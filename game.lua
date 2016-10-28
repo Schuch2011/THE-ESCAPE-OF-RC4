@@ -29,6 +29,7 @@ local parPowerUp4Duration = 4000
 
 local parDefaultSpeed = 4--4--10
 local parPowerUpSpeed = 6
+local parZeroChamberSpeed = 2
 local parSpeed = parDefaultSpeed
 
 local parDefaultJumpForce = -17
@@ -39,10 +40,12 @@ local parDefaultScoreMultiplier = 1
 local parPowerUpScoreMultiplier = 2
 local parScoreMultiplier = 1
 
-local parPlayerYPosition = 0.45*H--0.45*H 
+local parPlayerYPosition = 0.45*H
 local parPlayerXPosition = 0.25*W
 
 local parGravity = 60
+local parAccelerometerSensitivity = 25
+
 
 local canDie = true
 
@@ -52,6 +55,36 @@ local function setPhysics() -- INICIAR E CONFIGURAR A SIMULAÇÃO DE FÍSICA
 	physics.start(true)
 	physics.setGravity(0,parGravity)
 	--physics.setDrawMode("hybrid")
+end
+
+local function jump() -- AÇÃO DE PULO
+	player:applyForce(0,parJumpForce,player.x,player.y)
+	player:setLinearVelocity( 0,0 )
+	player.canJump = player.canJump - 1
+end
+
+local function switch() -- MECÂNICA DE INVERSÃO DOS ELEMENTOS DO CENÁRIO
+	if(switchTime == false) then
+		for i=1, lightGroup.numChildren do
+			lightGroup[i].alpha = 0.1
+			lightGroup[i].isBodyActive = false
+		end
+		for i=1, darkGroup.numChildren do
+			darkGroup[i].alpha = 1
+			darkGroup[i].isBodyActive = true			
+		end
+		switchTime = true
+	elseif (switchTime == true) then
+		for i=1, lightGroup.numChildren do
+			lightGroup[i].alpha = 1
+			lightGroup[i].isBodyActive = true
+		end
+		for i=1, darkGroup.numChildren do
+			darkGroup[i].alpha = 0.1
+			darkGroup[i].isBodyActive = false			
+		end
+		switchTime = false
+	end
 end
 
 local function onJumpButtonTouch( event )
@@ -68,6 +101,11 @@ local function onSwitchButtonTouch( event )
     elseif ( event.phase == "ended") then
     return true
 	end
+end
+
+local function onAccelerate( event )
+    physics.setGravity(0,event.yInstant*-1*parAccelerometerSensitivity)
+    parSpeed = parZeroChamberSpeed
 end
  
 local function getDeltaTime() -- CALCULAR O TEMPO DESDE O ÚLTIMO FRAME GERADO
@@ -112,6 +150,7 @@ local function playerCollider( self,event )
 				score.set(currentScore)
 				score.save()
 			end
+			Runtime:removeEventListener( "accelerometer", onAccelerate )
         	gameOver = true
 			composer.gotoScene("gameVictory","slideLeft",500)
     	end
@@ -124,6 +163,7 @@ local function playerCollider( self,event )
       	    -- COLISÃO COM BLOCOS FATAIS
 		if ( event.selfElement == 1 and event.other.objType == "fatal" and canDie==true) then
         	gameOver = true
+        	Runtime:removeEventListener( "accelerometer", onAccelerate )
 			composer.gotoScene("gameOver","slideLeft",500)
     	end
     	    -- COLISÃO COM POWERUP 1 -- AUMENTO TEMPORÁRIO NA VELOCIDADE DO JOGADOR
@@ -149,7 +189,13 @@ local function playerCollider( self,event )
         	local temp = event.other
 			display.remove(temp)
 			activatePowerUp(4)
-    	end    	
+    	end  
+    	if ( event.selfElement == 1 and event.other.objType == "startZeroGravity" ) then
+        	Runtime:addEventListener( "accelerometer", onAccelerate )
+        	jumpButton:setEnabled(false)
+        	jumpButton.alpha = 0
+    	end  
+ 	
     end
 end
 
@@ -173,17 +219,20 @@ function scene:create(event)
 	totalCoins = 0
 
 	-- INSTANCIAR BACKGROUND
-	
+
+	local backgroundColor = display.newRect(sceneGroup,W/2,H/2, W*1.2,H*1.2)
+	backgroundColor:setFillColor(0.41,0.59,1)
+
 	local sky = display.newImage(backgroundGroup, "images/sky.png", 0, 0)
-	sky.anchorX, sky.anchorY = 0, 0
+ 	sky.anchorX, sky.anchorY = 0, 0
 	
-	local farClouds = display.newImage(backgroundGroup, "images/farClouds.png", 0, 0)
+    local farClouds = display.newImage(backgroundGroup, "images/farClouds.png", 0, -90)
 	farClouds.anchorX, farClouds.anchorY = 0, 0
-	farClouds.speed = .5
-	
-	local nearClouds = display.newImage(backgroundGroup, "images/nearClouds.png", 0, 0)
+	farClouds.speed = .1
+
+	local nearClouds = display.newImage(backgroundGroup, "images/nearClouds.png", 0, -90)
 	nearClouds.anchorX, nearClouds.anchorY = 0, 0
-	nearClouds.speed = .8
+	nearClouds.speed = .4
 	
 	--INSTANCIAR PERSONAGEM
 
@@ -226,10 +275,14 @@ function scene:create(event)
 
 
 	blocks.newBlock("fatal",(W*15),H*(1.15),W*30,H*.3)
-	blocks.newBlock("neutral",(W*15),H*(-1.4),W*30,H*.3)
+	blocks.newBlock("neutral",(W*15),H*(-1.4),W*30,H*.3) -- teto
 
+	blocks.newBlock("startZeroGravity",(W*15.5),H*-.35,W*0.2,2*H)
 
-	blocks.newBlock("endGame",W*19.58,H*.5,W*.20,2*H)
+	blocks.newBlock("neutral",W*16.5,H*-0.5,W*0.15,H*0.4)
+	blocks.newBlock("neutral",W*17,H*-0.65,W*0.15,H*0.7)
+
+	blocks.newBlock("endGame",W*19.58,H*-.5,W*.20,2*H)
 
 	coin.newCoin(2.45*W,0.4*H)
 	coin.newCoin(3.75*W,-0.23*H)
@@ -237,6 +290,7 @@ function scene:create(event)
 	coin.newCoin(5.875*W+32,0.05*H)
 	coin.newCoin(7.35*W,0.0*H)
 	coin.newCoin(12.15*W,-1*H)
+	coin.newCoin(16.75*W,-1.2*H)
 
 
 	powerUp.newPowerUp(1, 9, -0.42)
@@ -322,35 +376,7 @@ end
 scene:addEventListener("create",scene)
 scene:addEventListener("show",scene)
 
-function jump() -- AÇÃO DE PULO
-	player:applyForce(0,parJumpForce,player.x,player.y)
-	player:setLinearVelocity( 0,0 )
-	player.canJump = player.canJump - 1
-end
 
-function switch() -- MECÂNICA DE INVERSÃO DOS ELEMENTOS DO CENÁRIO
-	if(switchTime == false) then
-		for i=1, lightGroup.numChildren do
-			lightGroup[i].alpha = 0.1
-			lightGroup[i].isBodyActive = false
-		end
-		for i=1, darkGroup.numChildren do
-			darkGroup[i].alpha = 1
-			darkGroup[i].isBodyActive = true			
-		end
-		switchTime = true
-	elseif (switchTime == true) then
-		for i=1, lightGroup.numChildren do
-			lightGroup[i].alpha = 1
-			lightGroup[i].isBodyActive = true
-		end
-		for i=1, darkGroup.numChildren do
-			darkGroup[i].alpha = 0.1
-			darkGroup[i].isBodyActive = false			
-		end
-		switchTime = false
-	end
-end
 
 
 function updateFrames()
@@ -358,13 +384,16 @@ function updateFrames()
 		local dt = getDeltaTime()
 
 		-- MOVIMENTAR ELEMENTOS DE CENÁRIO
-		
+
 		for i = 1, backgroundGroup.numChildren do
-			if backgroundGroup[i].speed then
-				backgroundGroup[i].x = backgroundGroup[i].x - (parSpeed * backgroundGroup[i].speed) * dt
-			end
-		end
-		
+ 			if backgroundGroup[i].speed then
+ 				backgroundGroup[i].x = backgroundGroup[i].x - (parSpeed * backgroundGroup[i].speed) * dt
+ 				if backgroundGroup[i].x < -backgroundGroup[i].width then
+ 					backgroundGroup[i].x = W*1+backgroundGroup[i].width
+ 				end
+ 			end
+
+ 		end
 		for i=1, movableGroup.numChildren do
 			movableGroup[i].x = movableGroup[i].x - parSpeed*dt
 		end
@@ -382,6 +411,10 @@ function updateFrames()
 		if (player.y > parPlayerYPosition or player.y<parPlayerYPosition) then
 			local difY = player.y-parPlayerYPosition
 			player.y = parPlayerYPosition
+
+			for i = 1, backgroundGroup.numChildren do
+ 				backgroundGroup[i].y = backgroundGroup[i].y - difY
+ 			end
 			for i=1, movableGroup.numChildren do
 				movableGroup[i].y = movableGroup[i].y - difY
 			end	
@@ -409,11 +442,11 @@ function updateFrames()
 	end
 end
 
--- local function onAccelerate( event )
---     print( event.name, event.xGravity, event.yGravity, event.zGravity )
--- end
 
--- Runtime:addEventListener( "accelerometer", onAccelerate )
+
+
+
+
 
 return scene
 

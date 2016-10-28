@@ -30,8 +30,12 @@ function _M.newBlock(type,xPos,yPos,width,height)
 		movableGroup:insert(box)
 		box.isSensor=true
 		box.objType = "fatal"
+	elseif (type == "startZeroGravity") then
+		movableGroup:insert(box)
+		box.isSensor=true
+		box.alpha=0
+		box.objType="startZeroGravity"
 	end
-
 	return box
 end
 

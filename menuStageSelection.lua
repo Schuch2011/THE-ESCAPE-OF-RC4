@@ -27,7 +27,7 @@ function scene:create(event)
 	score.load()
 	local stage1BestScore = score.get() or 0
 
-	bestScoreText = display.newText(sceneGroup,"BEST SCORE: "..stage1BestScore.." / 6", W/2,H*0.7,native.systemFontBold,20)
+	bestScoreText = display.newText(sceneGroup,"BEST SCORE: "..stage1BestScore.." / 7", W/2,H*0.7,native.systemFontBold,20)
 	bestScoreText:setFillColor(1)
 
 	sceneGroup:insert(backButton)

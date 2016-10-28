@@ -48,7 +48,7 @@ function _M.save()
       io.close( file )
       return true
    else
-      print( "Error: could not read ", _M.filename, "." )
+      --print( "Error: could not read ", _M.filename, "." )
       return false
    end
 end
@@ -64,7 +64,7 @@ function _M.load()
       io.close( file )
       return score
    else
-      print( "Error: could not read scores from ", _M.filename, "." )
+      --print( "Error: could not read scores from ", _M.filename, "." )
    end
    return nil
 end
