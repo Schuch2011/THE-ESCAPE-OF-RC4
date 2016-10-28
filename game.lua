@@ -46,6 +46,7 @@ local parPlayerXPosition = 0.25*W
 
 local parGravity = 60
 local parAccelerometerSensitivity = 25
+local parIsZeroGravity=false
 
 
 local canDie = true
@@ -109,8 +110,10 @@ local function onSwitchButtonTouch( event )
 end
 
 local function onAccelerate( event )
-    physics.setGravity(0,event.yInstant*-1*parAccelerometerSensitivity)
-    parSpeed = parZeroChamberSpeed
+	if (parIsZeroGravity==true) then
+    	physics.setGravity(0,event.yInstant*-1*parAccelerometerSensitivity)
+    	parSpeed = parZeroChamberSpeed
+	end
 end
  
 local function getDeltaTime() -- CALCULAR O TEMPO DESDE O ÚLTIMO FRAME GERADO
@@ -177,8 +180,12 @@ local function playerCollider( self,event )
 				score.set(currentScore)
 				score.save()
 			end
+			
 			Runtime:removeEventListener( "accelerometer", onAccelerate )
         	--gameOver = true
+			
+			parIsZeroGravity = false
+
 			composer.gotoScene("gameVictory","slideLeft",500)
     	end
     	    -- DETECTA A COLISÃO DO PERSONAGEM COM AS MOEDAS
@@ -191,6 +198,9 @@ local function playerCollider( self,event )
 		if ( event.selfElement == 1 and event.other.objType == "fatal" and canDie==true) then
         	--gameOver = true
         	Runtime:removeEventListener( "accelerometer", onAccelerate )
+
+        	parIsZeroGravity = false
+
 			composer.gotoScene("gameOver","slideLeft",500)
     	end
     	    -- COLISÃO COM POWERUP 1 -- AUMENTO TEMPORÁRIO NA VELOCIDADE DO JOGADOR
@@ -218,7 +228,7 @@ local function playerCollider( self,event )
 			activatePowerUp(4)
     	end  
     	if ( event.selfElement == 1 and event.other.objType == "startZeroGravity" ) then
-        	Runtime:addEventListener( "accelerometer", onAccelerate )
+        	parIsZeroGravity=true
         	jumpButton:setEnabled(false)
         	jumpButton.alpha = 0
     	end  
@@ -409,7 +419,9 @@ function scene:show( event )
 		isPaused = false
     	local dt = getDeltaTime()
     	Runtime:addEventListener("enterFrame",updateFrames)
+    	Runtime:addEventListener( "accelerometer", onAccelerate )
     	score.set(0)
+    	physics.setGravity(0,parGravity)
     end
 end
 
@@ -486,6 +498,8 @@ function updateFrames()
 
 		if ((player.x + player.width / 2) < 0) then
 			--gameOver = true
+			parIsZeroGravity = false
+
 			composer.gotoScene("gameOver","slideLeft",500)
 		end
 
