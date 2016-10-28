@@ -15,7 +15,8 @@ local powerUp = require("classes.powerUps")
 local scene = composer.newScene()
 local runtime = 0
 
-local gameOver = false
+--local gameOver = false
+local isPaused = true
 local switchTime=false
 local coins = 0
 
@@ -49,7 +50,9 @@ local parAccelerometerSensitivity = 25
 
 local canDie = true
 
-
+local jumpButton
+local switchButton
+local pauseButton
 
 local function setPhysics() -- INICIAR E CONFIGURAR A SIMULAÇÃO DE FÍSICA
 	physics.start(true)
@@ -88,10 +91,12 @@ local function switch() -- MECÂNICA DE INVERSÃO DOS ELEMENTOS DO CENÁRIO
 end
 
 local function onJumpButtonTouch( event )
-    if ( event.phase == "began" and player.canJump > 0) then
-    jump()
-    elseif ( event.phase == "ended") then
-    return true
+	if not isPaused then
+		if ( event.phase == "began" and player.canJump > 0) then
+			jump()
+		elseif ( event.phase == "ended") then
+			return true
+		end
 	end
 end
 
@@ -136,6 +141,28 @@ function activatePowerUp(type)
 	return powerUp
 end
 
+local function onPaused()
+	isPaused = true
+	
+	physics.pause()
+	
+	jumpButton.isVisible = false
+	switchButton.isVisible = false
+	pauseButton.isVisible = false
+	
+	composer.showOverlay("pause", {effect = "fade", time = 200, isModal = true})
+end
+
+function scene:resumeGame()
+	isPaused = false
+	
+	physics.start(true)
+	
+	jumpButton.isVisible = true
+	switchButton.isVisible = true
+	pauseButton.isVisible = true
+end
+
 local function playerCollider( self,event ) 
     if (event.phase == "began") then
     	-- RECOMEÇA A CONTAGEM DE PULOS QUANDO O PERSONAGEM ESTÁ COM OS PÉS NO CHÃO
@@ -151,7 +178,7 @@ local function playerCollider( self,event )
 				score.save()
 			end
 			Runtime:removeEventListener( "accelerometer", onAccelerate )
-        	gameOver = true
+        	--gameOver = true
 			composer.gotoScene("gameVictory","slideLeft",500)
     	end
     	    -- DETECTA A COLISÃO DO PERSONAGEM COM AS MOEDAS
@@ -162,7 +189,7 @@ local function playerCollider( self,event )
       	end
       	    -- COLISÃO COM BLOCOS FATAIS
 		if ( event.selfElement == 1 and event.other.objType == "fatal" and canDie==true) then
-        	gameOver = true
+        	--gameOver = true
         	Runtime:removeEventListener( "accelerometer", onAccelerate )
 			composer.gotoScene("gameOver","slideLeft",500)
     	end
@@ -329,12 +356,23 @@ function scene:create(event)
 	)
 	switchButton.alpha = 0.8
 
+	pauseButton = widget.newButton({
+		x = W - W * .05,
+		y = H * .05,
+		width = 50,
+		height = 50,
+		defaultFile = "images/pause.png",
+		onPress = onPaused
+	})
+	
+	pauseButton.anchorX, pauseButton.anchorY = 1, 0
+	
 	-- CONTADOR DE MOEDAS
 
 	scoreCounter = score.init({
 		fontSize = 20,
 		font = native.systemFontBold,
-		x = W*0.80,
+		x = W * .5,
 		y = H*.11,
 		maxDigits = 2,
 		leadingZeros = false,
@@ -346,6 +384,7 @@ function scene:create(event)
 	HUDGroup:insert(scoreCounter)
 	HUDGroup:insert(jumpButton)
 	HUDGroup:insert(switchButton)
+	HUDGroup:insert(pauseButton)
 
 	-- INSERIR ELEMENTOS DENTRO DO GRUPO DO COMPOSER 
 
@@ -366,23 +405,38 @@ function scene:show( event )
 
     if ( phase == "will" ) then
     elseif ( phase == "did" ) then
-    	gameOver = false
+    	--gameOver = false
+		isPaused = false
     	local dt = getDeltaTime()
     	Runtime:addEventListener("enterFrame",updateFrames)
     	score.set(0)
     end
 end
 
+function scene:hide(event)
+	local phase = event.phase
+	
+	if (phase == "will") then
+		
+	elseif (phase == "did") then
+	
+		--physics.pause()
+	
+		Runtime:removeEventListener("enterFrame",updateFrames)
+	end
+end
+
 scene:addEventListener("create",scene)
 scene:addEventListener("show",scene)
+scene:addEventListener("hide",scene)
 
 
 
 
 function updateFrames()
-	if gameOver == false then
-		local dt = getDeltaTime()
+	local dt = getDeltaTime()
 
+	if not isPaused then
 		-- MOVIMENTAR ELEMENTOS DE CENÁRIO
 
 		for i = 1, backgroundGroup.numChildren do
@@ -431,7 +485,7 @@ function updateFrames()
 		-- GAMEOVER QUANDO PERSONAGEM SAI PARA FORA DA TELA
 
 		if ((player.x + player.width / 2) < 0) then
-			gameOver = true
+			--gameOver = true
 			composer.gotoScene("gameOver","slideLeft",500)
 		end
 
