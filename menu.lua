@@ -8,9 +8,6 @@ local widget = require("widget")
 
 local scene = composer.newScene()
 
-function gotoNextScene()
-	composer.gotoScene("menuCharacterSelection", {time=500, effect="slideLeft"})
-end
 
 function scene:create(event)
 	local sceneGroup = self.view
@@ -33,7 +30,9 @@ function scene:create(event)
 			fillColor = { default={0,1,0}, over={0,1,0} },
 			strokeWidth = 3,
 			strokeColor = { default={0}, over={0} },
-			onPress = gotoNextScene
+			onPress = function ()
+				composer.gotoScene("menuCharacterSelection", {time=500, effect="slideLeft"})
+			end
 		}
 	)
 

@@ -4,7 +4,10 @@ local W = display.contentWidth
 local H = display.contentHeight
 
 local composer = require("composer")
+local score = require("classes.score")
+
 local scene = composer.newScene()
+
 
 function scene:create(event)
 	local sceneGroup = self.view
@@ -15,11 +18,17 @@ function scene:create(event)
 	menuTitle = display.newText("STAGE SELECTION",W/2,H*.15,native.systemFontBold,30)
 	menuTitle:setFillColor(1)
 
-	character1Square = display.newRect(W/2,H*.55,W*.45,H*.35)
+	character1Square = display.newRect(W/2,H*.45,W*.45,H*.35)
 	character1Square:setFillColor(0,1,0)
 
-	character1Text = display.newText("STAGE 1",W/2,H*.83,native.systemFont,25)
-	character1Text:setFillColor(1)
+	character1Text = display.newText("STAGE 1",W/2,H*.45,native.systemFontBold,25)
+	character1Text:setFillColor(0)
+
+	score.load()
+	local stage1BestScore = score.get() or 0
+
+	bestScoreText = display.newText(sceneGroup,"BEST SCORE: "..stage1BestScore.." / 6", W/2,H*0.7,native.systemFontBold,20)
+	bestScoreText:setFillColor(1)
 
 	sceneGroup:insert(backButton)
 	sceneGroup:insert(menuTitle)

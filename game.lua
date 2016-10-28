@@ -4,23 +4,47 @@ local W = display.contentWidth
 local H = display.contentHeight
 
 local composer = require("composer")
-local widget = require( "widget" )
 local physics = require("physics")
+local widget = require( "widget" )
+local coin = require("classes.coins")
+local blocks = require("classes.blocks")
+local spike = require("classes.spike")
+local score = require("classes.score")
+local powerUp = require("classes.powerUps")
 
 local scene = composer.newScene()
 local runtime = 0
 
-
 local gameOver = false
---local player
 local switchTime=false
 local coins = 0
 
 -- PARÂMETROS DE JOGABILIDADE
 
-local parSpeed = 4
-local parJumpForce = -17
+local parPowerUp1Duration = 2000
+local parPowerUp2Duration = 2000
+local parPowerUp3Duration = 4000
+local parPowerUp4Duration = 4000
+
+
+local parDefaultSpeed = 4--4--10
+local parPowerUpSpeed = 6
+local parSpeed = parDefaultSpeed
+
+local parDefaultJumpForce = -17
+local parPowerUpJumpForce = -22
+local parJumpForce = parDefaultJumpForce
+
+local parDefaultScoreMultiplier = 1
+local parPowerUpScoreMultiplier = 2
+local parScoreMultiplier = 1
+
+local parPlayerYPosition = 0.45*H--0.45*H 
+local parPlayerXPosition = 0.25*W
+
 local parGravity = 60
+
+local canDie = true
 
 
 
@@ -53,50 +77,100 @@ local function getDeltaTime() -- CALCULAR O TEMPO DESDE O ÚLTIMO FRAME GERADO
     return dt
 end
 
-local function playerCollider( self,event ) 
-	-- RECOMEÇA A CONTAGEM DE PULOS QUANDO O PERSONAGEM ESTÁ COM OS PÉS NO CHÃO
-	if ( event.selfElement == 2 and event.other.objType == "ground" ) then
-    	if ( event.phase == "began" ) then
-        	self.canJump = 2
-    	end
+function activatePowerUp(type)
+	if (type == 1) then
+		parSpeed = parPowerUpSpeed
+		timer.performWithDelay(parPowerUp1Duration,function ()	parSpeed=parDefaultSpeed end)
+	end
+	if (type == 2) then
+		parJumpForce = parPowerUpJumpForce
+		timer.performWithDelay(parPowerUp2Duration,function ()	parJumpForce=parDefaultJumpForce end)
+	end
+	if (type == 3) then
+		parScoreMultiplier = parPowerUpScoreMultiplier
+		timer.performWithDelay(parPowerUp3Duration,function ()	parScoreMultiplier= parDefaultScoreMultiplier end)
+	end
+	if (type == 4) then
+		canDie = false
+		timer.performWithDelay(parPowerUp4Duration,function ()	canDie=true end)
 	end
 
-	-- DETECTA SE O PERSONAGEM ALCANÇA O FIM DA FASE
-	if ( event.selfElement == 1 and event.other.objType == "endStage" ) then
-		if ( event.phase == "began" ) then
-        	gameOver = true
-			composer.gotoScene("gameVictory","slideLeft",500)
-      	end
-    end
-
-    -- DETECTA A COLISÃO DO PERSONAGEM COM AS MOEDAS
-    if ( event.selfElement == 1 and event.other.objType == "coin" ) then
-		if ( event.phase == "began" ) then
-			local coin = event.other
-			display.remove(coin)
-			coins = coins + 1
-			coinsCounter.text="COINS: "..coins
-      	end
-    end
+	return powerUp
 end
 
+local function playerCollider( self,event ) 
+    if (event.phase == "began") then
+    	-- RECOMEÇA A CONTAGEM DE PULOS QUANDO O PERSONAGEM ESTÁ COM OS PÉS NO CHÃO
+    	if ( event.selfElement == 2 and event.other.objType == "ground" ) then
+        	self.canJump = 2
+    	end
+    	-- DETECTA SE O PERSONAGEM ALCANÇA O FIM DA FASE
+		if ( event.selfElement == 1 and event.other.objType == "endStage" ) then
+			local currentScore = score.get()
+			score.load()
+			if (currentScore>score.get()) then
+				score.set(currentScore)
+				score.save()
+			end
+        	gameOver = true
+			composer.gotoScene("gameVictory","slideLeft",500)
+    	end
+    	    -- DETECTA A COLISÃO DO PERSONAGEM COM AS MOEDAS
+    	if ( event.selfElement == 1 and event.other.objType == "coin" ) then
+			local temp = event.other
+			display.remove(temp)
+			score.add(1)
+      	end
+      	    -- COLISÃO COM BLOCOS FATAIS
+		if ( event.selfElement == 1 and event.other.objType == "fatal" and canDie==true) then
+        	gameOver = true
+			composer.gotoScene("gameOver","slideLeft",500)
+    	end
+    	    -- COLISÃO COM POWERUP 1 -- AUMENTO TEMPORÁRIO NA VELOCIDADE DO JOGADOR
+		if ( event.selfElement == 1 and event.other.objType == "powerUp1" ) then
+        	local temp = event.other
+			display.remove(temp)
+			activatePowerUp(1)
+    	end
+    	    -- COLISÃO COM POWERUP 2 -- AUMENTO TEMPORÁRIO DA ALTURA DO PULO
+		if ( event.selfElement == 1 and event.other.objType == "powerUp2" ) then
+        	local temp = event.other
+			display.remove(temp)
+			activatePowerUp(2)
+    	end
+    	    -- COLISÃO COM POWERUP 3 -- AUMENTO NA TAXA DE SCORE GANHOS
+		if ( event.selfElement == 1 and event.other.objType == "powerUp3" ) then
+        	local temp = event.other
+			display.remove(temp)
+			activatePowerUp(3)
+    	end
+    	    -- COLISÃO COM POWERUP 4 -- INVENCIBILIDADE A OBSTÁCULOS NORMAIS
+		if ( event.selfElement == 1 and event.other.objType == "powerUp4" ) then
+        	local temp = event.other
+			display.remove(temp)
+			activatePowerUp(4)
+    	end    	
+    end
+end
 
 function scene:create(event)
 	sceneGroup = self.view
 
+	-- CRIAR GRUPOS
+
 	backGroundGroup = display.newGroup()
 	middleGroundGroup = display.newGroup()
-
 	movableGroup = display.newGroup()
 	darkGroup = display.newGroup()
 	lightGroup = display.newGroup()
-
 	HUDGroup = display.newGroup()
 	
 	-- ATIVAR E CONFIGURAR A FÍSICA
 
 	setPhysics()
 	switchTime=false
+
+	totalCoins = 0
 
 	-- INSTANCIAR BACKGROUND
 
@@ -105,90 +179,63 @@ function scene:create(event)
 	
 	--INSTANCIAR PERSONAGEM
 
-	player = display.newRect(W*.4,H*.65,W*.05,H*.15)
+	player = display.newRect(parPlayerXPosition,parPlayerYPosition,W*.05,H*.15)
 	player:setFillColor(0)
 	physics.addBody(player,"dynamic",
 	{ bounce=0},
-	{ shape={W*.015,H*0,W*.015,H*0.08,W*-.015,H*0.08,W*-.015,H*0}, isSensor=true}
+	{ shape={W*.010,H*0, W*.010,H*0.08, W*-.010,H*0.08, W*-.010,H*0}, isSensor=true}
 	)
 	player.isFixedRotation=true
 	player.canJump = 0
 	player.collision = playerCollider
 	player:addEventListener( "collision", player)
+	player.isSleepingAllowed = false
 
 	-- INSTANCIAR ELEMENTOS DE CENÁRIO
 
-	box1 = display.newRect(lightGroup,W*1.7,H*.75,W*.20,H*.25)
-	box1:setFillColor(0)
-	physics.addBody(box1,"static",{bounce=0})
-	box1.objType = "ground"
+	blocks.newBlock("neutral",W*1.5,H*(0.8275),(W*3.5),H*.6) --chao
+	blocks.newBlock("neutral",W*1.9,H*(0.4775),W*.1,H*.10)
+	blocks.newBlock("neutral",W*3.05,H*(0.425),W*.4,H*.25)
+	--GAP
+	blocks.newBlock("neutral",W*3.60,H*(0.125),W*.20,H*.05)
+	--GAP
+	blocks.newBlock("neutral",W*3.9,H*(.125),W*.20,H*.05)
+	--GAP
+	blocks.newBlock("neutral",(W*5.55),H*(1.275),W*2.6,H*1.5) -- chao
+	blocks.newBlock("light",W*4.675,H*(0.175),W*0.05,H) -- parede
+	blocks.newBlock("dark",W*5.275,H*(0.175),W*0.05,H) -- parede
+	spike.newSpike(W*5.875,H*(0.525)-25) 
+	spike.newSpike(W*5.875+64,H*(0.525)-25)
+	blocks.newBlock("dark",W*7.15,H*(0.25),W*0.2,H*0.05)
+	blocks.newBlock("light",W*7.65,H*(0.10),W*0.2,H*0.05)
+	blocks.newBlock("dark",W*8.15,H*(-0.05),W*0.2,H*0.05)
+	blocks.newBlock("neutral",(W*14.58),H*(-0.15),W*12,H*.3) -- chao
+	blocks.newBlock("neutral",W*9.7,H*-.4, W*0.15,H*0.2)
+	blocks.newBlock("neutral",W*10.4,H*-.4,W*0.15,H*0.2)
+	blocks.newBlock("neutral",W*11.8,H*-.5,W*0.15,H*0.4)
+	blocks.newBlock("neutral",W*12.5,H*-.4,W*0.15,H*0.2)
+	spike.newSpike(W*14.6,H*-.35)
 
-	box2 = display.newRect(darkGroup,W*2.15,H*.45,W*.20,H*.05)
-	box2:setFillColor(0)
-	physics.addBody(box2,"static",{bounce=0})
-	box2.objType = "ground"
-	box2.alpha = 0.1
-	box2.isBodyActive = false
 
-	box3 = display.newRect(lightGroup,W*2.60,H*.45,W*.20,H*.05)
-	box3:setFillColor(0)
-	physics.addBody(box3,"static",{bounce=0})
-	box3.objType = "ground"
+	blocks.newBlock("fatal",(W*15),H*(1.15),W*30,H*.3)
+	blocks.newBlock("neutral",(W*15),H*(-1.4),W*30,H*.3)
 
-	box4 = display.newRect(darkGroup,W*3.05,H*.45,W*.20,H*.05)
-	box4:setFillColor(0)
-	physics.addBody(box4,"static",{bounce=0})
-	box4.objType = "ground"
-	box4.alpha = 0.1
-	box4.isBodyActive = false
 
-	box5 = display.newRect(lightGroup,W*3.50,H*.45,W*.20,H*.05)
-	box5:setFillColor(0)
-	physics.addBody(box5,"static",{bounce=0})
-	box5.objType = "ground"
+	blocks.newBlock("endGame",W*19.58,H*.5,W*.20,2*H)
 
-	box6 = display.newRect(darkGroup,W*3.95,H*.45,W*.20,H*.05)
-	box6:setFillColor(0)
-	physics.addBody(box6,"static",{bounce=0})
-	box6.objType = "ground"
-	box6.alpha = 0.1
-	box6.isBodyActive = false
+	coin.newCoin(2.45*W,0.4*H)
+	coin.newCoin(3.75*W,-0.23*H)
+	coin.newCoin(4.975*W,0.25*H)
+	coin.newCoin(5.875*W+32,0.05*H)
+	coin.newCoin(7.35*W,0.0*H)
+	coin.newCoin(12.15*W,-1*H)
 
-	endGameBox = display.newRect(movableGroup,W*4.65,H*.5,W*.20,H)
-	endGameBox:setFillColor(0)
-	physics.addBody(endGameBox,"static",{bounce=0})
-	endGameBox.objType = "endStage"
-	endGameBox.alpha = 0
 
-	coin1 = display.newImageRect(movableGroup, "images/coin.png", 32, 32)
-	coin1.x= W*0.9
-	coin1.y = H*0.75
-	coin1.objType = "coin"
-	physics.addBody(coin1,"static",{bounce=0, isSensor=true})
+	powerUp.newPowerUp(1, 9, -0.42)
+	powerUp.newPowerUp(2, 11.1, -0.42)
+	powerUp.newPowerUp(3, 13.2, -0.42)
+	powerUp.newPowerUp(4, 13.9, -0.42)
 
-	coin2 = display.newImageRect(movableGroup, "images/coin.png", 32, 32)
-	coin2.x= W*1.7
-	coin2.y = H*0.5
-	coin2.objType = "coin"
-	physics.addBody(coin2,"static",{bounce=0, isSensor=true})
-
-	coin3 = display.newImageRect(movableGroup, "images/coin.png", 32, 32)
-	coin3.x= W*2.375
-	coin3.y = H*0.1
-	coin3.objType = "coin"
-	physics.addBody(coin3,"static",{bounce=0, isSensor=true})
-
-	-- INSTANCIAR CHÃO
-
-	ground1 = display.newRect(movableGroup,W*.85,H,(W*1.7+box1.width),H*.3)
-	ground1:setFillColor(0)
-	physics.addBody(ground1,"static",{bounce=0})
-	ground1.objType = "ground"
-
-	ground2 = display.newRect(movableGroup,(W*4.65+box6.width),H,W*1,H*.3)
-	ground2:setFillColor(0)
-	physics.addBody(ground2,"static",{bounce=0})
-	ground2.objType = "ground"
 
 	-- INSTANCIAR BOTÕES DE AÇÃO
 
@@ -220,11 +267,23 @@ function scene:create(event)
 	)
 	switchButton.alpha = 0.8
 
+	-- CONTADOR DE MOEDAS
+
+	scoreCounter = score.init({
+		fontSize = 20,
+		font = native.systemFontBold,
+		x = W*0.80,
+		y = H*.11,
+		maxDigits = 2,
+		leadingZeros = false,
+		filename = "scorefile.txt",
+		varMaxCoins = totalCoins,
+	})
+
+
+	HUDGroup:insert(scoreCounter)
 	HUDGroup:insert(jumpButton)
 	HUDGroup:insert(switchButton)
-
-	coinsCounter = display.newText(HUDGroup,"COINS: "..coins,W*0.80,H*.11,native.systemFontBold, 20)
-	coinsCounter:setFillColor(0)
 
 	-- INSERIR ELEMENTOS DENTRO DO GRUPO DO COMPOSER 
 
@@ -248,9 +307,9 @@ function scene:show( event )
     	gameOver = false
     	local dt = getDeltaTime()
     	Runtime:addEventListener("enterFrame",updateFrames)
+    	score.set(0)
     end
 end
-
 
 scene:addEventListener("create",scene)
 scene:addEventListener("show",scene)
@@ -292,6 +351,8 @@ function updateFrames()
 
 		-- MOVIMENTAR ELEMENTOS DE CENÁRIO
 
+
+
 		for i=1, movableGroup.numChildren do
 			movableGroup[i].x = movableGroup[i].x - parSpeed*dt
 		end
@@ -304,19 +365,43 @@ function updateFrames()
 			darkGroup[i].x = darkGroup[i].x - parSpeed*dt
 		end
 
+		-- CÂMERA ACOMPANHAR PLAYER
+
+		if (player.y > parPlayerYPosition or player.y<parPlayerYPosition) then
+			local difY = player.y-parPlayerYPosition
+			player.y = parPlayerYPosition
+			for i=1, movableGroup.numChildren do
+				movableGroup[i].y = movableGroup[i].y - difY
+			end	
+			
+			for i=1, lightGroup.numChildren do
+				lightGroup[i].y = lightGroup[i].y - difY
+			end
+	
+			for i=1, darkGroup.numChildren do
+				darkGroup[i].y = darkGroup[i].y - difY
+			end
+		end 
+
 		-- GAMEOVER QUANDO PERSONAGEM SAI PARA FORA DA TELA
 
-		if (player.x <= -(player.width/2)) then
+		if ((player.x + player.width / 2) < 0) then
 			gameOver = true
 			composer.gotoScene("gameOver","slideLeft",500)
 		end
 
-		if (player.y >= H+(player.height/2)) then
-			gameOver = true
-			composer.gotoScene("gameOver","slideLeft",500)
-		end
+		-- if (player.y >= H+(player.height/2)) then
+		-- 	gameOver = true
+		-- 	composer.gotoScene("gameOver","slideLeft",500)
+		-- end
 	end
 end
+
+-- local function onAccelerate( event )
+--     print( event.name, event.xGravity, event.yGravity, event.zGravity )
+-- end
+
+-- Runtime:addEventListener( "accelerometer", onAccelerate )
 
 return scene
 
