@@ -158,7 +158,7 @@ function scene:create(event)
 
 	-- CRIAR GRUPOS
 
-	backGroundGroup = display.newGroup()
+	backgroundGroup = display.newGroup()
 	middleGroundGroup = display.newGroup()
 	movableGroup = display.newGroup()
 	darkGroup = display.newGroup()
@@ -173,9 +173,17 @@ function scene:create(event)
 	totalCoins = 0
 
 	-- INSTANCIAR BACKGROUND
-
-	background = display.newRect(backGroundGroup,W/2,H/2,W*1.2,H)
-	background:setFillColor(.8)
+	
+	local sky = display.newImage(backgroundGroup, "images/sky.png", 0, 0)
+	sky.anchorX, sky.anchorY = 0, 0
+	
+	local farClouds = display.newImage(backgroundGroup, "images/farClouds.png", 0, 0)
+	farClouds.anchorX, farClouds.anchorY = 0, 0
+	farClouds.speed = .5
+	
+	local nearClouds = display.newImage(backgroundGroup, "images/nearClouds.png", 0, 0)
+	nearClouds.anchorX, nearClouds.anchorY = 0, 0
+	nearClouds.speed = .8
 	
 	--INSTANCIAR PERSONAGEM
 
@@ -287,7 +295,7 @@ function scene:create(event)
 
 	-- INSERIR ELEMENTOS DENTRO DO GRUPO DO COMPOSER 
 
-	sceneGroup:insert(backGroundGroup)
+	sceneGroup:insert(backgroundGroup)
 	sceneGroup:insert(middleGroundGroup)
 	sceneGroup:insert(player)
 	sceneGroup:insert(darkGroup)
@@ -350,9 +358,13 @@ function updateFrames()
 		local dt = getDeltaTime()
 
 		-- MOVIMENTAR ELEMENTOS DE CENÁRIO
-
-
-
+		
+		for i = 1, backgroundGroup.numChildren do
+			if backgroundGroup[i].speed then
+				backgroundGroup[i].x = backgroundGroup[i].x - (parSpeed * backgroundGroup[i].speed) * dt
+			end
+		end
+		
 		for i=1, movableGroup.numChildren do
 			movableGroup[i].x = movableGroup[i].x - parSpeed*dt
 		end
