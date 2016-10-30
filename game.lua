@@ -256,20 +256,17 @@ function scene:create(event)
 	totalCoins = 0
 
 	-- INSTANCIAR BACKGROUND
-
-	local backgroundColor = display.newRect(sceneGroup,W/2,H/2, W*1.2,H*1.2)
-	backgroundColor:setFillColor(0.41,0.59,1)
-
+	
 	local sky = display.newImage(backgroundGroup, "images/sky.png", 0, 0)
  	sky.anchorX, sky.anchorY = 0, 0
 	
     local farClouds = display.newImage(backgroundGroup, "images/farClouds.png", 0, -90)
 	farClouds.anchorX, farClouds.anchorY = 0, 0
-	farClouds.speed = .1
+	farClouds.speed = {x = .015, y = .0075}
 
 	local nearClouds = display.newImage(backgroundGroup, "images/nearClouds.png", 0, -90)
 	nearClouds.anchorX, nearClouds.anchorY = 0, 0
-	nearClouds.speed = .4
+	nearClouds.speed = {x = .15, y = .05}
 	
 	--INSTANCIAR PERSONAGEM
 
@@ -453,7 +450,7 @@ function updateFrames()
 
 		for i = 1, backgroundGroup.numChildren do
  			if backgroundGroup[i].speed then
- 				backgroundGroup[i].x = backgroundGroup[i].x - (parSpeed * backgroundGroup[i].speed) * dt
+ 				backgroundGroup[i].x = backgroundGroup[i].x - (parSpeed * backgroundGroup[i].speed.x) * dt
  				if backgroundGroup[i].x < -backgroundGroup[i].width then
  					backgroundGroup[i].x = W*1+backgroundGroup[i].width
  				end
@@ -479,7 +476,9 @@ function updateFrames()
 			player.y = parPlayerYPosition
 
 			for i = 1, backgroundGroup.numChildren do
- 				backgroundGroup[i].y = backgroundGroup[i].y - difY
+				if backgroundGroup[i].speed then
+					backgroundGroup[i].y = backgroundGroup[i].y - (difY * backgroundGroup[i].speed.y)
+				end
  			end
 			for i=1, movableGroup.numChildren do
 				movableGroup[i].y = movableGroup[i].y - difY

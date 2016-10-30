@@ -9,9 +9,7 @@ local scene = composer.newScene()
 function scene:create()
 	local sceneGroup = self.view
 	
-	local pauseGroup = display.newGroup()
-	
-	local background = display.newRect(_W * .5, _H * .5, _W, _H)
+	local background = display.newRect(_W * .5, _H * .5, display.actualContentWidth, display.actualContentHeight)
 	background:setFillColor(0, 0, 0, .8)
 	
 	local resumeButton = widget.newButton({
@@ -30,10 +28,8 @@ function scene:create()
 		end
 	})
 	
-	pauseGroup:insert(background)
-	pauseGroup:insert(resumeButton)
-	
-	sceneGroup:insert(pauseGroup)
+	sceneGroup:insert(background)
+	sceneGroup:insert(resumeButton)
 end
 
 function scene:show()
