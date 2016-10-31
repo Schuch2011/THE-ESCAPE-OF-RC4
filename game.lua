@@ -41,7 +41,7 @@ local parDefaultScoreMultiplier = 1
 local parPowerUpScoreMultiplier = 2
 local parScoreMultiplier = 1
 
-local parPlayerYPosition = 0.45*H
+local parPlayerYPosition = 0.65*H
 local parPlayerXPosition = 0.25*W
 
 local parGravity = 60
@@ -123,7 +123,7 @@ local function getDeltaTime() -- CALCULAR O TEMPO DESDE O ÚLTIMO FRAME GERADO
     return dt
 end
 
-function activatePowerUp(type)
+local function activatePowerUp(type)
 	if (type == 1) then
 		parSpeed = parPowerUpSpeed
 		timer.performWithDelay(parPowerUp1Duration,function ()	parSpeed=parDefaultSpeed end)
@@ -256,6 +256,9 @@ function scene:create(event)
 
 	-- INSTANCIAR BACKGROUND
 	
+	local backgroundColor = display.newRect(sceneGroup,W/2,H/2, W*1.2,H*1.2)
+ 	backgroundColor:setFillColor(0.41,0.59,1)
+
 	local sky = display.newImage(backgroundGroup, "images/sky.png", 0, 0)
  	sky.anchorX, sky.anchorY = 0, 0
 
