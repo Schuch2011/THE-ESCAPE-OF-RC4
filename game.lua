@@ -51,8 +51,8 @@ local parIsZeroGravity=false
 
 local canDie = true
 
-local jumpButton
-local switchButton
+local jumpButtonArea
+local switchButtonArea
 local pauseButton
 
 local function setPhysics() -- INICIAR E CONFIGURAR A SIMULAÇÃO DE FÍSICA
@@ -149,8 +149,8 @@ local function onPaused()
 	
 	physics.pause()
 	
-	jumpButton.isVisible = false
-	switchButton.isVisible = false
+	jumpButtonArea.isHitTestable = false
+	switchButtonArea.isHitTestable = false
 	pauseButton.isVisible = false
 	
 	composer.showOverlay("pause", {effect = "fade", time = 200, isModal = true})
@@ -161,8 +161,8 @@ function scene:resumeGame()
 	
 	physics.start(true)
 	
-	jumpButton.isVisible = true
-	switchButton.isVisible = true
+	jumpButtonArea.isHitTestable = true
+	switchButtonArea.isHitTestable = true
 	pauseButton.isVisible = true
 end
 
@@ -229,8 +229,7 @@ local function playerCollider( self,event )
     	end  
     	if ( event.selfElement == 1 and event.other.objType == "startZeroGravity" ) then
         	parIsZeroGravity=true
-        	jumpButton:setEnabled(false)
-        	jumpButton.alpha = 0
+        	jumpButtonArea.isHitTestable=false
     	end  
  	
     end
@@ -259,7 +258,7 @@ function scene:create(event)
 	
 	local sky = display.newImage(backgroundGroup, "images/sky.png", 0, 0)
  	sky.anchorX, sky.anchorY = 0, 0
-	
+
     local farClouds = display.newImage(backgroundGroup, "images/farClouds.png", 0, -90)
 	farClouds.anchorX, farClouds.anchorY = 0, 0
 	farClouds.speed = {x = .015, y = .0075}
@@ -335,33 +334,15 @@ function scene:create(event)
 
 	-- INSTANCIAR BOTÕES DE AÇÃO
 
-	jumpButton = widget.newButton(
-		{
-			x = W*0.9,
-			y = H*0.85,
-			shape = "circle",
-			radius = H*.1,
-			fillColor = { default={1}, over={0.9} },
-			strokeWidth = 3,
-			strokeColor = { default={0}, over={0} },
-			onPress = onJumpButtonTouch
-		}
-	)
-	jumpButton.alpha = 0.8
+	jumpButtonArea = display.newRect(HUDGroup,W/4*3,H/2,W/2,H)
+	jumpButtonArea.alpha = 0
+	jumpButtonArea:addEventListener("touch",onJumpButtonTouch)
+	jumpButtonArea.isHitTestable = true
 
-	switchButton = widget.newButton(
-		{
-			x = W*0.1,
-			y = H*0.85,
-			shape = "circle",
-			radius = H*.1,
-			fillColor = { default={1}, over={0.9} },
-			strokeWidth = 3,
-			strokeColor = { default={0}, over={0} },
-			onPress = onSwitchButtonTouch
-		}
-	)
-	switchButton.alpha = 0.8
+	switchButtonArea = display.newRect(HUDGroup,W/4,H/2,W/2,H)
+	switchButtonArea.alpha = 0
+	switchButtonArea:addEventListener("touch",onSwitchButtonTouch)	
+	switchButtonArea.isHitTestable = true
 
 	pauseButton = widget.newButton({
 		x = W - W * .05,
@@ -389,8 +370,6 @@ function scene:create(event)
 
 
 	HUDGroup:insert(scoreCounter)
-	HUDGroup:insert(jumpButton)
-	HUDGroup:insert(switchButton)
 	HUDGroup:insert(pauseButton)
 
 	-- INSERIR ELEMENTOS DENTRO DO GRUPO DO COMPOSER 
@@ -438,9 +417,6 @@ end
 scene:addEventListener("create",scene)
 scene:addEventListener("show",scene)
 scene:addEventListener("hide",scene)
-
-
-
 
 function updateFrames()
 	local dt = getDeltaTime()
@@ -501,11 +477,6 @@ function updateFrames()
 
 			composer.gotoScene("gameOver","slideLeft",500)
 		end
-
-		-- if (player.y >= H+(player.height/2)) then
-		-- 	gameOver = true
-		-- 	composer.gotoScene("gameOver","slideLeft",500)
-		-- end
 	end
 end
 
