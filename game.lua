@@ -11,6 +11,8 @@ local blocks = require("classes.blocks")
 local spike = require("classes.spike")
 local score = require("classes.score")
 local powerUp = require("classes.powerUps")
+local animation = require("classes.animation")
+local sequences = require("sequences")
 
 local scene = composer.newScene()
 local runtime = 0
@@ -33,8 +35,8 @@ local parPowerUpSpeed = 6
 local parZeroChamberSpeed = 2
 local parSpeed = parDefaultSpeed
 
-local parDefaultJumpForce = -17
-local parPowerUpJumpForce = -22
+local parDefaultJumpForce = -37
+local parPowerUpJumpForce = -45
 local parJumpForce = parDefaultJumpForce
 
 local parDefaultScoreMultiplier = 1
@@ -58,7 +60,7 @@ local pauseButton
 local function setPhysics() -- INICIAR E CONFIGURAR A SIMULAÇÃO DE FÍSICA
 	physics.start(true)
 	physics.setGravity(0,parGravity)
-	--physics.setDrawMode("hybrid")
+	physics.setDrawMode("hybrid")
 end
 
 local function jump() -- AÇÃO DE PULO
@@ -153,6 +155,8 @@ local function onPaused()
 	switchButtonArea.isHitTestable = false
 	pauseButton.isVisible = false
 	
+	player:pause()
+	
 	composer.showOverlay("pause", {effect = "fade", time = 200, isModal = true})
 end
 
@@ -164,6 +168,8 @@ function scene:resumeGame()
 	jumpButtonArea.isHitTestable = true
 	switchButtonArea.isHitTestable = true
 	pauseButton.isVisible = true
+	
+	player:play()
 end
 
 local function playerCollider( self,event ) 
@@ -272,11 +278,20 @@ function scene:create(event)
 	
 	--INSTANCIAR PERSONAGEM
 
-	player = display.newRect(parPlayerXPosition,parPlayerYPosition,W*.05,H*.15)
-	player:setFillColor(0)
+	player = animation.newAnimation("char1SpriteSheet.png", 120, 119, 21, sequences.char1)
+	player.x = parPlayerXPosition
+	player.y = parPlayerYPosition
+	player.width = W*.09
+	player.height = H*.15
+	player.xScale = player.width / 120
+	player.yScale = player.height / 119
+	
 	physics.addBody(player,"dynamic",
 	{ bounce=0},
-	{ shape={W*.010,H*0, W*.010,H*0.08, W*-.010,H*0.08, W*-.010,H*0}, isSensor=true}
+	{ shape={- player.width * .4 , 0,
+			   player.width * .4 , 0,
+			   player.width * .4 , player.height * .5,
+			 - player.width * .4 , player.height * .5}, isSensor=true}
 	)
 	player.isFixedRotation=true
 	player.canJump = 0
@@ -284,6 +299,9 @@ function scene:create(event)
 	player:addEventListener( "collision", player)
 	player.isSleepingAllowed = false
 
+	player:setSequence("running")
+	player:play()
+	
 	-- INSTANCIAR ELEMENTOS DE CENÁRIO
 
 	blocks.newBlock("neutral",W*1.5,H*(0.8275),(W*3.5),H*.6) --chao
@@ -337,12 +355,14 @@ function scene:create(event)
 
 	-- INSTANCIAR BOTÕES DE AÇÃO
 
-	jumpButtonArea = display.newRect(HUDGroup,W/4*3,H/2,W/2,H)
+	jumpButtonArea = display.newRect(HUDGroup, W * .5 , H * .5 , display.actualContentWidth * .5, display.actualContentHeight)
+	jumpButtonArea.anchorX = 0
 	jumpButtonArea.alpha = 0
 	jumpButtonArea:addEventListener("touch",onJumpButtonTouch)
 	jumpButtonArea.isHitTestable = true
 
-	switchButtonArea = display.newRect(HUDGroup,W/4,H/2,W/2,H)
+	switchButtonArea = display.newRect(HUDGroup, W * .5, H * .5, display.actualContentWidth * .5, display.actualContentHeight)
+	switchButtonArea.anchorX = 1
 	switchButtonArea.alpha = 0
 	switchButtonArea:addEventListener("touch",onSwitchButtonTouch)	
 	switchButtonArea.isHitTestable = true
