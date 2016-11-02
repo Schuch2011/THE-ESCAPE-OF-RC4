@@ -60,7 +60,7 @@ local pauseButton
 local function setPhysics() -- INICIAR E CONFIGURAR A SIMULAÇÃO DE FÍSICA
 	physics.start(true)
 	physics.setGravity(0,parGravity)
-	physics.setDrawMode("hybrid")
+	--physics.setDrawMode("hybrid")
 end
 
 local function jump() -- AÇÃO DE PULO
