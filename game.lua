@@ -67,6 +67,9 @@ local function jump() -- AÇÃO DE PULO
 	player:applyForce(0,parJumpForce,player.x,player.y)
 	player:setLinearVelocity( 0,0 )
 	player.canJump = player.canJump - 1
+	
+	player:setSequence("jumping")
+	player:play()
 end
 
 local function switch() -- MECÂNICA DE INVERSÃO DOS ELEMENTOS DO CENÁRIO
@@ -174,7 +177,7 @@ end
 
 local function playerCollider( self,event ) 
     if (event.phase == "began") then
-    	-- RECOMEÇA A CONTAGEM DE PULOS QUANDO O PERSONAGEM ESTÁ COM OS PÉS NO CHÃO
+		-- RECOMEÇA A CONTAGEM DE PULOS QUANDO O PERSONAGEM ESTÁ COM OS PÉS NO CHÃO
     	if ( event.selfElement == 2 and event.other.objType == "ground" ) then
         	self.canJump = 2
     	end
@@ -237,7 +240,6 @@ local function playerCollider( self,event )
         	parIsZeroGravity=true
         	jumpButtonArea.isHitTestable=false
     	end  
- 	
     end
 end
 
@@ -278,13 +280,13 @@ function scene:create(event)
 	
 	--INSTANCIAR PERSONAGEM
 
-	player = animation.newAnimation("char1SpriteSheet.png", 120, 119, 21, sequences.char1)
+	player = animation.newAnimation("images/RC4_CRV1SpriteSheet.png", 140, 125, 23, sequences.RC4_CRV1)
 	player.x = parPlayerXPosition
 	player.y = parPlayerYPosition
 	player.width = W*.09
 	player.height = H*.15
-	player.xScale = player.width / 120
-	player.yScale = player.height / 119
+	player.xScale = player.width / 140
+	player.yScale = player.height / 125
 	
 	physics.addBody(player,"dynamic",
 	{ bounce=0},
@@ -445,6 +447,22 @@ function updateFrames()
 	local dt = getDeltaTime()
 
 	if not isPaused then
+		local vx, vy = player:getLinearVelocity()
+		
+		-- ANIMAÇÃO DO PERSONAGEM CAINDO
+		if vy > 0 then
+			if player.sequence ~= "falling" then
+				player:setSequence("falling")
+				player:play()
+			end
+		-- ANIMAÇÃO DO PERSONAGEM CORRENDO
+		elseif vy == 0 then
+			if player.sequence ~= "running" then
+				player:setSequence("running")
+				player:play()
+			end
+		end
+		
 		-- MOVIMENTAR ELEMENTOS DE CENÁRIO
 
 		for i = 1, backgroundGroup.numChildren do
