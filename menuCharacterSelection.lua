@@ -18,7 +18,7 @@ function scene:create(event)
 	character1Square = display.newRect(W/2,H*.43,W*.08,H*.3)
 	character1Square:setFillColor(0,1,0)
 
-	character1Text = display.newText("CHARACTER 1",W/2,H*.75,native.systemFont,20)
+	character1Text = display.newText("CHARACTER 1",W/2,H*.75,native.systemFontBold,20)
 	character1Text:setFillColor(1)
 
 	sceneGroup:insert(backButton)

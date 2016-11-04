@@ -14,22 +14,41 @@ function scene:create()
 	
 	local resumeButton = widget.newButton({
 		x = _W * .5,
-		y = _H * .5,
-		width = _W * .35,
-		height = _H * .2,
+		y = _H * .25,
+		width = _W * .50,
+		height = _H * .25,
 		shape = "roundedRect",
 		fillColor = {default = {0, 1, 0}, over = {0, 1, 0}},
 		cornerRadius = 10,
 		label = "RESUME",
 		labelColor = {default = {0, 0, 0}, over = {0, 0, 0}},
 		fontSize = 25,
+		font = native.systemFontBold,
 		onRelease = function()
 			composer.hideOverlay("fade", 200)
+		end
+	})
+
+	local backToMenuButton = widget.newButton({
+		x = _W * .5,
+		y = _H * .75,
+		width = _W * .50,
+		height = _H * .25,
+		shape = "roundedRect",
+		fillColor = {default = {0, 1, 0}, over = {0, 1, 0}},
+		cornerRadius = 10,
+		label = "BACK TO MENU",
+		labelColor = {default = {0, 0, 0}, over = {0, 0, 0}},
+		fontSize = 25,
+		font = native.systemFontBold,
+		onRelease = function()
+			composer.gotoScene("menu","slideRight",500)
 		end
 	})
 	
 	sceneGroup:insert(background)
 	sceneGroup:insert(resumeButton)
+	sceneGroup:insert(backToMenuButton)
 end
 
 function scene:show()

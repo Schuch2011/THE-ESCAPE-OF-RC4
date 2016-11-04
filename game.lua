@@ -43,8 +43,11 @@ local parDefaultScoreMultiplier = 1
 local parPowerUpScoreMultiplier = 2
 local parScoreMultiplier = 1
 
-local parPlayerYPosition = 0.65*H
+local parPlayerYPosition = 0.55*H
 local parPlayerXPosition = 0.25*W
+local parVerticalFollowRate = 5  -- Frames necessários para a câmera alcançar a posição vertical padrão do personagem
+local parHorizontalFollowRate = 120  -- Frames necessários para a câmera alcançar a posição horizontal padrão do personagem
+local tempPosition
 
 local parGravity = 60
 local parAccelerometerSensitivity = 25
@@ -489,8 +492,8 @@ function updateFrames()
 		-- CÂMERA ACOMPANHAR PLAYER
 
 		if (player.y > parPlayerYPosition or player.y<parPlayerYPosition) then
-			local difY = player.y-parPlayerYPosition
-			player.y = parPlayerYPosition
+			local difY = (player.y-parPlayerYPosition)/parVerticalFollowRate
+			player.y = player.y-(player.y-parPlayerYPosition)/parVerticalFollowRate
 
 			for i = 1, backgroundGroup.numChildren do
 				if backgroundGroup[i].speed then
@@ -508,7 +511,37 @@ function updateFrames()
 			for i=1, darkGroup.numChildren do
 				darkGroup[i].y = darkGroup[i].y - difY
 			end
-		end 
+		end
+
+		--HORIZONTALMENTE, APÓS O FIM DA OBSTRUÇÃO
+
+		if (player.x < parPlayerXPosition) then
+
+			if (player.x == tempPosition) then
+
+				local difX = (player.x-parPlayerXPosition)/parHorizontalFollowRate
+				player.x = player.x+parPlayerXPosition/parHorizontalFollowRate
+
+	
+				for i = 1, backgroundGroup.numChildren do
+					if backgroundGroup[i].speed then
+						backgroundGroup[i].x = backgroundGroup[i].x - (difX * backgroundGroup[i].speed.x)
+					end
+	 			end
+				for i=1, movableGroup.numChildren do
+					movableGroup[i].x = movableGroup[i].x - difX
+				end	
+					
+				for i=1, lightGroup.numChildren do
+					lightGroup[i].x = lightGroup[i].x - difX
+				end
+			
+				for i=1, darkGroup.numChildren do
+					darkGroup[i].x = darkGroup[i].x - difX
+				end
+			end
+			tempPosition = player.x
+		end
 
 		-- GAMEOVER QUANDO PERSONAGEM SAI PARA FORA DA TELA
 
@@ -518,6 +551,7 @@ function updateFrames()
 
 			composer.gotoScene("gameOver","slideLeft",500)
 		end
+		print(player.x)
 	end
 end
 
