@@ -12,7 +12,6 @@ local spike = require("classes.spike")
 local saveState = require("classes.preference")
 local powerUp = require("classes.powerUps")
 local animation = require("classes.animation")
-local sequences = require("sequences")
 
 local scene = composer.newScene()
 local runtime = 0
@@ -39,8 +38,8 @@ local parPowerUpSpeed = 6
 local parZeroChamberSpeed = 2
 local parSpeed = parDefaultSpeed
 
-local parDefaultJumpForce = -20---37
-local parPowerUpJumpForce = -26---45
+local parDefaultJumpForce = -17---20
+local parPowerUpJumpForce = -25---26
 local parJumpForce = parDefaultJumpForce
 
 local parDefaultScoreMultiplier = 1
@@ -165,7 +164,7 @@ local function onPaused()
 	switchButtonArea.isHitTestable = false
 	pauseButton.isVisible = false
 	
-	--player:pause()
+	player:pause()
 	
 	composer.showOverlay("scenes.pause", {effect = "fade", time = 200, isModal = true})
 end
@@ -179,12 +178,13 @@ function scene:resumeGame()
 	switchButtonArea.isHitTestable = true
 	pauseButton.isVisible = true
 	
-	--player:play()
+	player:play()
 end
 
 local function playerCollider( self,event ) 
     if (event.phase == "began") then
 		-- RECOMEÇA A CONTAGEM DE PULOS QUANDO O PERSONAGEM ESTÁ COM OS PÉS NO CHÃO
+		
     	if ( event.selfElement == 2 and event.other.objType == "ground" ) then
         	self.canJump = 2
     	end
@@ -296,31 +296,23 @@ function scene:create(event)
 
 	local charId= saveState.getValue("selectedCharacter")
 	
-	player = display.newRect(W*.4,H*.65,W*.05,H*.15)
-	if (charId==1) then
-		player:setFillColor(1,0.5,0)
-	elseif (charId==2) then
-		player:setFillColor(0,1,0)
-	elseif (charId==3) then
-		player:setFillColor(1,0,0)
-	elseif (charId==4) then
-		player:setFillColor(1,1,0)
-	end
-	
-	--player = animation.newAnimation("images/RC4_CRV1SpriteSheet.png", 140, 125, 23, sequences.RC4_CRV1)
-	-- player.x = parPlayerXPosition
-	-- player.y = parPlayerYPosition
-	-- player.width = W*.09
-	-- player.height = H*.15
-	-- player.xScale = player.width / 140
-	-- player.yScale = player.height / 125
+	player = animation.newAnimation("images/" .. charId .. ".png", 140, 125, 21)
+	player.x = parPlayerXPosition
+	player.y = parPlayerYPosition
+	player.width = W*.09
+	player.height = H*.15
+	player.xScale = player.width / 140
+	player.yScale = player.height / 125
 	
 	physics.addBody(player,"dynamic",
-	{ bounce=0},
-	{ shape={- player.width * .4 , 0,
-			   player.width * .4 , 0,
-			   player.width * .4 , player.height * .5,
-			 - player.width * .4 , player.height * .5}, isSensor=true}
+	{ shape={- player.width * .3 , - player.height * .4,
+			   player.width * .35, - player.height * .4,
+			   player.width * .35,   player.height * .5,
+			 - player.width * .3 ,   player.height * .5}, bounce=0},
+	{ shape={- player.width * .1, 0,
+			   player.width * .1, 0,
+			   player.width * .1, player.height * .5,
+			 - player.width * .1, player.height * .5}, isSensor=true}
 	)
 	player.isFixedRotation=true
 	player.canJump = 0
@@ -328,8 +320,8 @@ function scene:create(event)
 	player:addEventListener( "collision", player)
 	player.isSleepingAllowed = false
 
-	--player:setSequence("running")
-	--player:play()
+	player:setSequence("running")
+	player:play()
 
 	self.blocks = {}
 	for i = 1, #self.level.blocks do
@@ -426,12 +418,9 @@ function scene:hide(event)
 	local phase = event.phase
 	
 	if (phase == "will") then
-		
-	elseif (phase == "did") then
-	
-		--physics.pause()
-	
 		Runtime:removeEventListener("enterFrame",updateFrames)
+	elseif (phase == "did") then
+		
 	end
 end
 
