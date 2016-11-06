@@ -17,6 +17,7 @@ local sequences = require("sequences")
 local scene = composer.newScene()
 local runtime = 0
 local currentLevel
+local charID
 
 --local gameOver = false
 local isPaused = true
@@ -39,7 +40,7 @@ local parZeroChamberSpeed = 2
 local parSpeed = parDefaultSpeed
 
 local parDefaultJumpForce = -20---37
-local parPowerUpJumpForce = -45
+local parPowerUpJumpForce = -26---45
 local parJumpForce = parDefaultJumpForce
 
 local parDefaultScoreMultiplier = 1
@@ -122,7 +123,7 @@ end
 
 local function onAccelerate( event )
 	if (parIsZeroGravity==true) then
-    	physics.setGravity(0,event.yInstant*-1*parAccelerometerSensitivity)
+    	physics.setGravity(0,event.zInstant*1*parAccelerometerSensitivity)
     	parSpeed = parZeroChamberSpeed
 	end
 end
@@ -292,9 +293,20 @@ function scene:create(event)
 	nearClouds.speed = {x = .15, y = .05}
 	
 	--INSTANCIAR PERSONAGEM
+
+	local charId= saveState.getValue("selectedCharacter")
 	
 	player = display.newRect(W*.4,H*.65,W*.05,H*.15)
-	player:setFillColor(0)
+	if (charId==1) then
+		player:setFillColor(1,0.5,0)
+	elseif (charId==2) then
+		player:setFillColor(0,1,0)
+	elseif (charId==3) then
+		player:setFillColor(1,0,0)
+	elseif (charId==4) then
+		player:setFillColor(1,1,0)
+	end
+	
 	--player = animation.newAnimation("images/RC4_CRV1SpriteSheet.png", 140, 125, 23, sequences.RC4_CRV1)
 	-- player.x = parPlayerXPosition
 	-- player.y = parPlayerYPosition
@@ -396,6 +408,9 @@ function scene:show( event )
     local sceneGroup = self.view
     local phase = event.phase
 
+
+    
+
     if ( phase == "will" ) then
     elseif ( phase == "did" ) then
     	--gameOver = false
@@ -428,9 +443,10 @@ function updateFrames()
 	local dt = getDeltaTime()
 
 	if not isPaused then
-		score = score + 1
+
+		score = score + 1*(parScoreMultiplier)
 		if score%10 == 0 then
-			--scoreCounter.text= "SCORE: "..score
+			scoreCounter.text= "SCORE: "..score
 		end
 
 		local vx, vy = player:getLinearVelocity()

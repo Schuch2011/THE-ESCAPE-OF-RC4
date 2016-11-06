@@ -11,7 +11,7 @@ function _M.newCoin(xPos,yPos)
 	coin.y = yPos
 	coin.objType = "coin"
 	physics.addBody(coin,"static",{bounce=0, isSensor=true})
-	totalCoins = totalCoins + 1
+
 	return coin
 end
 

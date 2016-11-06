@@ -4,7 +4,5 @@ system.activate('multitouch')
 local composer = require("composer")
 composer.recycleOnSceneChange = true
 
-totalCoins = 0
-
 composer.gotoScene("scenes.menu",{time=500, effect="slideLeft"})
 
