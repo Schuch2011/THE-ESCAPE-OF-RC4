@@ -6,5 +6,5 @@ composer.recycleOnSceneChange = true
 
 totalCoins = 0
 
-composer.gotoScene("menu",{time=500, effect="slideLeft"})
+composer.gotoScene("scenes.menu",{time=500, effect="slideLeft"})
 

@@ -42,7 +42,7 @@ function scene:create()
 		fontSize = 25,
 		font = native.systemFontBold,
 		onRelease = function()
-			composer.gotoScene("menu","slideRight",500)
+			composer.gotoScene("scenes.menu","slideRight",500)
 		end
 	})
 	
