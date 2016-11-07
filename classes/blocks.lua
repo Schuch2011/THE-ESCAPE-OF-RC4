@@ -30,6 +30,30 @@ function _M.newBlock(type,xPos,yPos,width,height)
 		movableGroup:insert(box)
 		box.isSensor=true
 		box.objType = "fatal"
+	elseif (type == "portal1") then
+		box:setFillColor(1,0.5,0)
+		box.alpha=0.5
+		movableGroup:insert(box)
+		box.isSensor=true
+		box.objType = "portal1"
+	elseif (type == "portal2") then
+		box:setFillColor(0,1,0)
+		box.alpha=0.5
+		movableGroup:insert(box)
+		box.isSensor=true
+		box.objType = "portal2"
+	elseif (type == "portal3") then
+		box:setFillColor(1,0,0)
+		box.alpha=0.5
+		movableGroup:insert(box)
+		box.isSensor=true
+		box.objType = "portal3"
+	elseif (type == "portal4") then
+		box:setFillColor(1,1,0)
+		box.alpha=0.5
+		movableGroup:insert(box)
+		box.isSensor=true
+		box.objType = "portal4"
 	elseif (type == "startZeroGravity") then
 		movableGroup:insert(box)
 		box.isSensor=true

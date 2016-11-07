@@ -21,10 +21,11 @@ return {
 		{type="neutral", 			x=W*12.5, 		y=H*(-.4), 			w=(W*.15), 		h=H*.2},
 		{type="fatal", 				x=W*15, 		y=H*(1.15), 		w=(W*30), 		h=H*.3},
 		{type="neutral", 			x=W*15, 		y=H*(-1.4), 		w=(W*30), 		h=H*.3},
+		{type="portal1", 			x=W*1.5, 		y=H*0.45, 			w=(W*.15), 		h=H*.2},
 		{type="startZeroGravity", 	x=W*15.5, 		y=H*(-.35), 		w=(W*0.2), 		h=H*2},
-		{type="neutral", 			x=W*16.5, 		y=H*(-.5), 			w=(W*.15), 		h=H*.4},
-		{type="neutral", 			x=W*17, 		y=H*(-.65), 		w=(W*.15), 		h=H*.7},
-		{type="endGame", 			x=W*19.58, 		y=H*(-.5), 			w=(W*.20), 		h=H*2},
+		{type="neutral", 			x=W*17.5, 		y=H*(-.5), 			w=(W*.15), 		h=H*.4},
+		{type="neutral", 			x=W*18, 		y=H*(-.65), 		w=(W*.15), 		h=H*.7},
+		{type="endGame", 			x=W*20.58, 		y=H*(-.5), 			w=(W*.20), 		h=H*2},
 	},
 
 	spikes = {

@@ -9,6 +9,12 @@ local saveState = require("classes.preference")
 
 local scene = composer.newScene()
 
+local slotSelected = 1
+local initXPos = 0
+local xView = 0
+local difX = 0
+
+
 local function onCharacterButtonRelease(event)
 	scrollView:removeSelf()
 	scrollView=nil
@@ -16,38 +22,58 @@ local function onCharacterButtonRelease(event)
 	composer.gotoScene("scenes.menuStageSelection", {effect = "slideLeft", time = 500})
 end
 
-local function scrollListener(event)
+local function scrollListener(event) -- CONTROLA O SCROLL DA SELEÇÃO DOS PERSONAGENS 
 	local phase = event.phase
-	if ( phase == "ended" ) then
-		local xView, yView = scrollView:getContentPosition()
-		xView = -1*(xView)
-		local temp = math.floor(xView/(W/2))
-		if (temp <= 0) then
-			scrollView:scrollToPosition
-			{
-   				x = 0*W,
-   				time = 200,
-			}			
-		elseif (temp == 1 or temp == 2) then
-			scrollView:scrollToPosition
-			{
-   				x = -1*W,
-   				time = 200,
-			}	
-		elseif (temp == 3 or temp == 4) then
-			scrollView:scrollToPosition
-			{
-   				x = -2*W,
-   				time = 200,
-			}	
-		elseif (temp >= 5) then
-			scrollView:scrollToPosition
-			{
-   				x = -3*W,
-   				time = 200,
-			}	
-		end
+
+	if ( phase == "began" ) then
+		initXPos = scrollView:getContentPosition()
 	end
+	if ( phase == "ended" ) then
+		xView = scrollView:getContentPosition()
+		difX = initXPos-xView
+
+		if (difX > 40) then
+			if (slotSelected<4) then
+				scrollView:scrollToPosition			
+				{
+   					x = -W+initXPos,
+   					time = 200,
+				}
+				slotSelected = slotSelected +1 
+			else
+				scrollView:scrollToPosition			
+				{
+   					x = initXPos,
+   					time = 200,
+				}
+			end
+		elseif (difX < -40) then
+			if (slotSelected>1) then
+				scrollView:scrollToPosition			
+				{
+   					x = initXPos+W,
+   					time = 200,
+				}
+				slotSelected = slotSelected - 1 
+			else
+				scrollView:scrollToPosition			
+				{
+   					x = initXPos,
+   					time = 200,
+				}
+			end
+		else
+			scrollView:scrollToPosition			
+			{
+   				x = initXPos,
+   				time = 200,
+			}
+		end
+
+
+	end
+
+
 	return true
 end
 
@@ -66,7 +92,8 @@ function scene:create(event)
 		listener = scrollListener,
 		leftPadding = W*0,
 		rightPadding = W*0.25,
-		hideBackground = true
+		hideBackground = true,
+		--friction = 10, 
 	})
 
 	local backButton = widget.newButton({

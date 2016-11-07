@@ -33,13 +33,13 @@ local parPowerUp3Duration = 4000
 local parPowerUp4Duration = 4000
 
 
-local parDefaultSpeed = 4--4--10
+local parDefaultSpeed = 4--10
 local parPowerUpSpeed = 6
 local parZeroChamberSpeed = 2
 local parSpeed = parDefaultSpeed
 
-local parDefaultJumpForce = -17---20
-local parPowerUpJumpForce = -25---26
+local parDefaultJumpForce = -21---20
+local parPowerUpJumpForce = -28---26
 local parJumpForce = parDefaultJumpForce
 
 local parDefaultScoreMultiplier = 1
@@ -49,11 +49,11 @@ local parScoreMultiplier = 1
 local parPlayerYPosition = 0.55*H
 local parPlayerXPosition = 0.25*W
 local parVerticalFollowRate = 5  -- Frames necessários para a câmera alcançar a posição vertical padrão do personagem
-local parHorizontalFollowRate = 120  -- Frames necessários para a câmera alcançar a posição horizontal padrão do personagem
+local parHorizontalFollowRate = 15  -- Frames necessários para a câmera alcançar a posição horizontal padrão do personagem
 local tempPosition
 
 local parGravity = 60
-local parAccelerometerSensitivity = 25
+local parAccelerometerSensitivity = 500
 local parIsZeroGravity=false
 
 
@@ -225,6 +225,29 @@ local function playerCollider( self,event )
 
 			composer.gotoScene("scenes.gameOver",{params = currentLevel, effect="slideLeft",time = 500})
     	end
+
+    		-- PORTAIS ESPECIAIS
+    	if ( event.selfElement == 1 and event.other.objType == "portal1" and charId~=1) then
+       		Runtime:removeEventListener( "accelerometer", onAccelerate )
+        	parIsZeroGravity = false
+			composer.gotoScene("scenes.gameOver",{params = currentLevel, effect="slideLeft",time = 500})
+    	end
+    	if ( event.selfElement == 1 and event.other.objType == "portal2" and charId~=2) then
+       		Runtime:removeEventListener( "accelerometer", onAccelerate )
+        	parIsZeroGravity = false
+			composer.gotoScene("scenes.gameOver",{params = currentLevel, effect="slideLeft",time = 500})
+    	end
+    	if ( event.selfElement == 1 and event.other.objType == "portal3" and charId~=3) then
+       		Runtime:removeEventListener( "accelerometer", onAccelerate )
+        	parIsZeroGravity = false
+			composer.gotoScene("scenes.gameOver",{params = currentLevel, effect="slideLeft",time = 500})
+    	end
+    	if ( event.selfElement == 1 and event.other.objType == "portal4" and charId~=4) then
+       		Runtime:removeEventListener( "accelerometer", onAccelerate )
+        	parIsZeroGravity = false
+			composer.gotoScene("scenes.gameOver",{params = currentLevel, effect="slideLeft",time = 500})
+    	end
+
     	    -- COLISÃO COM POWERUP 1 -- AUMENTO TEMPORÁRIO NA VELOCIDADE DO JOGADOR
 		if ( event.selfElement == 1 and event.other.objType == "powerUp1" ) then
         	local temp = event.other
@@ -251,6 +274,7 @@ local function playerCollider( self,event )
     	end  
     	if ( event.selfElement == 1 and event.other.objType == "startZeroGravity" ) then
         	parIsZeroGravity=true
+        	physics.setGravity(0,0)
         	jumpButtonArea.isHitTestable=false
     	end  
     end
@@ -279,8 +303,31 @@ function scene:create(event)
 	-- INSTANCIAR BACKGROUND
 	
 	local backgroundColor = display.newRect(sceneGroup,W/2,H/2, W*1.2,H*1.2)
- 	backgroundColor:setFillColor(0.41,0.59,1)
+ 	backgroundColor:setFillColor(0.3764705882352941,0.5725490196078431,0.7686274509803922)
 
+ 	for i = 1, 3 do
+		local background = display.newImage(backgroundGroup, "images/background/background_"..math.random(7)..".png",0, -50)
+		background.anchorX, background.anchorY = 0,0
+		background.xScale, background.yScale = 0.5,0.5
+		background.x = (i-1)*background.width*background.xScale-(i-1)*1-100
+		background.speed = {x = 0.03, y=0.05}
+	end
+	for i = 1, 4 do
+		local middleGround = display.newImage(backgroundGroup, "images/background/middleGround_"..math.random(6)..".png",0, -50)
+		middleGround.anchorX, middleGround.anchorY = 0,0
+		middleGround.xScale, middleGround.yScale = 0.5,0.5
+		middleGround.x = (i-1)*middleGround.width*middleGround.xScale-(i-1)*1-100
+		middleGround.speed = {x = 0.07, y=0.1}
+	end
+	for i = 1, 4 do
+		local foreGround = display.newImage(backgroundGroup, "images/background/foreGround_"..math.random(5)..".png",0, -70)
+		foreGround.anchorX, foreGround.anchorY = 0,0
+		foreGround.xScale, foreGround.yScale = 0.5,0.5
+		foreGround.x = (i-1)*foreGround.width*foreGround.xScale-(i-1)*1-100
+		foreGround.speed = {x = 0.15, y=0.2}
+	end
+
+	--[[
 	local sky = display.newImage(backgroundGroup, "images/sky.png", 0, 0)
  	sky.anchorX, sky.anchorY = 0, 0
 
@@ -291,10 +338,11 @@ function scene:create(event)
 	local nearClouds = display.newImage(backgroundGroup, "images/nearClouds.png", 0, -90)
 	nearClouds.anchorX, nearClouds.anchorY = 0, 0
 	nearClouds.speed = {x = .15, y = .05}
-	
+	--]]
+
 	--INSTANCIAR PERSONAGEM
 
-	local charId= saveState.getValue("selectedCharacter")
+	charId= saveState.getValue("selectedCharacter")
 	
 	player = animation.newAnimation("images/" .. charId .. ".png", 140, 125, 21)
 	player.x = parPlayerXPosition
@@ -302,23 +350,24 @@ function scene:create(event)
 	player.width = W*.09
 	player.height = H*.15
 	player.xScale = player.width / 140
-	player.yScale = player.height / 125
+	player.yScale = player.xScale--player.height / 125
 	
 	physics.addBody(player,"dynamic",
 	{ shape={- player.width * .3 , - player.height * .4,
 			   player.width * .35, - player.height * .4,
 			   player.width * .35,   player.height * .5,
 			 - player.width * .3 ,   player.height * .5}, bounce=0},
-	{ shape={- player.width * .1, 0,
-			   player.width * .1, 0,
-			   player.width * .1, player.height * .5,
-			 - player.width * .1, player.height * .5}, isSensor=true}
+	{ shape={- player.width * .10, 0,
+			   player.width * .15, 0,
+			   player.width * .15, player.height * .6,
+			 - player.width * .10, player.height * .6}, isSensor=true}
 	)
 	player.isFixedRotation=true
 	player.canJump = 0
 	player.collision = playerCollider
 	player:addEventListener( "collision", player)
 	player.isSleepingAllowed = false
+	player.isBullet = true
 
 	player:setSequence("running")
 	player:play()
@@ -375,11 +424,11 @@ function scene:create(event)
 	-- CONTADOR DE MOEDAS
 
 	scoreCounter = display.newText(HUDGroup,"SCORE: "..score,W*.4,H*.11,native.systemFontBold,25)
-	scoreCounter:setFillColor(0)
+	scoreCounter:setFillColor(1,1,0)
 
 	totalCoins = saveState.getValue("stage"..currentLevel.."totalCoins")
 	coinsCounter = display.newText(HUDGroup,"COINS: "..coins.." / "..totalCoins,W*.8,H*.11,native.systemFontBold,25)
-	coinsCounter:setFillColor(0)
+	coinsCounter:setFillColor(1,1,0)
 
 	HUDGroup:insert(pauseButton)
 
@@ -419,6 +468,7 @@ function scene:hide(event)
 	
 	if (phase == "will") then
 		Runtime:removeEventListener("enterFrame",updateFrames)
+		Runtime:removeEventListener( "accelerometer", onAccelerate )
 	elseif (phase == "did") then
 		
 	end
@@ -430,6 +480,7 @@ scene:addEventListener("hide",scene)
 
 function updateFrames()
 	local dt = getDeltaTime()
+	print(player.x)
 
 	if not isPaused then
 
@@ -463,6 +514,9 @@ function updateFrames()
  					backgroundGroup[i].x = W*1+backgroundGroup[i].width
  				end
  			end
+ 			if backgroundGroup[i].x < -1* backgroundGroup[i].width*backgroundGroup[i].xScale-100 then
+ 				backgroundGroup[i].x = 3* backgroundGroup[i].width*backgroundGroup[i].xScale-100
+ 			end 
 
  		end
 		for i=1, movableGroup.numChildren do
@@ -480,8 +534,16 @@ function updateFrames()
 		-- CÂMERA ACOMPANHAR PLAYER
 
 		if (player.y > parPlayerYPosition or player.y<parPlayerYPosition) then
-			local difY = (player.y-parPlayerYPosition)/parVerticalFollowRate
-			player.y = player.y-(player.y-parPlayerYPosition)/parVerticalFollowRate
+			local difY
+
+			--TESTA SE A DIFERENÇA ENTRE A POSIÇÃO VERTICAL ATUAL E A PADRÃO É POUCA
+			if ((player.y-(player.y-parPlayerYPosition)/parVerticalFollowRate+1)>parPlayerYPosition) and ((player.y-(player.y-parPlayerYPosition)/parVerticalFollowRate-1)<parPlayerYPosition) then
+				difY = player.y-parPlayerYPosition
+				player.y = parPlayerYPosition				
+			else
+				player.y = player.y-(player.y-parPlayerYPosition)/parVerticalFollowRate
+				difY = (player.y-parPlayerYPosition)/parVerticalFollowRate
+			end
 
 			for i = 1, backgroundGroup.numChildren do
 				if backgroundGroup[i].speed then
@@ -503,14 +565,19 @@ function updateFrames()
 
 		--HORIZONTALMENTE, APÓS O FIM DA OBSTRUÇÃO
 
-		if (player.x < parPlayerXPosition) then
+		if (player.x < parPlayerXPosition or player.x > parPlayerXPosition) then
+			local difX
 
 			if (player.x == tempPosition) then
 
-				local difX = (player.x-parPlayerXPosition)/parHorizontalFollowRate
-				player.x = player.x+parPlayerXPosition/parHorizontalFollowRate
+				if ((player.x-(player.x-parPlayerXPosition)/parHorizontalFollowRate+1)>parPlayerXPosition) and ((player.x-(player.x-parPlayerXPosition)/parHorizontalFollowRate-1)<parPlayerXPosition) then
+					difX = player.x-parPlayerXPosition
+					player.x = parPlayerXPosition				
+				else
+					player.x = player.x-(player.x-parPlayerXPosition)/parHorizontalFollowRate
+					difX = (player.x-parPlayerXPosition)/parHorizontalFollowRate
+				end
 
-	
 				for i = 1, backgroundGroup.numChildren do
 					if backgroundGroup[i].speed then
 						backgroundGroup[i].x = backgroundGroup[i].x - (difX * backgroundGroup[i].speed.x)
