@@ -6,11 +6,8 @@ local H = display.contentHeight
 local composer = require("composer")
 local physics = require("physics")
 local widget = require( "widget" )
-local coin = require("classes.coins")
-local blocks = require("classes.blocks")
-local spike = require("classes.spike")
+local tiles = require("classes.tiles")
 local saveState = require("classes.preference")
-local powerUp = require("classes.powerUps")
 local animation = require("classes.animation")
 
 local scene = composer.newScene()
@@ -33,20 +30,20 @@ local parPowerUp3Duration = 4000
 local parPowerUp4Duration = 4000
 
 
-local parDefaultSpeed = 4--10
+local parDefaultSpeed = 3--10
 local parPowerUpSpeed = 6
 local parZeroChamberSpeed = 2
 local parSpeed = parDefaultSpeed
 
-local parDefaultJumpForce = -21---20
-local parPowerUpJumpForce = -28---26
+local parDefaultJumpForce = -15---20
+local parPowerUpJumpForce = -22---26
 local parJumpForce = parDefaultJumpForce
 
 local parDefaultScoreMultiplier = 1
 local parPowerUpScoreMultiplier = 2
 local parScoreMultiplier = 1
 
-local parPlayerYPosition = 0.55*H
+local parPlayerYPosition = 0.70*H
 local parPlayerXPosition = 0.25*W
 local parVerticalFollowRate = 5  -- Frames necessários para a câmera alcançar a posição vertical padrão do personagem
 local parHorizontalFollowRate = 15  -- Frames necessários para a câmera alcançar a posição horizontal padrão do personagem
@@ -305,40 +302,27 @@ function scene:create(event)
 	local backgroundColor = display.newRect(sceneGroup,W/2,H/2, W*1.2,H*1.2)
  	backgroundColor:setFillColor(0.3764705882352941,0.5725490196078431,0.7686274509803922)
 
- 	for i = 1, 3 do
-		local background = display.newImage(backgroundGroup, "images/background/background_"..math.random(7)..".png",0, -50)
+ 	for i = 1, 4 do
+		local background = display.newImage(backgroundGroup, "images/background/background_5.png",0, 0)
 		background.anchorX, background.anchorY = 0,0
 		background.xScale, background.yScale = 0.5,0.5
 		background.x = (i-1)*background.width*background.xScale-(i-1)*1-100
 		background.speed = {x = 0.03, y=0.05}
 	end
 	for i = 1, 4 do
-		local middleGround = display.newImage(backgroundGroup, "images/background/middleGround_"..math.random(6)..".png",0, -50)
+		local middleGround = display.newImage(backgroundGroup, "images/background/middleGround_2.png",0, 0)
 		middleGround.anchorX, middleGround.anchorY = 0,0
 		middleGround.xScale, middleGround.yScale = 0.5,0.5
 		middleGround.x = (i-1)*middleGround.width*middleGround.xScale-(i-1)*1-100
 		middleGround.speed = {x = 0.07, y=0.1}
 	end
 	for i = 1, 4 do
-		local foreGround = display.newImage(backgroundGroup, "images/background/foreGround_"..math.random(5)..".png",0, -70)
+		local foreGround = display.newImage(backgroundGroup, "images/background/foreGround_1.png",0, 0)
 		foreGround.anchorX, foreGround.anchorY = 0,0
 		foreGround.xScale, foreGround.yScale = 0.5,0.5
 		foreGround.x = (i-1)*foreGround.width*foreGround.xScale-(i-1)*1-100
 		foreGround.speed = {x = 0.15, y=0.2}
 	end
-
-	--[[
-	local sky = display.newImage(backgroundGroup, "images/sky.png", 0, 0)
- 	sky.anchorX, sky.anchorY = 0, 0
-
-    local farClouds = display.newImage(backgroundGroup, "images/farClouds.png", 0, -90)
-	farClouds.anchorX, farClouds.anchorY = 0, 0
-	farClouds.speed = {x = .015, y = .0075}
-
-	local nearClouds = display.newImage(backgroundGroup, "images/nearClouds.png", 0, -90)
-	nearClouds.anchorX, nearClouds.anchorY = 0, 0
-	nearClouds.speed = {x = .15, y = .05}
-	--]]
 
 	--INSTANCIAR PERSONAGEM
 
@@ -357,10 +341,10 @@ function scene:create(event)
 			   player.width * .35, - player.height * .4,
 			   player.width * .35,   player.height * .5,
 			 - player.width * .3 ,   player.height * .5}, bounce=0},
-	{ shape={- player.width * .10, 0,
-			   player.width * .15, 0,
-			   player.width * .15, player.height * .6,
-			 - player.width * .10, player.height * .6}, isSensor=true}
+	{ shape={- player.width * .04, player.height * .5,
+			   player.width * .09, player.height * .5,
+			   player.width * .09, player.height * .6,
+			 - player.width * .04, player.height * .6}, isSensor=true}
 	)
 	player.isFixedRotation=true
 	player.canJump = 0
@@ -372,28 +356,36 @@ function scene:create(event)
 	player:setSequence("running")
 	player:play()
 
-	self.blocks = {}
-	for i = 1, #self.level.blocks do
-		local b = self.level.blocks[i]
-		table.insert(self.blocks, blocks.newBlock(b.type,b.x,b.y,b.w,b.h))
-	end
+	-- self.blocks = {}
+	-- for i = 1, #self.level.blocks do
+	-- 	local b = self.level.blocks[i]
+	-- 	table.insert(self.blocks, blocks.newBlock(b.type,b.x,b.y,b.w,b.h))
+	-- end
 
-	self.spikes = {}
-	for i = 1, #self.level.spikes do
-		local s = self.level.spikes[i]
-		table.insert(self.spikes, spike.newSpike(s.x,s.y))
-	end
+	-- self.spikes = {}
+	-- for i = 1, #self.level.spikes do
+	-- 	local s = self.level.spikes[i]
+	-- 	table.insert(self.spikes, spike.newSpike(s.x,s.y))
+	-- end
 
-	self.coins = {}
-	for i = 1, #self.level.coins do
-		local c = self.level.coins[i]
-		table.insert(self.coins, coin.newCoin(c.x,c.y))
-	end
+	-- self.coins = {}
+	-- for i = 1, #self.level.coins do
+	-- 	local c = self.level.coins[i]
+	-- 	table.insert(self.coins, coin.newCoin(c.x,c.y))
+	-- end
 
-	self.powerUps = {}
-	for i = 1, #self.level.powerUps do
-		local p = self.level.powerUps[i]
-		table.insert(self.powerUps, powerUp.newPowerUp(p.type,p.x,p.y))
+	-- self.powerUps = {}
+	-- for i = 1, #self.level.powerUps do
+	-- 	local p = self.level.powerUps[i]
+	-- 	table.insert(self.powerUps, powerUp.newPowerUp(p.type,p.x,p.y))
+	-- end
+	for i = 1, #self.level do
+		for j = 1, #self.level[i] do
+			local t = self.level[i][j]
+			if t ~= "Z" then
+				tiles.newTile(t,j,i)
+			end
+		end
 	end
 
 	-- INSTANCIAR BOTÕES DE AÇÃO
@@ -480,10 +472,8 @@ scene:addEventListener("hide",scene)
 
 function updateFrames()
 	local dt = getDeltaTime()
-	print(player.x)
-
+	
 	if not isPaused then
-
 		score = score + 1*(parScoreMultiplier)
 		if score%10 == 0 then
 			scoreCounter.text= "SCORE: "..score
@@ -567,12 +557,11 @@ function updateFrames()
 
 		if (player.x < parPlayerXPosition or player.x > parPlayerXPosition) then
 			local difX
-
 			if (player.x == tempPosition) then
 
 				if ((player.x-(player.x-parPlayerXPosition)/parHorizontalFollowRate+1)>parPlayerXPosition) and ((player.x-(player.x-parPlayerXPosition)/parHorizontalFollowRate-1)<parPlayerXPosition) then
 					difX = player.x-parPlayerXPosition
-					player.x = parPlayerXPosition				
+					player.x = parPlayerXPosition
 				else
 					player.x = player.x-(player.x-parPlayerXPosition)/parHorizontalFollowRate
 					difX = (player.x-parPlayerXPosition)/parHorizontalFollowRate
@@ -607,6 +596,7 @@ function updateFrames()
 			composer.gotoScene("scenes.gameOver",{params = currentLevel, effect="slideLeft",time = 500})
 		end
 	end
+
 end
 
 
