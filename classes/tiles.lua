@@ -55,8 +55,10 @@ function _M.newTile(type,xPos,yPos)
 			box.objType="ground"
 			movableGroup:insert(box)
 		elseif (type == "L") then
+			box.objType="ground"
 			lightGroup:insert(box)
 		elseif (type == "D") then
+			box.objType="ground"
 			darkGroup:insert(box)
 			box.isBodyActive = false
 			box.alpha = 0.1 

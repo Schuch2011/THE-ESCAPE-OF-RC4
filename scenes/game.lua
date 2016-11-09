@@ -9,6 +9,7 @@ local widget = require( "widget" )
 local tiles = require("classes.tiles")
 local saveState = require("classes.preference")
 local animation = require("classes.animation")
+local fpsCounter = require("classes.fpsCounter").newFpsCounter()
 
 local scene = composer.newScene()
 local runtime = 0
@@ -59,10 +60,6 @@ local canDie = true
 local jumpButtonArea
 local switchButtonArea
 local pauseButton
-
-local frames = 0
-local count = 0
-local fpsCounter
 
 local function setPhysics() -- INICIAR E CONFIGURAR A SIMULAÇÃO DE FÍSICA
 	physics.start(true)
@@ -405,13 +402,9 @@ function scene:create(event)
 	coinsCounter:setFillColor(1,1,0)
 
 	HUDGroup:insert(pauseButton)
-	
-	fpsCounter = display.newText({ text = frames, x = W, y = H, font = native.systemFontBold, fontSize = 12 })
-	fpsCounter.anchorX, fpsCounter.anchorY = 1, 1
-	fpsCounter:setFillColor(1, 1, 0)
 
 	-- INSERIR ELEMENTOS DENTRO DO GRUPO DO COMPOSER 
-
+	
 	sceneGroup:insert(backgroundGroup)
 	sceneGroup:insert(middleGroundGroup)
 	sceneGroup:insert(player)
@@ -460,22 +453,15 @@ scene:addEventListener("hide",scene)
 function updateFrames()
 	local dt = getDeltaTime()
 	
-	frames = frames + 1
-	
-	count = count + dt
-	
-	if count >= 60 then
-		fpsCounter.text = frames
-		frames = 0
-		count = count % 60
-	end
-	
 	if not isPaused then
 		score = score + 1*(parScoreMultiplier)
 		if score%10 == 0 then
 			scoreCounter.text= "SCORE: "..score
 		end
 
+		-- EXIBE OS FPS NA TELA
+		fpsCounter:updateCounter(dt)
+		
 		local vx, vy = player:getLinearVelocity()
 		
 		-- ANIMAÇÃO DO PERSONAGEM CAINDO
