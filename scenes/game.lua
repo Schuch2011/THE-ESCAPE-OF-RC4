@@ -342,12 +342,12 @@ function scene:create(event)
 	physics.addBody(player,"dynamic",
 	{ shape={- player.width * .3 , - player.height * .4,
 			   player.width * .35, - player.height * .4,
-			   player.width * .35,   player.height * .40,
-			 - player.width * .3 ,   player.height * .40}, bounce=0},
-	{ shape={- player.width * .06, player.height * .3,
-			   player.width * .11, player.height * .3,
+			   player.width * .35,   player.height * .5,
+			 - player.width * .3 ,   player.height * .5}, bounce=0},
+	{ shape={- player.width * .06, player.height * .5,
 			   player.width * .11, player.height * .5,
-			 - player.width * .06, player.height * .5}, isSensor=true}
+			   player.width * .11, player.height * .7,
+			 - player.width * .06, player.height * .7}, isSensor=true}
 	)
 	player.isFixedRotation = true
 	player.canJump = 0
