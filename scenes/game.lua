@@ -60,6 +60,10 @@ local jumpButtonArea
 local switchButtonArea
 local pauseButton
 
+local frames = 0
+local count = 0
+local fpsCounter
+
 local function setPhysics() -- INICIAR E CONFIGURAR A SIMULAÇÃO DE FÍSICA
 	physics.start(true)
 	physics.setGravity(0,parGravity)
@@ -401,6 +405,10 @@ function scene:create(event)
 	coinsCounter:setFillColor(1,1,0)
 
 	HUDGroup:insert(pauseButton)
+	
+	fpsCounter = display.newText({ text = frames, x = W, y = H, font = native.systemFontBold, fontSize = 12 })
+	fpsCounter.anchorX, fpsCounter.anchorY = 1, 1
+	fpsCounter:setFillColor(1, 1, 0)
 
 	-- INSERIR ELEMENTOS DENTRO DO GRUPO DO COMPOSER 
 
@@ -411,6 +419,7 @@ function scene:create(event)
 	sceneGroup:insert(lightGroup)
 	sceneGroup:insert(movableGroup)
 	sceneGroup:insert(HUDGroup)
+	sceneGroup:insert(fpsCounter)
 
 end
 
@@ -450,6 +459,16 @@ scene:addEventListener("hide",scene)
 
 function updateFrames()
 	local dt = getDeltaTime()
+	
+	frames = frames + 1
+	
+	count = count + dt
+	
+	if count >= 60 then
+		fpsCounter.text = frames
+		frames = 0
+		count = count % 60
+	end
 	
 	if not isPaused then
 		score = score + 1*(parScoreMultiplier)
