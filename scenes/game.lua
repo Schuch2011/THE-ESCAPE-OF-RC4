@@ -134,7 +134,8 @@ end
 local function activatePowerUp(type)
 	if (type == 1) then
 		parSpeed = parPowerUpSpeed
-		timer.performWithDelay(parPowerUp1Duration,function ()	parSpeed=parDefaultSpeed end)
+		player.timeScale = 1.5
+		timer.performWithDelay(parPowerUp1Duration,function ()	parSpeed=parDefaultSpeed; player.timeScale = 1 end)
 	end
 	if (type == 2) then
 		parJumpForce = parPowerUpJumpForce
@@ -331,10 +332,12 @@ function scene:create(event)
 	player = animation.newAnimation("images/" .. charId .. ".png", 140, 125, 21)
 	player.x = parPlayerXPosition
 	player.y = parPlayerYPosition
-	player.width = W*.09
-	player.height = H*.15
+	
+	player.width = W * .1
+	player.height = player.width * (125 / 140)
+	
 	player.xScale = player.width / 140
-	player.yScale = player.xScale--player.height / 125
+	player.yScale = player.height / 125
 	
 	physics.addBody(player,"dynamic",
 	{ shape={- player.width * .3 , - player.height * .4,
