@@ -105,10 +105,10 @@ function scene:create(event)
 	})
 	buttonGroup:insert(backButton)
 
-	saveState.save({["stage1".."totalCoins"] = 7})
-	saveState.save({["stage2".."totalCoins"] = 7})
-	saveState.save({["stage3".."totalCoins"] = 7})
-	saveState.save({["stage4".."totalCoins"] = 7})
+	saveState.save({["stage1".."totalCoins"] = 8})
+	saveState.save({["stage2".."totalCoins"] = 8})
+	saveState.save({["stage3".."totalCoins"] = 8})
+	saveState.save({["stage4".."totalCoins"] = 8})
 
 	for i = 1, 4 do
 		if saveState.getValue("stage"..i.."Coins")==nil then

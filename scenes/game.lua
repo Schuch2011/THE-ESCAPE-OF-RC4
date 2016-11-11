@@ -9,6 +9,8 @@ local widget = require( "widget" )
 local tiles = require("classes.tiles")
 local saveState = require("classes.preference")
 local animation = require("classes.animation")
+local fpsCounter = require("classes.fpsCounter")
+--local fpsCounter = require("classes.fpsCounter").newFpsCounter()
 
 local scene = composer.newScene()
 local runtime = 0
@@ -43,11 +45,14 @@ local parDefaultScoreMultiplier = 1
 local parPowerUpScoreMultiplier = 2
 local parScoreMultiplier = 1
 
+local playerLocalX
+local playerLocalY
 local parPlayerYPosition = 0.55*H
 local parPlayerXPosition = 0.25*W
 local parVerticalFollowRate = 5  -- Frames necessários para a câmera alcançar a posição vertical padrão do personagem
 local parHorizontalFollowRate = 15  -- Frames necessários para a câmera alcançar a posição horizontal padrão do personagem
 local tempPosition
+local xCompensation = W*0.4
 
 local parGravity = 60
 local parAccelerometerSensitivity = 500
@@ -327,6 +332,8 @@ function scene:create(event)
 	--INSTANCIAR PERSONAGEM
 
 	charId= saveState.getValue("selectedCharacter")
+
+	playerGroup = display.newGroup()
 	
 	player = animation.newAnimation("images/" .. charId .. ".png", 140, 125, 21)
 	player.x = parPlayerXPosition
@@ -340,7 +347,7 @@ function scene:create(event)
 	{ shape={- player.width * .3 , - player.height * .4,
 			   player.width * .35, - player.height * .4,
 			   player.width * .35,   player.height * .40,
-			 - player.width * .3 ,   player.height * .40}, bounce=0},
+			 - player.width * .3 ,   player.height * .40}, bounce=0, friction=0},
 	{ shape={- player.width * .06, player.height * .3,
 			   player.width * .11, player.height * .3,
 			   player.width * .11, player.height * .5,
@@ -356,10 +363,13 @@ function scene:create(event)
 	player:setSequence("running")
 	player:play()
 
+	playerGroup.x = 0
+	playerGroup:insert(player)
+
 	for i = 1, #self.level.layers[1].objects do
 		local t = self.level.layers[1].objects[i]
 		if t.type ~= "Z" then
-			tiles.newTile(t.type,t.x,t.y)
+			tiles.newTile(t.type,t.x,t.y,t.width,t.height)
 		end
 	end
 
@@ -399,15 +409,19 @@ function scene:create(event)
 
 	HUDGroup:insert(pauseButton)
 
+	fpsCounter_N = fpsCounter.newFpsCounter()
+
 	-- INSERIR ELEMENTOS DENTRO DO GRUPO DO COMPOSER 
+
 
 	sceneGroup:insert(backgroundGroup)
 	sceneGroup:insert(middleGroundGroup)
-	sceneGroup:insert(player)
+	sceneGroup:insert(playerGroup)
 	sceneGroup:insert(darkGroup)
 	sceneGroup:insert(lightGroup)
 	sceneGroup:insert(movableGroup)
 	sceneGroup:insert(HUDGroup)
+	sceneGroup:insert(fpsCounter_N)
 
 end
 
@@ -447,6 +461,7 @@ scene:addEventListener("hide",scene)
 
 function updateFrames()
 	local dt = getDeltaTime()
+	fpsCounter_N:updateCounter(dt)
 	
 	if not isPaused then
 		score = score + 1*(parScoreMultiplier)
@@ -484,30 +499,29 @@ function updateFrames()
  			end 
 
  		end
-		for i=1, movableGroup.numChildren do
-			movableGroup[i].x = movableGroup[i].x - parSpeed*dt
-		end
 
-		for i=1, lightGroup.numChildren do
-			lightGroup[i].x = lightGroup[i].x - parSpeed*dt
-		end
+ 		moviment = parSpeed*dt
 
-		for i=1, darkGroup.numChildren do
-			darkGroup[i].x = darkGroup[i].x - parSpeed*dt
-		end
+		movableGroup.x = movableGroup.x - moviment
+		lightGroup.x = lightGroup.x - moviment
+		darkGroup.x = darkGroup.x - moviment
+		playerGroup.x = playerGroup.x - moviment
+		player.x = player.x + moviment
 
 		-- CÂMERA ACOMPANHAR PLAYER
 
-		if (player.y > parPlayerYPosition or player.y<parPlayerYPosition) then
+		playerLocalX, playerLocalY = player:localToContent(0, 0)
+
+		if (playerLocalY > parPlayerYPosition or playerLocalY<parPlayerYPosition) then
 			local difY
 
 			--TESTA SE A DIFERENÇA ENTRE A POSIÇÃO VERTICAL ATUAL E A PADRÃO É POUCA
-			if ((player.y-(player.y-parPlayerYPosition)/parVerticalFollowRate+1)>parPlayerYPosition) and ((player.y-(player.y-parPlayerYPosition)/parVerticalFollowRate-1)<parPlayerYPosition) then
-				difY = player.y-parPlayerYPosition
-				player.y = parPlayerYPosition				
+			if ((playerLocalY-(playerLocalY-parPlayerYPosition)/parVerticalFollowRate+2)>parPlayerYPosition) and ((playerLocalY-(playerLocalY-parPlayerYPosition)/parVerticalFollowRate-2)<parPlayerYPosition) then
+				difY = playerLocalY-parPlayerYPosition
+				playerGroup.y = playerGroup.y - difY				
 			else
-				player.y = player.y-(player.y-parPlayerYPosition)/parVerticalFollowRate
-				difY = (player.y-parPlayerYPosition)/parVerticalFollowRate
+				difY = (playerLocalY-parPlayerYPosition)/parVerticalFollowRate
+				playerGroup.y = playerGroup.y - difY
 			end
 
 			for i = 1, backgroundGroup.numChildren do
@@ -515,31 +529,25 @@ function updateFrames()
 					backgroundGroup[i].y = backgroundGroup[i].y - (difY * backgroundGroup[i].speed.y)
 				end
  			end
-			for i=1, movableGroup.numChildren do
-				movableGroup[i].y = movableGroup[i].y - difY
-			end	
-			
-			for i=1, lightGroup.numChildren do
-				lightGroup[i].y = lightGroup[i].y - difY
-			end
-	
-			for i=1, darkGroup.numChildren do
-				darkGroup[i].y = darkGroup[i].y - difY
-			end
+
+			movableGroup.y = movableGroup.y - difY
+			lightGroup.y = lightGroup.y - difY
+			darkGroup.y = darkGroup.y - difY
 		end
 
 		--HORIZONTALMENTE, APÓS O FIM DA OBSTRUÇÃO
 
-		if (player.x < parPlayerXPosition or player.x > parPlayerXPosition) then
-			local difX
-			if (player.x == tempPosition) then
 
-				if ((player.x-(player.x-parPlayerXPosition)/parHorizontalFollowRate+1)>parPlayerXPosition) and ((player.x-(player.x-parPlayerXPosition)/parHorizontalFollowRate-1)<parPlayerXPosition) then
-					difX = player.x-parPlayerXPosition
-					player.x = parPlayerXPosition
+		if (playerLocalX < parPlayerXPosition or playerLocalX > parPlayerXPosition) then
+			local difX
+			if (playerLocalX == tempPosition) then
+
+				if ((playerLocalX-(playerLocalX-parPlayerXPosition)/parHorizontalFollowRate+2)>parPlayerXPosition) and ((playerLocalX-(playerLocalX-parPlayerXPosition)/parHorizontalFollowRate-2)<parPlayerXPosition) then
+					difX = playerLocalX-parPlayerXPosition
+					playerGroup.x = playerGroup.x-difX
 				else
-					player.x = player.x-(player.x-parPlayerXPosition)/parHorizontalFollowRate
-					difX = (player.x-parPlayerXPosition)/parHorizontalFollowRate
+					difX = (playerLocalX-parPlayerXPosition)/parHorizontalFollowRate
+					playerGroup.x = playerGroup.x-difX
 				end
 
 				for i = 1, backgroundGroup.numChildren do
@@ -547,24 +555,17 @@ function updateFrames()
 						backgroundGroup[i].x = backgroundGroup[i].x - (difX * backgroundGroup[i].speed.x)
 					end
 	 			end
-				for i=1, movableGroup.numChildren do
-					movableGroup[i].x = movableGroup[i].x - difX
-				end	
-					
-				for i=1, lightGroup.numChildren do
-					lightGroup[i].x = lightGroup[i].x - difX
-				end
-			
-				for i=1, darkGroup.numChildren do
-					darkGroup[i].x = darkGroup[i].x - difX
-				end
+
+					movableGroup.x = movableGroup.x - difX
+					lightGroup.x = lightGroup.x - difX
+					darkGroup.x = darkGroup.x - difX
 			end
-			tempPosition = player.x
+			playerLocalX, playerLocalY = player:localToContent(0, 0)
+			tempPosition = playerLocalX
 		end
 
 		-- GAMEOVER QUANDO PERSONAGEM SAI PARA FORA DA TELA
-
-		if ((player.x + player.width / 2) < 0) then
+		if ((playerLocalX) < 0) then
 			--gameOver = true
 			parIsZeroGravity = false
 
