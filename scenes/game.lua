@@ -409,8 +409,6 @@ function scene:create(event)
 
 	HUDGroup:insert(pauseButton)
 
-	fpsCounter_N = fpsCounter.newFpsCounter()
-
 	-- INSERIR ELEMENTOS DENTRO DO GRUPO DO COMPOSER 
 
 	sceneGroup:insert(backgroundGroup)
@@ -420,7 +418,6 @@ function scene:create(event)
 	sceneGroup:insert(lightGroup)
 	sceneGroup:insert(movableGroup)
 	sceneGroup:insert(HUDGroup)
-	sceneGroup:insert(fpsCounter)
 
 end
 
