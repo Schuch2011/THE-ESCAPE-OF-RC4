@@ -418,6 +418,7 @@ function scene:create(event)
 	sceneGroup:insert(lightGroup)
 	sceneGroup:insert(movableGroup)
 	sceneGroup:insert(HUDGroup)
+	sceneGroup:insert(fpsCounter)
 
 end
 
