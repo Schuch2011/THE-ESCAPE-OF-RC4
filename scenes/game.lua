@@ -9,8 +9,7 @@ local widget = require( "widget" )
 local tiles = require("classes.tiles")
 local saveState = require("classes.preference")
 local animation = require("classes.animation")
-local fpsCounter = require("classes.fpsCounter")
---local fpsCounter = require("classes.fpsCounter").newFpsCounter()
+local fpsCounter = require("classes.fpsCounter").newFpsCounter()
 
 local scene = composer.newScene()
 local runtime = 0
@@ -139,7 +138,8 @@ end
 local function activatePowerUp(type)
 	if (type == 1) then
 		parSpeed = parPowerUpSpeed
-		timer.performWithDelay(parPowerUp1Duration,function ()	parSpeed=parDefaultSpeed end)
+		player.timeScale = 1.5
+		timer.performWithDelay(parPowerUp1Duration,function ()	parSpeed=parDefaultSpeed; player.timeScale = 1 end)
 	end
 	if (type == 2) then
 		parJumpForce = parPowerUpJumpForce
@@ -338,20 +338,20 @@ function scene:create(event)
 	player = animation.newAnimation("images/" .. charId .. ".png", 140, 125, 21)
 	player.x = parPlayerXPosition
 	player.y = parPlayerYPosition
-	player.width = W*.09
-	player.height = H*.15
+	player.width = W * .1
+	player.height = player.width * (125 / 140)
 	player.xScale = player.width / 140
-	player.yScale = player.xScale--player.height / 125
+	player.yScale = player.height / 125
 	
 	physics.addBody(player,"dynamic",
 	{ shape={- player.width * .3 , - player.height * .4,
 			   player.width * .35, - player.height * .4,
-			   player.width * .35,   player.height * .40,
-			 - player.width * .3 ,   player.height * .40}, bounce=0, friction=0},
-	{ shape={- player.width * .06, player.height * .3,
+			   player.width * .35,   player.height * .5,
+			 - player.width * .3 ,   player.height * .5}, bounce=0},
+	{ shape={- player.width * .06, player.height * .5,
 			   player.width * .11, player.height * .3,
-			   player.width * .11, player.height * .5,
-			 - player.width * .06, player.height * .5}, isSensor=true}
+			   player.width * .11, player.height * .7,
+			 - player.width * .06, player.height * .7}, isSensor=true}
 	)
 	player.isFixedRotation = true
 	player.canJump = 0
@@ -413,7 +413,6 @@ function scene:create(event)
 
 	-- INSERIR ELEMENTOS DENTRO DO GRUPO DO COMPOSER 
 
-
 	sceneGroup:insert(backgroundGroup)
 	sceneGroup:insert(middleGroundGroup)
 	sceneGroup:insert(playerGroup)
@@ -421,7 +420,7 @@ function scene:create(event)
 	sceneGroup:insert(lightGroup)
 	sceneGroup:insert(movableGroup)
 	sceneGroup:insert(HUDGroup)
-	sceneGroup:insert(fpsCounter_N)
+	sceneGroup:insert(fpsCounter)
 
 end
 
@@ -461,7 +460,7 @@ scene:addEventListener("hide",scene)
 
 function updateFrames()
 	local dt = getDeltaTime()
-	fpsCounter_N:updateCounter(dt)
+	fpsCounter:updateCounter(dt)
 	
 	if not isPaused then
 		score = score + 1*(parScoreMultiplier)

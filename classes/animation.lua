@@ -9,6 +9,7 @@ local defaultSequences = {
 		loopCount = 0,
 		loopDirection = "forward"
 	},
+	--[[
 	{
 		name = "jumping",
 		start = 22,
@@ -25,6 +26,7 @@ local defaultSequences = {
 		loopCount = 0,
 		loopDirection = "forward"
 	}
+	--]]
 }
 
 function _M.newAnimation(imagePath, width, height, numFrames, sequences)
