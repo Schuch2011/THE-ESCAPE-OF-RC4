@@ -46,7 +46,7 @@ function scene:create()
 		strokeColor = { default={0}, over={0} },
 		font = native.systemFontBold,
 		onRelease = function()
-			--composer.gotoScene("scenes.game")
+			composer.gotoScene("scenes.retry")
 		end
 	})
 	

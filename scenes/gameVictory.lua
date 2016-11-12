@@ -14,21 +14,22 @@ local totalCoins
 
 function scene:create(event)
 	local sceneGroup = self.view
-	currentLevel = event.params or 1
+	currentLevel = composer.getVariable("selectedStage") or 1
 	totalCoins = saveState.getValue("stage"..currentLevel.."totalCoins")
+	local coinsTaken = event.params
 
 	--TEXTO DE VICTORY
 
-	victoryText = display.newText("YOU DID IT!",W/2,H*.15,native.systemFontBold,40)
+	local victoryText = display.newText("YOU DID IT!",W/2,H*.15,native.systemFontBold,40)
 	victoryText:setFillColor(0,1,0)
 
-	coinsTakenText = display.newText(sceneGroup,"COINS: "..saveState.getValue("stage"..currentLevel.."Coins").." / "..totalCoins,W/4,H*.32,native.systemFontBold,25)
-	scoreText = display.newText(sceneGroup,"SCORE: "..saveState.getValue("stage"..currentLevel.."Score"),(W/4)*3,H*.32,native.systemFontBold,25)
+	local coinsTakenText = display.newText(sceneGroup,"COINS: "..coinsTaken.." / "..totalCoins,W/4,H*.32,native.systemFontBold,25)
+	local scoreText = display.newText(sceneGroup,"SCORE: "..saveState.getValue("stage"..currentLevel.."Score"),(W/4)*3,H*.32,native.systemFontBold,25)
 
 
 	-- BOTAO DE RETRY
 
-	nextStageButton = widget.newButton(
+	local nextStageButton = widget.newButton(
 		{
 			x = W/2,
 			y = H*.53,
@@ -44,14 +45,15 @@ function scene:create(event)
 			strokeWidth = 3,
 			strokeColor = { default={0}, over={0} },
 			onPress = function ()
-				composer.gotoScene("scenes.game", {time=500, effect="slideRight", params=currentLevel+1})
+				composer.setVariable("selectedStage",currentLevel+1)
+				composer.gotoScene("scenes.game", {time=500, effect="slideRight"})
 			end
 		}
 	)
 
 	-- BOTAO DE VOLTAR AO MENU
 
-	backButton = widget.newButton(
+	local backButton = widget.newButton(
 		{
 			x = W/2,
 			y = H*.8,

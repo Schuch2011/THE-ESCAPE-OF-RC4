@@ -194,6 +194,7 @@ local function playerCollider( self,event )
 		if ( event.selfElement == 1 and event.other.objType == "endStage") then
 			local tempScore = saveState.getValue("stage"..currentLevel.."Score") or 0
 			local tempCoins = saveState.getValue("stage"..currentLevel.."Coins") or 0
+
 			score = (math.floor(score/10))*10
 			
 			if (score>tempScore) then
@@ -208,7 +209,7 @@ local function playerCollider( self,event )
 			
 			parIsZeroGravity = false
 
-			composer.gotoScene("scenes.gameVictory",{params = currentLevel, effect="slideLeft",time = 500})
+			composer.gotoScene("scenes.gameVictory",{params=coins, effect="slideLeft",time = 500})
     	end
     	    -- DETECTA A COLISÃO DO PERSONAGEM COM AS MOEDAS
     	if ( event.selfElement == 1 and event.other.objType == "coin" ) then
@@ -225,29 +226,29 @@ local function playerCollider( self,event )
 
         	parIsZeroGravity = false
 
-			composer.gotoScene("scenes.gameOver",{params = currentLevel, effect="slideLeft",time = 500})
+			composer.gotoScene("scenes.gameOver",{effect="slideLeft",time = 500})
     	end
 
     		-- PORTAIS ESPECIAIS
     	if ( event.selfElement == 1 and event.other.objType == "portal1" and charId~=1) then
        		Runtime:removeEventListener( "accelerometer", onAccelerate )
         	parIsZeroGravity = false
-			composer.gotoScene("scenes.gameOver",{params = currentLevel, effect="slideLeft",time = 500})
+			composer.gotoScene("scenes.gameOver",{effect="slideLeft",time = 500})
     	end
     	if ( event.selfElement == 1 and event.other.objType == "portal2" and charId~=2) then
        		Runtime:removeEventListener( "accelerometer", onAccelerate )
         	parIsZeroGravity = false
-			composer.gotoScene("scenes.gameOver",{params = currentLevel, effect="slideLeft",time = 500})
+			composer.gotoScene("scenes.gameOver",{effect="slideLeft",time = 500})
     	end
     	if ( event.selfElement == 1 and event.other.objType == "portal3" and charId~=3) then
        		Runtime:removeEventListener( "accelerometer", onAccelerate )
         	parIsZeroGravity = false
-			composer.gotoScene("scenes.gameOver",{params = currentLevel, effect="slideLeft",time = 500})
+			composer.gotoScene("scenes.gameOver",{effect="slideLeft",time = 500})
     	end
     	if ( event.selfElement == 1 and event.other.objType == "portal4" and charId~=4) then
        		Runtime:removeEventListener( "accelerometer", onAccelerate )
         	parIsZeroGravity = false
-			composer.gotoScene("scenes.gameOver",{params = currentLevel, effect="slideLeft",time = 500})
+			composer.gotoScene("scenes.gameOver",{effect="slideLeft",time = 500})
     	end
 
     	    -- COLISÃO COM POWERUP 1 -- AUMENTO TEMPORÁRIO NA VELOCIDADE DO JOGADOR
@@ -284,9 +285,9 @@ end
 
 function scene:create(event)
 	sceneGroup = self.view
-	currentLevel = event.params
-	self.levelId = event.params
-	self.level = require("levels." .. self.levelId)
+	currentLevel = composer.getVariable("selectedStage")
+	self.levelId = currentLevel
+	self.level = require("levels." .. currentLevel)
 
 	-- CRIAR GRUPOS
 
@@ -331,7 +332,7 @@ function scene:create(event)
 
 	--INSTANCIAR PERSONAGEM
 
-	charId= saveState.getValue("selectedCharacter")
+	charId = composer.getVariable("selectedCharacter")
 
 	playerGroup = display.newGroup()
 	
@@ -422,13 +423,9 @@ function scene:create(event)
 
 end
 
-function scene:show( event )
-     
+function scene:show( event )     
     local sceneGroup = self.view
-    local phase = event.phase
-
-
-    
+    local phase = event.phase    
 
     if ( phase == "will" ) then
     elseif ( phase == "did" ) then
@@ -566,7 +563,7 @@ function updateFrames()
 			--gameOver = true
 			parIsZeroGravity = false
 
-			composer.gotoScene("scenes.gameOver",{params = currentLevel, effect="slideLeft",time = 500})
+			composer.gotoScene("scenes.gameOver",{effect="slideLeft",time = 500})
 		end
 	end
 

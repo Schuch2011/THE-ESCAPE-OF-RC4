@@ -12,10 +12,10 @@ local scene = composer.newScene()
 function scene:create(event)
 	local sceneGroup = self.view
 
-	gameTitle = display.newText("THE ESCAPE OF RC4",W/2,H*.35,native.systemFontBold,40)
+	local gameTitle = display.newText("THE ESCAPE OF RC4",W/2,H*.35,native.systemFontBold,40)
 	gameTitle:setFillColor(1)
 
-	startButton = widget.newButton(
+	local startButton = widget.newButton(
 		{
 			x = W/2,
 			y = H*.75,
