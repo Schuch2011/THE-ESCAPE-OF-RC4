@@ -605,7 +605,7 @@ function updateFrames()
 		end
 
 		-- BARRA DE PROGRESSO
-		playerProgression.position.x = (player.x / levelEndPosition) * playerProgression.background.width
+		playerProgression.position.x = (player.x / levelEndPosition) * playerProgression.background.width - 5
 		
 		-- GAMEOVER QUANDO PERSONAGEM SAI PARA FORA DA TELA
 		if ((playerLocalX) < 0) then
