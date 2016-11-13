@@ -8,17 +8,19 @@ local widget = require("widget")
 local saveState = require("classes.preference")
 
 local scene = composer.newScene()
+local scrollView
+
 local slotSelected = 1
 local initXPos = 0
 local xView = 0
 local difX = 0
 
-local character 
 
 local function onLevelButtonRelease(event)
 	scrollView:removeSelf()
 	scrollView=nil
-	composer.gotoScene("scenes.game", {params = event.target.id})
+	composer.setVariable("selectedStage", event.target.id)
+	composer.gotoScene("scenes.game")
 end
 
 local function scrollListener(event)
@@ -77,8 +79,6 @@ end
 function scene:create(event)
 	local sceneGroup = self.view
 	local buttonGroup = display.newGroup()
-
-	character = event.params
 
 	scrollView = widget.newScrollView({
 		left = 0,

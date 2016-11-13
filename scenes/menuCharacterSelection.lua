@@ -8,6 +8,7 @@ local widget = require("widget")
 local saveState = require("classes.preference")
 
 local scene = composer.newScene()
+local scrollView
 
 local slotSelected = 1
 local initXPos = 0
@@ -18,7 +19,7 @@ local difX = 0
 local function onCharacterButtonRelease(event)
 	scrollView:removeSelf()
 	scrollView=nil
-	saveState.save({["selectedCharacter"]= event.target.id})
+	composer.setVariable("selectedCharacter" , event.target.id)
 	composer.gotoScene("scenes.menuStageSelection", {effect = "slideLeft", time = 500})
 end
 

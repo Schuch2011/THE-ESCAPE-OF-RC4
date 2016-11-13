@@ -11,16 +11,16 @@ local currentLevel
 
 function scene:create(event)
 	local sceneGroup = self.view
-	currentLevel = event.params or 1
+	currentLevel = composer.getVariable("selectedStage")
 
 	--TEXTO DE GAME OVER
 
-	gameOverText = display.newText("GAME OVER",W/2,H*.15,native.systemFontBold,40)
+	local gameOverText = display.newText("GAME OVER",W/2,H*.15,native.systemFontBold,40)
 	gameOverText:setFillColor(1,0,0)
 
 	-- BOTAO DE RETRY
 
-	retryButton = widget.newButton(
+	local retryButton = widget.newButton(
 		{
 			x = W/2,
 			y = H*.47,
@@ -36,14 +36,14 @@ function scene:create(event)
 			strokeWidth = 3,
 			strokeColor = { default={0}, over={0} },
 			onPress = function ()
-				composer.gotoScene("scenes.game", {time=500, effect="slideRight", params=currentLevel})
+				composer.gotoScene("scenes.game", {time=500, effect="slideRight"})
 			end
 		}
 	)
 
 	-- BOTAO DE VOLTAR AO MENU
 
-	backButton = widget.newButton(
+	local backButton = widget.newButton(
 		{
 			x = W/2,
 			y = H*.8,
