@@ -6,7 +6,7 @@ local physics = require("physics")
 local _M = {}
 
 function _M.newTile(type,xPos,yPos,width,height)
-	yPos = yPos - 420
+	yPos = yPos - 300--420
 	if (type == "C") then
 		box = display.newImageRect(movableGroup, "images/coin.png", 25, 25)
 		box.x = xPos+box.width/2
@@ -22,26 +22,26 @@ function _M.newTile(type,xPos,yPos,width,height)
 		box.objType = "fatal"
 	elseif (type == "PU1") then
 		box = display.newImageRect(movableGroup, "images/powerUp1.png", 35, 35)
-		box.x = xPos+box.width/2
-		box.y = yPos-box.width/2
+		box.x = xPos+12.5
+		box.y = yPos-12.5
 		box.objType = "powerUp1"
 		physics.addBody(box,"static",{bounce=0, isSensor=true})
 	elseif (type == "PU2") then
 		box = display.newImageRect(movableGroup, "images/powerUp2.png", 35, 35)
-		box.x = xPos+box.width/2
-		box.y = yPos-box.width/2
+		box.x = xPos+12.5
+		box.y = yPos-12.5
 		box.objType = "powerUp2"
 		physics.addBody(box,"static",{bounce=0, isSensor=true})
 	elseif (type == "PU3") then
 		box = display.newImageRect(movableGroup, "images/powerUp3.png", 35, 35)
-		box.x = xPos+box.width/2
-		box.y = yPos-box.width/2
+		box.x = xPos+12.5
+		box.y = yPos-12.5
 		box.objType = "powerUp3"
 		physics.addBody(box,"static",{bounce=0, isSensor=true})
 	elseif (type == "PU4") then
 		box = display.newImageRect(movableGroup, "images/powerUp4.png", 35, 35)
-		box.x = xPos+box.width/2
-		box.y = yPos-box.width/2
+		box.x = xPos+12.5
+		box.y = yPos-12.5
 		box.objType = "powerUp4"
 		physics.addBody(box,"static",{bounce=0, isSensor=true})
 	else
