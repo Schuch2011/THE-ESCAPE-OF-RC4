@@ -16,7 +16,6 @@ local runtime = 0
 local currentLevel
 local charID
 
---local gameOver = false
 local isPaused = true
 local switchTime=false
 local coins = 0
@@ -84,9 +83,6 @@ local function jump() -- AÇÃO DE PULO
 		player:setSequence("jumping")
 		player:play()
 	end
-	
-	--player:setSequence("jumping")
-	--player:play()
 end
 
 local function switch() -- MECÂNICA DE INVERSÃO DOS ELEMENTOS DO CENÁRIO
@@ -215,7 +211,6 @@ local function playerCollider( self,event )
 			end
 			
 			Runtime:removeEventListener( "accelerometer", onAccelerate )
-        	--gameOver = true
 			
 			parIsZeroGravity = false
 
@@ -361,7 +356,7 @@ function scene:create(event)
 			   player.width * .35,   player.height * .5,
 			 - player.width * .3 ,   player.height * .5}, bounce=0},
 	{ shape={- player.width * .06, player.height * .5,
-			   player.width * .11, player.height * .3,
+			   player.width * .11, player.height * .5,
 			   player.width * .11, player.height * .7,
 			 - player.width * .06, player.height * .7}, isSensor=true}
 	)
@@ -481,7 +476,6 @@ function scene:show( event )
 
     if ( phase == "will" ) then
     elseif ( phase == "did" ) then
-    	--gameOver = false
 		isPaused = false
     	local dt = getDeltaTime()
     	Runtime:addEventListener("enterFrame",updateFrames)
@@ -615,20 +609,12 @@ function updateFrames()
 		
 		-- GAMEOVER QUANDO PERSONAGEM SAI PARA FORA DA TELA
 		if ((playerLocalX) < 0) then
-			--gameOver = true
 			parIsZeroGravity = false
 
 			composer.gotoScene("scenes.gameOver",{effect="slideLeft",time = 500})
 		end
 	end
-
 end
-
-
-
-
-
-
 
 return scene
 
