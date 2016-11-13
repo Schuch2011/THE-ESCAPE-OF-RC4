@@ -57,6 +57,8 @@ local parGravity = 60
 local parAccelerometerSensitivity = 500
 local parIsZeroGravity=false
 
+local playerProgression = {}
+local levelEndPosition
 
 local canDie = true
 
@@ -304,6 +306,7 @@ function scene:create(event)
 	movableGroup = display.newGroup()
 	darkGroup = display.newGroup()
 	lightGroup = display.newGroup()
+	playerProgressionGroup = display.newGroup()
 	HUDGroup = display.newGroup()
 	
 	-- ATIVAR E CONFIGURAR A FÍSICA
@@ -377,6 +380,10 @@ function scene:create(event)
 
 	for i = 1, #self.level.layers[1].objects do
 		local t = self.level.layers[1].objects[i]
+		if t.type == "EG" then
+			levelEndPosition = t.x
+		end
+		
 		if t.type ~= "Z" then
 			tiles.newTile(t.type,t.x,t.y,t.width,t.height)
 		end
@@ -416,6 +423,45 @@ function scene:create(event)
 	coinsCounter = display.newText(HUDGroup,"COINS: "..coins.." / "..totalCoins,W*.8,H*.11,native.systemFontBold,25)
 	coinsCounter:setFillColor(1,1,0)
 
+	-- BARRA DE PROGRESSO
+	
+	playerProgression.background = display.newRoundedRect(playerProgressionGroup, 0, 0, W * .5, H * 0.01, 2)
+	playerProgression.background.anchorX = 0
+	playerProgression.background.strokeWidth = 3
+	playerProgression.background:setStrokeColor(0)
+	playerProgression.background:setFillColor(1)
+	
+	playerProgression.position = display.newRoundedRect(playerProgressionGroup, 0, 0, H * 0.03, H * 0.03, H * 0.03)
+	playerProgression.position.strokeWidth = 1
+	playerProgression.position:setStrokeColor(0)
+	
+	local playerColor = {}
+	
+	if charId == 1 then
+		playerColor.red = .97
+		playerColor.green = .58
+		playerColor.blue = .35
+	elseif charId == 2 then
+		playerColor.red = 0
+		playerColor.green = .32
+		playerColor.blue = .16
+	elseif charId == 3 then
+		playerColor.red = .92
+		playerColor.green = .19
+		playerColor.blue = .22
+	elseif charId == 4 then
+		playerColor.red = .43
+		playerColor.green = .39
+		playerColor.blue = .3
+	end
+	
+	playerProgression.position:setFillColor(playerColor.red, playerColor.green, playerColor.blue)
+	
+	playerProgressionGroup.x = W * .5 - playerProgression.background.width * .5
+	playerProgressionGroup.y = H * .95
+	
+	HUDGroup:insert(playerProgressionGroup)
+	
 	HUDGroup:insert(pauseButton)
 
 	-- INSERIR ELEMENTOS DENTRO DO GRUPO DO COMPOSER 
@@ -503,7 +549,7 @@ function updateFrames()
  		end
 
  		moviment = parSpeed*dt
-
+		
 		movableGroup.x = movableGroup.x - moviment
 		lightGroup.x = lightGroup.x - moviment
 		darkGroup.x = darkGroup.x - moviment
@@ -566,6 +612,9 @@ function updateFrames()
 			tempPosition = playerLocalX
 		end
 
+		-- BARRA DE PROGRESSO
+		playerProgression.position.x = (player.x / levelEndPosition) * playerProgression.background.width
+		
 		-- GAMEOVER QUANDO PERSONAGEM SAI PARA FORA DA TELA
 		if ((playerLocalX) < 0) then
 			--gameOver = true
