@@ -75,6 +75,14 @@ local function jump() -- AÇÃO DE PULO
 	player:setLinearVelocity( 0,0 )
 	player.canJump = player.canJump - 1
 	
+	if player.canJump == 0 then
+		player:setSequence("doubleJump")
+		player:play()
+	elseif player.canJump == 1 then
+		player:setSequence("jumping")
+		player:play()
+	end
+	
 	--player:setSequence("jumping")
 	--player:play()
 end
@@ -335,7 +343,7 @@ function scene:create(event)
 
 	playerGroup = display.newGroup()
 	
-	player = animation.newAnimation("images/" .. charId .. ".png", 140, 125, 21)
+	player = animation.newAnimation("images/" .. charId .. ".png", 140, 125, 21 + 23 + 5 + 21)
 	player.x = parPlayerXPosition
 	player.y = parPlayerYPosition
 	player.width = W * .1
@@ -477,8 +485,8 @@ function updateFrames()
 		-- ANIMAÇÃO DO PERSONAGEM CORRENDO
 		elseif vy == 0 then
 			if player.sequence ~= "running" then
-				--player:setSequence("running")
-				--player:play()
+				player:setSequence("running")
+				player:play()
 			end
 		end
 		

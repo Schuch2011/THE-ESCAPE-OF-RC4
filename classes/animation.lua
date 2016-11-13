@@ -9,21 +9,25 @@ local defaultSequences = {
 		loopCount = 0,
 		loopDirection = "forward"
 	},
-	--[[
 	{
 		name = "jumping",
-		start = 22,
-		count = 1,
-		time = 600,
-		loopCount = 0,
+		frames = {25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36},
+		time = 300,
+		loopCount = 1,
 		loopDirection = "forward"
 	},
 	{
+		name = "doubleJump",
+		frames = {50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60},
+		time = 500,
+		loopCount = 1,
+		loopDirection = "forward"
+	},
+	--[[
+	{
 		name = "falling",
-		start = 23,
-		count = 1,
-		time = 600,
-		loopCount = 0,
+		frames = {},
+		loopCount = 1,
 		loopDirection = "forward"
 	}
 	--]]
