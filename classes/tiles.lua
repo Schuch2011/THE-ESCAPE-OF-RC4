@@ -9,44 +9,39 @@ function _M.newTile(type,xPos,yPos,width,height)
 	yPos = yPos - 420
 	if (type == "C") then
 		box = display.newImageRect(movableGroup, "images/coin.png", 25, 25)
-		box.anchorX, box.anchorY = 0,1
-		box.x = xPos
-		box.y = yPos
+		box.x = xPos+box.width/2
+		box.y = yPos-box.width/2
 		box.objType = "coin"
 		physics.addBody(box,"static",{bounce=0, isSensor=true})
 	elseif (type == "S") then
-		box = display.newImageRect(movableGroup,"images/spike.png",25,25)
+		box = display.newImageRect(movableGroup,"images/spike.png",35, 35)
 		box.anchorX, box.anchorY = 0,1
 		box.x, box.y = xPos, yPos
 		physics.addBody(box,"static",{bounce=0,isSensor=true, 
 			shape={-12,-12, 12,-12, 12,17, -12,17}})
 		box.objType = "fatal"
 	elseif (type == "PU1") then
-		box = display.newImageRect(movableGroup, "images/powerUp1.png", 25, 25)
-		box.anchorX, box.anchorY = 0,1
-		box.x = xPos
-		box.y = yPos
+		box = display.newImageRect(movableGroup, "images/powerUp1.png", 35, 35)
+		box.x = xPos+box.width/2
+		box.y = yPos-box.width/2
 		box.objType = "powerUp1"
 		physics.addBody(box,"static",{bounce=0, isSensor=true})
 	elseif (type == "PU2") then
-		box = display.newImageRect(movableGroup, "images/powerUp2.png", 25, 25)
-		box.anchorX, box.anchorY = 0,1
-		box.x = xPos
-		box.y = yPos
+		box = display.newImageRect(movableGroup, "images/powerUp2.png", 35, 35)
+		box.x = xPos+box.width/2
+		box.y = yPos-box.width/2
 		box.objType = "powerUp2"
 		physics.addBody(box,"static",{bounce=0, isSensor=true})
 	elseif (type == "PU3") then
-		box = display.newImageRect(movableGroup, "images/powerUp3.png", 25,25)
-		box.anchorX, box.anchorY = 0,1
-		box.x = xPos
-		box.y = yPos
+		box = display.newImageRect(movableGroup, "images/powerUp3.png", 35, 35)
+		box.x = xPos+box.width/2
+		box.y = yPos-box.width/2
 		box.objType = "powerUp3"
 		physics.addBody(box,"static",{bounce=0, isSensor=true})
 	elseif (type == "PU4") then
-		box = display.newImageRect(movableGroup, "images/powerUp4.png", 25, 25)
-		box.anchorX, box.anchorY = 0,1
-		box.x = xPos
-		box.y = yPos
+		box = display.newImageRect(movableGroup, "images/powerUp4.png", 35, 35)
+		box.x = xPos+box.width/2
+		box.y = yPos-box.width/2
 		box.objType = "powerUp4"
 		physics.addBody(box,"static",{bounce=0, isSensor=true})
 	else
