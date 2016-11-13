@@ -432,8 +432,6 @@ function scene:create(event)
 	playerProgression.background:setFillColor(1)
 	
 	playerProgression.position = display.newRoundedRect(playerProgressionGroup, 0, 0, H * 0.03, H * 0.03, H * 0.03)
-	playerProgression.position.strokeWidth = 1
-	playerProgression.position:setStrokeColor(0)
 	
 	local playerColor = {}
 	
