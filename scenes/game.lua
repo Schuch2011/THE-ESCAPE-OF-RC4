@@ -59,6 +59,10 @@ local parIsZeroGravity=false
 local playerProgression = {}
 local levelEndPosition
 
+local activePowerUpOverlay = {}
+local activePowerUpTimer = 0
+local activePowerUpTime
+
 local canDie = true
 
 local jumpButtonArea
@@ -141,23 +145,66 @@ local function getDeltaTime() -- CALCULAR O TEMPO DESDE O ÚLTIMO FRAME GERADO
     return dt
 end
 
+local function loadPowerUpOverlayImage(group, type)
+	local powerUp = display.newImage(group, "images/powerUp" .. type .. ".png")
+	powerUp.xScale = .3
+	powerUp.yScale = .3
+	powerUp.x = - activePowerUpOverlay.background.width * .5 - 20
+	powerUp.isVisible = false
+end
+
 local function activatePowerUp(type)
+	activePowerUpOverlayGroup.isVisible = true
+	
+	for i = 1, #activePowerUpOverlay.images do
+		activePowerUpOverlay.images[i].isVisible = false
+	end
+	
+	activePowerUpOverlay.images[type].isVisible = true
+	
+	activePowerUpOverlay.timerBar.width = activePowerUpOverlay.timerBar.totalWidth
+	
 	if (type == 1) then
 		parSpeed = parPowerUpSpeed
 		player.timeScale = 1.5
-		timer.performWithDelay(parPowerUp1Duration,function ()	parSpeed=parDefaultSpeed; player.timeScale = 1 end)
+		activePowerUpTime = parPowerUp1Duration
+		activePowerUpTimer = parPowerUp1Duration
+		timer.performWithDelay(parPowerUp1Duration,
+			function()
+				parSpeed = parDefaultSpeed
+				player.timeScale = 1
+				activePowerUpOverlayGroup.isVisible = false
+			end)
 	end
 	if (type == 2) then
 		parJumpForce = parPowerUpJumpForce
-		timer.performWithDelay(parPowerUp2Duration,function ()	parJumpForce=parDefaultJumpForce end)
+		activePowerUpTime = parPowerUp2Duration
+		activePowerUpTimer = parPowerUp2Duration
+		timer.performWithDelay(parPowerUp2Duration,
+			function()
+				parJumpForce = parDefaultJumpForce
+				activePowerUpOverlayGroup.isVisible = false
+			end)
 	end
 	if (type == 3) then
 		parScoreMultiplier = parPowerUpScoreMultiplier
-		timer.performWithDelay(parPowerUp3Duration,function ()	parScoreMultiplier= parDefaultScoreMultiplier end)
+		activePowerUpTime = parPowerUp3Duration
+		activePowerUpTimer = parPowerUp3Duration
+		timer.performWithDelay(parPowerUp3Duration,
+			function()
+				parScoreMultiplier = parDefaultScoreMultiplier
+				activePowerUpOverlayGroup.isVisible = false
+			end)
 	end
 	if (type == 4) then
 		canDie = false
-		timer.performWithDelay(parPowerUp4Duration,function ()	canDie=true end)
+		activePowerUpTime = parPowerUp4Duration
+		activePowerUpTimer = parPowerUp4Duration
+		timer.performWithDelay(parPowerUp4Duration,
+			function()
+				canDie = true
+				activePowerUpOverlayGroup.isVisible = false
+			end)
 	end
 
 	return powerUp
@@ -301,6 +348,7 @@ function scene:create(event)
 	movableGroup = display.newGroup()
 	darkGroup = display.newGroup()
 	lightGroup = display.newGroup()
+	activePowerUpOverlayGroup = display.newGroup()
 	playerProgressionGroup = display.newGroup()
 	HUDGroup = display.newGroup()
 	
@@ -418,6 +466,36 @@ function scene:create(event)
 	coinsCounter = display.newText(HUDGroup,"COINS: "..coins.." / "..totalCoins,W*.8,H*.11,native.systemFontBold,25)
 	coinsCounter:setFillColor(1,1,0)
 
+	-- POWER UP ATIVO
+	
+	activePowerUpOverlay.background = display.newRect(activePowerUpOverlayGroup, 0, 0, W * .1, H * .05)
+	activePowerUpOverlay.background:setFillColor(0)
+	
+	local totalTimerBarWidth = activePowerUpOverlay.background.width - 6
+	
+	activePowerUpOverlay.timerBar = display.newRect(activePowerUpOverlayGroup, 0, 0, totalTimerBarWidth, activePowerUpOverlay.background.height - 6)
+	activePowerUpOverlay.timerBar.anchorX = 0
+	activePowerUpOverlay.timerBar:setFillColor(1)
+	
+	activePowerUpOverlay.timerBar.totalWidth = totalTimerBarWidth
+	
+	activePowerUpOverlay.timerBar.x = - activePowerUpOverlay.timerBar.width * .5
+	
+	activePowerUpOverlay.images = display.newGroup()
+	loadPowerUpOverlayImage(activePowerUpOverlay.images, 1)
+	loadPowerUpOverlayImage(activePowerUpOverlay.images, 2)
+	loadPowerUpOverlayImage(activePowerUpOverlay.images, 3)
+	loadPowerUpOverlayImage(activePowerUpOverlay.images, 4)
+	
+	activePowerUpOverlayGroup:insert(activePowerUpOverlay.images)
+	
+	activePowerUpOverlayGroup.x = W * .1
+	activePowerUpOverlayGroup.y = H * .35
+	
+	activePowerUpOverlayGroup.isVisible = false
+	
+	HUDGroup:insert(activePowerUpOverlayGroup)
+	
 	-- BARRA DE PROGRESSO
 	
 	playerProgression.background = display.newRoundedRect(playerProgressionGroup, 0, 0, W * .5, H * 0.01, 2)
@@ -607,6 +685,17 @@ function updateFrames()
 		-- BARRA DE PROGRESSO
 		playerProgression.position.x = (player.x / levelEndPosition) * playerProgression.background.width - 5
 		
+		-- MOSTRA TEMPO RESTANTE DO POWERUP ATIVO
+		if activePowerUpOverlayGroup.isVisible then
+			activePowerUpTimer = activePowerUpTimer - dt / 60 * 1000
+			
+			if activePowerUpTimer > 0 then
+				activePowerUpOverlay.timerBar.width = activePowerUpTimer / activePowerUpTime * activePowerUpOverlay.timerBar.totalWidth
+			else
+				activePowerUpOverlay.timerBar.width = 0
+			end
+		end
+		
 		-- GAMEOVER QUANDO PERSONAGEM SAI PARA FORA DA TELA
 		if ((playerLocalX) < 0) then
 			parIsZeroGravity = false
@@ -617,7 +706,3 @@ function updateFrames()
 end
 
 return scene
-
-
-
-
