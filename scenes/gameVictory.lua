@@ -12,11 +12,14 @@ local currentLevel
 
 local totalCoins
 
+local sfxButton
+
 function scene:create(event)
 	local sceneGroup = self.view
 	currentLevel = composer.getVariable("selectedStage") or 1
 	totalCoins = saveState.getValue("stage"..currentLevel.."totalCoins")
 	local coinsTaken = event.params
+	sfxButton = audio.loadSound("audios/button.wav")
 
 	--TEXTO DE VICTORY
 
@@ -45,6 +48,7 @@ function scene:create(event)
 			strokeWidth = 3,
 			strokeColor = { default={0}, over={0} },
 			onPress = function ()
+				audio.play(sfxButton)
 				composer.setVariable("selectedStage",currentLevel+1)
 				composer.gotoScene("scenes.game", {time=500, effect="slideRight"})
 			end
@@ -69,6 +73,7 @@ function scene:create(event)
 			strokeWidth = 3,
 			strokeColor = { default={0}, over={0} },
 			onPress = function ()
+				audio.play(sfxButton)
 				composer.gotoScene("scenes.menu", {time=500, effect="slideRight"})
 			end
 		}

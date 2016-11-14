@@ -6,8 +6,16 @@ local _H = display.contentHeight
 
 local scene = composer.newScene()
 
+-- AUDIOS
+
+local sfxButton
+
+--
+
 function scene:create()
 	local sceneGroup = self.view
+
+	sfxButton = audio.loadSound("audios/button.wav")
 	
 	local background = display.newRect(_W * .5, _H * .5, display.actualContentWidth, display.actualContentHeight)
 	background:setFillColor(0, 0, 0, .8)
@@ -27,6 +35,7 @@ function scene:create()
 		strokeColor = { default={0}, over={0} },
 		font = native.systemFontBold,
 		onRelease = function()
+			audio.play(sfxButton)
 			composer.hideOverlay("fade", 200)
 		end
 	})
@@ -46,6 +55,7 @@ function scene:create()
 		strokeColor = { default={0}, over={0} },
 		font = native.systemFontBold,
 		onRelease = function()
+			audio.play(sfxButton)
 			composer.gotoScene("scenes.retry")
 		end
 	})
@@ -65,6 +75,7 @@ function scene:create()
 		strokeColor = { default={0}, over={0} },
 		font = native.systemFontBold,
 		onRelease = function()
+			audio.play(sfxButton)
 			composer.gotoScene("scenes.menu","slideRight",500)
 		end
 	})

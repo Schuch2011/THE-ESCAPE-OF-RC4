@@ -7,6 +7,7 @@ local composer = require("composer")
 local physics = require("physics")
 local widget = require( "widget" )
 local tiles = require("classes.tiles")
+local background = require("classes.background")
 local saveState = require("classes.preference")
 local animation = require("classes.animation")
 local fpsCounter = require("classes.fpsCounter").newFpsCounter()
@@ -21,6 +22,21 @@ local switchTime=false
 local coins = 0
 local totalCoins
 local score = 0
+
+-- VARIÁVEIS DE SOM
+
+local sfxCoin
+local sfxJump1
+local sfxJump2
+local sfxJumpLanding
+local sfxSwitch
+local sfxPowerUp
+local sfxGameOver
+local sfxGameWin
+local sfxButton
+local sfxBGMusic
+
+local bgMusic
 
 -- PARÂMETROS DE JOGABILIDADE
 
@@ -83,13 +99,16 @@ local function jump() -- AÇÃO DE PULO
 	if player.canJump == 0 then
 		player:setSequence("doubleJump")
 		player:play()
+		audio.play(sfxJump2) 
 	elseif player.canJump == 1 then
+		audio.play(sfxJump1) 
 		player:setSequence("jumping")
 		player:play()
 	end
 end
 
 local function switch() -- MECÂNICA DE INVERSÃO DOS ELEMENTOS DO CENÁRIO
+	audio.play(sfxSwitch)
 	if(switchTime == false) then
 		for i=1, lightGroup.numChildren do
 			lightGroup[i].alpha = 0.1
@@ -111,6 +130,14 @@ local function switch() -- MECÂNICA DE INVERSÃO DOS ELEMENTOS DO CENÁRIO
 		end
 		switchTime = false
 	end
+end
+
+local function gameOver()
+	audio.stop(1)
+	audio.play(sfxGameOver)
+    Runtime:removeEventListener( "accelerometer", onAccelerate )
+    parIsZeroGravity = false
+	composer.gotoScene("scenes.gameOver",{effect="slideLeft",time = 500})
 end
 
 local function onJumpButtonTouch( event )
@@ -211,6 +238,9 @@ local function activatePowerUp(type)
 end
 
 local function onPaused()
+	audio.pause(1)
+	audio.play(sfxButton)
+
 	isPaused = true
 	
 	physics.pause()
@@ -240,27 +270,26 @@ local function playerCollider( self,event )
     if (event.phase == "began") then
 		-- RECOMEÇA A CONTAGEM DE PULOS QUANDO O PERSONAGEM ESTÁ COM OS PÉS NO CHÃO
 		
-    	if ( event.selfElement == 2 and event.other.objType == "ground" ) then
+    	if ( event.selfElement == 2 and event.other.objType == "ground") then
+        	audio.play(sfxJumpLanding, {channel = 2})
         	self.canJump = 2
     	end
     	-- DETECTA SE O PERSONAGEM ALCANÇA O FIM DA FASE
 		if ( event.selfElement == 1 and event.other.objType == "endStage") then
+			audio.stop(1)
+			audio.play(sfxGameWin)
+
 			local tempScore = saveState.getValue("stage"..currentLevel.."Score") or 0
 			local tempCoins = saveState.getValue("stage"..currentLevel.."Coins") or 0
-
-			score = (math.floor(score/10))*10
-			
+			score = (math.floor(score/10))*10			
 			if (score>tempScore) then
 				saveState.save{["stage"..currentLevel.."Score"]=score}
 			end
 			if (coins > tempCoins) then
 				saveState.save{["stage"..currentLevel.."Coins"]=coins}
-			end
-			
-			Runtime:removeEventListener( "accelerometer", onAccelerate )
-			
+			end			
+			Runtime:removeEventListener( "accelerometer", onAccelerate )			
 			parIsZeroGravity = false
-
 			composer.gotoScene("scenes.gameVictory",{params=coins, effect="slideLeft",time = 500})
     	end
     	    -- DETECTA A COLISÃO DO PERSONAGEM COM AS MOEDAS
@@ -270,37 +299,25 @@ local function playerCollider( self,event )
 			coins = coins +1
 			score = score + 250
 			coinsCounter.text = "COINS: "..coins.." / "..totalCoins
+			audio.play(sfxCoin)
       	end
       	    -- COLISÃO COM BLOCOS FATAIS
 		if ( event.selfElement == 1 and event.other.objType == "fatal" and canDie==true) then
-        	--gameOver = true
-        	Runtime:removeEventListener( "accelerometer", onAccelerate )
-
-        	parIsZeroGravity = false
-
-			composer.gotoScene("scenes.gameOver",{effect="slideLeft",time = 500})
+			gameOver()
     	end
 
     		-- PORTAIS ESPECIAIS
     	if ( event.selfElement == 1 and event.other.objType == "portal1" and charId~=1) then
-       		Runtime:removeEventListener( "accelerometer", onAccelerate )
-        	parIsZeroGravity = false
-			composer.gotoScene("scenes.gameOver",{effect="slideLeft",time = 500})
+			gameOver()
     	end
     	if ( event.selfElement == 1 and event.other.objType == "portal2" and charId~=2) then
-       		Runtime:removeEventListener( "accelerometer", onAccelerate )
-        	parIsZeroGravity = false
-			composer.gotoScene("scenes.gameOver",{effect="slideLeft",time = 500})
+			gameOver()
     	end
     	if ( event.selfElement == 1 and event.other.objType == "portal3" and charId~=3) then
-       		Runtime:removeEventListener( "accelerometer", onAccelerate )
-        	parIsZeroGravity = false
-			composer.gotoScene("scenes.gameOver",{effect="slideLeft",time = 500})
+    		gameOver()
     	end
     	if ( event.selfElement == 1 and event.other.objType == "portal4" and charId~=4) then
-       		Runtime:removeEventListener( "accelerometer", onAccelerate )
-        	parIsZeroGravity = false
-			composer.gotoScene("scenes.gameOver",{effect="slideLeft",time = 500})
+    		gameOver()
     	end
 
     	    -- COLISÃO COM POWERUP 1 -- AUMENTO TEMPORÁRIO NA VELOCIDADE DO JOGADOR
@@ -308,24 +325,28 @@ local function playerCollider( self,event )
         	local temp = event.other
 			display.remove(temp)
 			activatePowerUp(1)
+			audio.play(sfxPowerUp)
     	end
     	    -- COLISÃO COM POWERUP 2 -- AUMENTO TEMPORÁRIO DA ALTURA DO PULO
 		if ( event.selfElement == 1 and event.other.objType == "powerUp2" ) then
         	local temp = event.other
 			display.remove(temp)
 			activatePowerUp(2)
+			audio.play(sfxPowerUp)
     	end
     	    -- COLISÃO COM POWERUP 3 -- AUMENTO NA TAXA DE SCORE GANHOS
 		if ( event.selfElement == 1 and event.other.objType == "powerUp3" ) then
         	local temp = event.other
 			display.remove(temp)
 			activatePowerUp(3)
+			audio.play(sfxPowerUp)
     	end
     	    -- COLISÃO COM POWERUP 4 -- INVENCIBILIDADE A OBSTÁCULOS NORMAIS
 		if ( event.selfElement == 1 and event.other.objType == "powerUp4" ) then
         	local temp = event.other
 			display.remove(temp)
 			activatePowerUp(4)
+			audio.play(sfxPowerUp)
     	end  
     	if ( event.selfElement == 1 and event.other.objType == "startZeroGravity" ) then
         	parIsZeroGravity=true
@@ -340,6 +361,22 @@ function scene:create(event)
 	currentLevel = composer.getVariable("selectedStage")
 	self.levelId = currentLevel
 	self.level = require("levels." .. currentLevel)
+
+	-- CARREGAR SONS
+
+	audio.reserveChannels(2)
+
+	sfxCoin = audio.loadSound("audios/coin.wav")
+	sfxJump1 = audio.loadSound("audios/jump1.wav")
+	sfxJump2 = audio.loadSound("audios/jump2.wav")
+	sfxJumpLanding = audio.loadSound("audios/jumpLanding.wav")
+	sfxSwitch = audio.loadSound("audios/switch.wav")
+	sfxPowerUp = audio.loadSound("audios/powerUp.wav")
+	sfxGameOver = audio.loadSound("audios/gameOver.wav")
+	sfxGameWin = audio.loadSound("audios/gameWin.wav")
+	sfxButton = audio.loadSound("audios/button.wav")
+	sfxBGMusic = audio.loadStream("audios/music.wav")
+
 
 	-- CRIAR GRUPOS
 
@@ -359,51 +396,7 @@ function scene:create(event)
 
 	-- INSTANCIAR BACKGROUND
 	
-	local backgroundColor = display.newRect(sceneGroup,W/2,H/2, W*1.2,H*1.2)
- 	backgroundColor:setFillColor(0.3764705882352941,0.5725490196078431,0.7686274509803922)
-
-
- 	local backgroundUpperFill = display.newRect(backgroundGroup,0,10, W*1.2,H*3)
- 	backgroundUpperFill.anchorX = 0
- 	backgroundUpperFill.anchorY = 1
-	backgroundUpperFill:setFillColor(168/255,222/255,237/255)
- 	backgroundUpperFill.speed = {x = 0, y = 0.05}
-
- 	for i = 1, 5 do
-		local background = display.newImage(backgroundGroup, "images/background/stage_1/background_"..math.random(3)..".png",0, 0)
-		background.anchorX, background.anchorY = 0,0
-		background.xScale, background.yScale = 0.5,0.5
-		background.x = (i-1)*background.width*background.xScale-100-(i-2)*1
-		background.speed = {x = 0.03, y=0.05}
-	end
-
-	local middleGroundUpperFill = display.newRect(backgroundGroup,0,-10, W*1.2,H*3)
- 	middleGroundUpperFill.anchorX = 0
- 	middleGroundUpperFill.anchorY = 1
-	middleGroundUpperFill:setFillColor(97/255,203/255,232/255)
- 	middleGroundUpperFill.speed = {x = 0, y = 0.05}
-
-	for i = 1, 5 do
-		local middleGround = display.newImage(backgroundGroup, "images/background/stage_1/middleGround_"..math.random(5)..".png",0, -20)
-		middleGround.anchorX, middleGround.anchorY = 0,0
-		middleGround.xScale, middleGround.yScale = 0.5,0.5
-		middleGround.x = (i-1)*middleGround.width*middleGround.xScale-100-(i-1)*2
-		middleGround.speed = {x = 0.07, y=0.05}
-	end
-
-	local foreGroundUpperFill = display.newRect(backgroundGroup,0,-40, W*1.2,H*3)
- 	foreGroundUpperFill.anchorX = 0
- 	foreGroundUpperFill.anchorY = 1
-	foreGroundUpperFill:setFillColor(24/255,127/255,152/255)
- 	foreGroundUpperFill.speed = {x = 0, y = 0.1}
-
-	for i = 1, 5 do
-		local foreGround = display.newImage(backgroundGroup, "images/background/stage_1/foreGround_"..math.random(3)..".png",0, -50)
-		foreGround.anchorX, foreGround.anchorY = 0,0
-		foreGround.xScale, foreGround.yScale = 0.5,0.5
-		foreGround.x = (i-1)*foreGround.width*foreGround.xScale-100-(i-1)*2
-		foreGround.speed = {x = 0.15, y=0.1}
-	end
+	background.newBackground(self.levelId)
 
 	--INSTANCIAR PERSONAGEM
 
@@ -572,14 +565,17 @@ end
 function scene:show( event )     
     local sceneGroup = self.view
     local phase = event.phase    
-
     if ( phase == "will" ) then
+
     elseif ( phase == "did" ) then
 		isPaused = false
     	local dt = getDeltaTime()
     	Runtime:addEventListener("enterFrame",updateFrames)
     	Runtime:addEventListener( "accelerometer", onAccelerate)
     	physics.setGravity(0,parGravity)
+
+    	audio.setVolume(0.05, {channel = 1})
+    	audio.setVolume(0.3, {channel = 2})
     end
 end
 
@@ -603,6 +599,13 @@ function updateFrames()
 	fpsCounter:updateCounter(dt)
 	
 	if not isPaused then
+		if not audio.isChannelActive(1) then
+    		bgMusic = audio.play(sfxBGMusic, {channel = 1, loops = -1})
+		end
+		if audio.isChannelPaused(1) then
+			audio.resume(1)
+		end
+
 		score = score + 1*(parScoreMultiplier)
 		if score%10 == 0 then
 			scoreCounter.text= "SCORE: "..score
@@ -719,9 +722,7 @@ function updateFrames()
 		
 		-- GAMEOVER QUANDO PERSONAGEM SAI PARA FORA DA TELA
 		if ((playerLocalX) < 0) then
-			parIsZeroGravity = false
-
-			composer.gotoScene("scenes.gameOver",{effect="slideLeft",time = 500})
+			gameOver()
 		end
 	end
 end

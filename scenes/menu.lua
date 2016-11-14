@@ -8,9 +8,13 @@ local widget = require("widget")
 
 local scene = composer.newScene()
 
+local sfxButton
+
 
 function scene:create(event)
 	local sceneGroup = self.view
+
+	sfxButton = audio.loadSound("audios/button.wav")
 
 	local gameTitle = display.newText("THE ESCAPE OF RC4",W/2,H*.35,native.systemFontBold,40)
 	gameTitle:setFillColor(1)
@@ -31,6 +35,7 @@ function scene:create(event)
 			strokeWidth = 3,
 			strokeColor = { default={0}, over={0} },
 			onPress = function ()
+				audio.play(sfxButton)
 				composer.gotoScene("scenes.menuCharacterSelection", {time=500, effect="slideLeft"})
 			end
 		}

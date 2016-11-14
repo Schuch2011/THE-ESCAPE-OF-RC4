@@ -15,8 +15,10 @@ local initXPos = 0
 local xView = 0
 local difX = 0
 
+local sfxButton
 
 local function onLevelButtonRelease(event)
+	audio.play(sfxButton)
 	scrollView:removeSelf()
 	scrollView=nil
 	composer.setVariable("selectedStage", event.target.id)
@@ -80,6 +82,8 @@ function scene:create(event)
 	local sceneGroup = self.view
 	local buttonGroup = display.newGroup()
 
+	sfxButton = audio.loadSound("audios/button.wav")
+
 	scrollView = widget.newScrollView({
 		left = 0,
 		top = 0,
@@ -97,7 +101,8 @@ function scene:create(event)
 		defaultFile = "images/backButton.png",
 		width = H*.22, height = H*.22,
 		x = W*0.1, y = H*0.85,
-		onRelease = function() 
+		onRelease = function()
+			audio.play(sfxButton)
 			scrollView:removeSelf()
 			scrollView=nil
 			composer.gotoScene("scenes.menuCharacterSelection", {time=500, effect="slideRight"})
