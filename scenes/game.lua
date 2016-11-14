@@ -69,7 +69,7 @@ local tempPosition
 local xCompensation = W*0.4
 
 local parGravity = 60
-local parAccelerometerSensitivity = 500
+local parAccelerometerSensitivity = 30
 local parIsZeroGravity=false
 
 local playerProgression = {}
@@ -352,6 +352,11 @@ local function playerCollider( self,event )
         	parIsZeroGravity=true
         	physics.setGravity(0,0)
         	jumpButtonArea.isHitTestable=false
+    	end  
+    	if ( event.selfElement == 1 and event.other.objType == "endZeroGravity" ) then
+        	parIsZeroGravity=false
+        	physics.setGravity(0,parGravity)
+        	jumpButtonArea.isHitTestable=true
     	end  
     end
 end

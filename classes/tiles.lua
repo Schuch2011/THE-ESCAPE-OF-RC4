@@ -102,6 +102,11 @@ function _M.newTile(type,xPos,yPos,width,height)
 			box.isSensor=true
 			box.alpha=0
 			box.objType="startZeroGravity"
+		elseif (type == "EZG") then
+			movableGroup:insert(box)
+			box.isSensor=true
+			box.alpha=0
+			box.objType="endZeroGravity"
 		end
 	end
 	return box
