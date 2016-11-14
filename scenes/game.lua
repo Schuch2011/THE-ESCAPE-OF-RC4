@@ -162,8 +162,6 @@ local function onAccelerate( event )
 	if (parIsZeroGravity==true) then
     	physics.setGravity(0,event.zInstant*1*parAccelerometerSensitivity)
     	parSpeed = parZeroChamberSpeed
-		
-		print("zero gravity")
 	end
 end
  
@@ -185,7 +183,7 @@ end
 local function activatePowerUp(type)
 	activePowerUpOverlayGroup.isVisible = true
 	
-	for i = 1, #activePowerUpOverlay.images do
+	for i = 1, activePowerUpOverlay.images.numChildren do
 		activePowerUpOverlay.images[i].isVisible = false
 	end
 	
@@ -356,8 +354,6 @@ local function playerCollider( self,event )
         	jumpButtonArea.isHitTestable=false
 			player:setSequence("zeroGravity")
 			player:play()
-			
-			print("start")
     	end  
     	if ( event.selfElement == 1 and event.other.objType == "endZeroGravity" ) then
         	parIsZeroGravity=false
@@ -365,8 +361,6 @@ local function playerCollider( self,event )
         	jumpButtonArea.isHitTestable=true
 			player:setSequence("running")
 			player:play()
-			
-			print("finnish")
     	end  
     end
 end
