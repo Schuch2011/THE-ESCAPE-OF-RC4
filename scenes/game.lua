@@ -162,6 +162,8 @@ local function onAccelerate( event )
 	if (parIsZeroGravity==true) then
     	physics.setGravity(0,event.zInstant*1*parAccelerometerSensitivity)
     	parSpeed = parZeroChamberSpeed
+		
+		print("zero gravity")
 	end
 end
  
@@ -352,11 +354,19 @@ local function playerCollider( self,event )
         	parIsZeroGravity=true
         	physics.setGravity(0,0)
         	jumpButtonArea.isHitTestable=false
+			player:setSequence("zeroGravity")
+			player:play()
+			
+			print("start")
     	end  
     	if ( event.selfElement == 1 and event.other.objType == "endZeroGravity" ) then
         	parIsZeroGravity=false
         	physics.setGravity(0,parGravity)
         	jumpButtonArea.isHitTestable=true
+			player:setSequence("running")
+			player:play()
+			
+			print("finnish")
     	end  
     end
 end
@@ -618,17 +628,19 @@ function updateFrames()
 
 		local vx, vy = player:getLinearVelocity()
 		
-		-- ANIMAÇÃO DO PERSONAGEM CAINDO
-		if vy > 0 then
-			if player.sequence ~= "falling" then
-				--player:setSequence("falling")
-				--player:play()
-			end
-		-- ANIMAÇÃO DO PERSONAGEM CORRENDO
-		elseif vy == 0 then
-			if player.sequence ~= "running" then
-				player:setSequence("running")
-				player:play()
+		if not parIsZeroGravity then
+			-- ANIMAÇÃO DO PERSONAGEM CAINDO
+			if vy > 0 then
+				if player.sequence ~= "falling" then
+					--player:setSequence("falling")
+					--player:play()
+				end
+			-- ANIMAÇÃO DO PERSONAGEM CORRENDO
+			elseif vy == 0 then
+				if player.sequence ~= "running" then
+					player:setSequence("running")
+					player:play()
+				end
 			end
 		end
 		

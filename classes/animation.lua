@@ -23,6 +23,13 @@ local defaultSequences = {
 		loopCount = 1,
 		loopDirection = "forward"
 	},
+	{
+		name = "zeroGravity",
+		frames = {62},
+		time = 250,
+		loopCount = 1,
+		loopDirection = "forward"
+	}
 	--[[
 	{
 		name = "falling",
