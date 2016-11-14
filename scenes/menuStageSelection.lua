@@ -16,6 +16,7 @@ local xView = 0
 local difX = 0
 
 local sfxButton
+local sfxSwipe
 
 local function onLevelButtonRelease(event)
 	audio.play(sfxButton)
@@ -38,6 +39,7 @@ local function scrollListener(event)
 
 		if (difX > 40) then
 			if (slotSelected<4) then
+				audio.play(sfxSwipe)
 				scrollView:scrollToPosition			
 				{
    					x = -W+initXPos,
@@ -53,6 +55,7 @@ local function scrollListener(event)
 			end
 		elseif (difX < -40) then
 			if (slotSelected>1) then
+				audio.play(sfxSwipe)
 				scrollView:scrollToPosition			
 				{
    					x = initXPos+W,
@@ -83,6 +86,7 @@ function scene:create(event)
 	local buttonGroup = display.newGroup()
 
 	sfxButton = audio.loadSound("audios/button.wav")
+	sfxSwipe = audio.loadSound("audios/swipe.wav")
 
 	scrollView = widget.newScrollView({
 		left = 0,

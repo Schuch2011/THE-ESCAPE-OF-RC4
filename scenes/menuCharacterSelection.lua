@@ -16,6 +16,7 @@ local xView = 0
 local difX = 0
 
 local sfxButton
+local sfxSwipe
 
 local function onCharacterButtonRelease(event)
 	audio.play(sfxButton)
@@ -37,6 +38,7 @@ local function scrollListener(event) -- CONTROLA O SCROLL DA SELEÇÃO DOS PERSO
 
 		if (difX > 40) then
 			if (slotSelected<4) then
+				audio.play(sfxSwipe)
 				scrollView:scrollToPosition			
 				{
    					x = -W+initXPos,
@@ -52,6 +54,7 @@ local function scrollListener(event) -- CONTROLA O SCROLL DA SELEÇÃO DOS PERSO
 			end
 		elseif (difX < -40) then
 			if (slotSelected>1) then
+				audio.play(sfxSwipe)
 				scrollView:scrollToPosition			
 				{
    					x = initXPos+W,
@@ -86,6 +89,7 @@ function scene:create(event)
 	local buttonGroup = display.newGroup()
 
 	sfxButton = audio.loadSound("audios/button.wav")
+	sfxSwipe = audio.loadSound("audios/swipe.wav")
 
 	scrollView = widget.newScrollView({
 		left = 0,
@@ -115,37 +119,27 @@ function scene:create(event)
 	buttonGroup:insert(backButton)
 
 	for i = 1, 4 do
-		local c1 = 1
-		local c2 = 1
-		local c3 = 1
+		local cWidth = 1
+		local cHeight = 1
+
 		
 
 		if i==1 then
-			c1 = 1
-			c2 = 0.5
-			c3 = 0
+			cWidth, cHeight = W*.15, H*.5
 		elseif i==2 then
-			c1 = 0
-			c2 = 1
-			c3 = 0
+			cWidth, cHeight = W*.23, H*.5
 		elseif i==3 then
-			c1 = 1
-			c2 = 0
-			c3 = 0
+			cWidth, cHeight = W*.15, H*.5
 		elseif i==4 then
-			c1 = 1
-			c2 = 1
-			c3 = 0
+			cWidth, cHeight = W*.15, H*.5
 		end
 
 		local button = widget.newButton({
 			id = i,			
-			shape = "roundedRect",
-			cornerRadius = 10,
-			width = W*.15, height = H*.5,
+			defaultFile = "images/characterSelection/character_"..i..".png",
+			width = cWidth, height = cHeight,
 			x = W*0.5+(i-1)*W, y = H*.55,
 			onRelease = onCharacterButtonRelease,
-			fillColor = { default={c1,c2,c3}, over={c1,c2,c3} }
 		})
 
 		local text = display.newText(
