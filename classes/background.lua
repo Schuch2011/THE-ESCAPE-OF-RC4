@@ -9,8 +9,7 @@ function _M.newBackground(stageID)
 		local backgroundBottonColor = display.newRect(backgroundGroup,W/2,H/2, W*1.2,H*1.2)
 	 	backgroundBottonColor:setFillColor(96/255, 146/255, 196/255)
 		
-	 	local backgroundUpperFill = display.newRect(backgroundGroup,0,10, W*1.2,H*3)
-	 	backgroundUpperFill.anchorX = 0
+	 	local backgroundUpperFill = display.newRect(backgroundGroup,W/2,10, W*1.2,H*3)
 	 	backgroundUpperFill.anchorY = 1
 		backgroundUpperFill:setFillColor(168/255, 222/255, 237/255)
 	 	backgroundUpperFill.speed = {x = 0, y = 0.05}
@@ -23,8 +22,7 @@ function _M.newBackground(stageID)
 			background.speed = {x = 0.03, y=0.05}
 		end
 	
-		local middleGroundUpperFill = display.newRect(backgroundGroup,0,-10, W*1.2,H*3)
-	 	middleGroundUpperFill.anchorX = 0
+		local middleGroundUpperFill = display.newRect(backgroundGroup,W/2,-10, W*1.2,H*3)
 	 	middleGroundUpperFill.anchorY = 1
 		middleGroundUpperFill:setFillColor(97/255, 203/255, 232/255)
 	 	middleGroundUpperFill.speed = {x = 0, y = 0.05}
@@ -37,8 +35,7 @@ function _M.newBackground(stageID)
 			middleGround.speed = {x = 0.07, y=0.05}
 		end
 	
-		local foreGroundUpperFill = display.newRect(backgroundGroup,0,10, W*1.2,H*3)
-	 		foreGroundUpperFill.anchorX = 0
+		local foreGroundUpperFill = display.newRect(backgroundGroup,W/2,10, W*1.2,H*3)
 	 		foreGroundUpperFill.anchorY = 1
 			foreGroundUpperFill:setFillColor(24/255, 127/255, 152/255)
 	 		foreGroundUpperFill.speed = {x = 0, y = 0.1}
@@ -56,8 +53,7 @@ function _M.newBackground(stageID)
 		local backgroundBottonColor = display.newRect(backgroundGroup,W/2,H/2, W*1.2,H*1.2)
 	 	backgroundBottonColor:setFillColor(62/255, 19/255, 18/255)
 		
-	 	local backgroundUpperFill = display.newRect(backgroundGroup,0,10, W*1.2,H*3)
-	 	backgroundUpperFill.anchorX = 0
+	 	local backgroundUpperFill = display.newRect(backgroundGroup,W/2,10, W*1.2,H*3)
 	 	backgroundUpperFill.anchorY = 1
 		backgroundUpperFill:setFillColor(63/255, 20/255, 19/255)
 	 	backgroundUpperFill.speed = {x = 0, y = 0.05}
@@ -70,8 +66,7 @@ function _M.newBackground(stageID)
 			background.speed = {x = 0.03, y=0.05}
 		end
 	
-		local middleGroundUpperFill = display.newRect(backgroundGroup,0,-10, W*1.2,H*3)
-	 	middleGroundUpperFill.anchorX = 0
+		local middleGroundUpperFill = display.newRect(backgroundGroup,W/2,-10, W*1.2,H*3)
 	 	middleGroundUpperFill.anchorY = 1
 		middleGroundUpperFill:setFillColor(121/255, 23/255, 24/255)
 	 	middleGroundUpperFill.speed = {x = 0, y = 0.05}
@@ -84,8 +79,7 @@ function _M.newBackground(stageID)
 			middleGround.speed = {x = 0.07, y=0.05}
 		end
 	
-		local foreGroundUpperFill = display.newRect(backgroundGroup,0,10, W*1.2,H*3)
-	 		foreGroundUpperFill.anchorX = 0
+		local foreGroundUpperFill = display.newRect(backgroundGroup,W/2,10, W*1.2,H*3)
 	 		foreGroundUpperFill.anchorY = 1
 			foreGroundUpperFill:setFillColor(62/255, 17/255, 16/255)
 	 		foreGroundUpperFill.speed = {x = 0, y = 0.1}
@@ -103,8 +97,7 @@ function _M.newBackground(stageID)
 		local backgroundBottonColor = display.newRect(backgroundGroup,W/2,H/2, W*1.2,H*1.2)
 	 	backgroundBottonColor:setFillColor(62/255, 19/255, 18/255)
 		
-	 	local backgroundUpperFill = display.newRect(backgroundGroup,0,10, W*1.2,H*3)
-	 	backgroundUpperFill.anchorX = 0
+	 	local backgroundUpperFill = display.newRect(backgroundGroup,W/2,10, W*1.2,H*3)
 	 	backgroundUpperFill.anchorY = 1
 		backgroundUpperFill:setFillColor(63/255, 20/255, 19/255)
 	 	backgroundUpperFill.speed = {x = 0, y = 0.05}
@@ -117,8 +110,7 @@ function _M.newBackground(stageID)
 			background.speed = {x = 0.03, y=0.05}
 		end
 	
-		local middleGroundUpperFill = display.newRect(backgroundGroup,0,-10, W*1.2,H*3)
-	 	middleGroundUpperFill.anchorX = 0
+		local middleGroundUpperFill = display.newRect(backgroundGroup,W/2,-10, W*1.2,H*3)
 	 	middleGroundUpperFill.anchorY = 1
 		middleGroundUpperFill:setFillColor(121/255, 23/255, 24/255)
 	 	middleGroundUpperFill.speed = {x = 0, y = 0.05}
@@ -131,8 +123,7 @@ function _M.newBackground(stageID)
 			middleGround.speed = {x = 0.07, y=0.05}
 		end
 	
-		local foreGroundUpperFill = display.newRect(backgroundGroup,0,10, W*1.2,H*3)
-	 		foreGroundUpperFill.anchorX = 0
+		local foreGroundUpperFill = display.newRect(backgroundGroup,W/2,10, W*1.2,H*3)
 	 		foreGroundUpperFill.anchorY = 1
 			foreGroundUpperFill:setFillColor(62/255, 17/255, 16/255)
 	 		foreGroundUpperFill.speed = {x = 0, y = 0.1}
@@ -151,8 +142,7 @@ function _M.newBackground(stageID)
 		local backgroundBottonColor = display.newRect(backgroundGroup,W/2,H/2, W*1.2,H*1.2)
 	 	backgroundBottonColor:setFillColor(62/255, 19/255, 18/255)
 		
-	 	local backgroundUpperFill = display.newRect(backgroundGroup,0,10, W*1.2,H*3)
-	 	backgroundUpperFill.anchorX = 0
+	 	local backgroundUpperFill = display.newRect(backgroundGroup,W/2,10, W*1.2,H*3)
 	 	backgroundUpperFill.anchorY = 1
 		backgroundUpperFill:setFillColor(63/255, 20/255, 19/255)
 	 	backgroundUpperFill.speed = {x = 0, y = 0.05}
@@ -165,8 +155,7 @@ function _M.newBackground(stageID)
 			background.speed = {x = 0.03, y=0.05}
 		end
 	
-		local middleGroundUpperFill = display.newRect(backgroundGroup,0,-10, W*1.2,H*3)
-	 	middleGroundUpperFill.anchorX = 0
+		local middleGroundUpperFill = display.newRect(backgroundGroup,W/2,-10, W*1.2,H*3)
 	 	middleGroundUpperFill.anchorY = 1
 		middleGroundUpperFill:setFillColor(121/255, 23/255, 24/255)
 	 	middleGroundUpperFill.speed = {x = 0, y = 0.05}
@@ -179,8 +168,7 @@ function _M.newBackground(stageID)
 			middleGround.speed = {x = 0.07, y=0.05}
 		end
 	
-		local foreGroundUpperFill = display.newRect(backgroundGroup,0,10, W*1.2,H*3)
-	 		foreGroundUpperFill.anchorX = 0
+		local foreGroundUpperFill = display.newRect(backgroundGroup,W/2,10, W*1.2,H*3)
 	 		foreGroundUpperFill.anchorY = 1
 			foreGroundUpperFill:setFillColor(62/255, 17/255, 16/255)
 	 		foreGroundUpperFill.speed = {x = 0, y = 0.1}
