@@ -576,7 +576,24 @@ function scene:create(event)
 	playerProgression.background:setStrokeColor(0)
 	playerProgression.background:setFillColor(1)
 	
-	playerProgression.position = display.newRoundedRect(playerProgressionGroup, 0, 0, H * 0.03, H * 0.03, H * 0.03)
+	playerProgression.position = display.newImage(playerProgressionGroup, "images/char_" .. charId .. "_head.png")
+	
+	local hRatio = playerProgression.position.height / playerProgression.position.width
+	local imageWidth
+	
+	if charId == 1 or charId == 4 then
+		imageWidth = 14
+	elseif charId == 2 then
+		imageWidth = 18
+	elseif charId == 3 then
+		imageWidth = 11
+	end
+	
+	playerProgression.position.width = imageWidth
+	playerProgression.position.height = imageWidth * hRatio
+	
+	--[[
+	display.newRoundedRect(playerProgressionGroup, 0, 0, H * 0.03, H * 0.03, H * 0.03)
 	
 	local playerColor = {}
 	
@@ -599,6 +616,7 @@ function scene:create(event)
 	end
 	
 	playerProgression.position:setFillColor(playerColor.red, playerColor.green, playerColor.blue)
+	--]]
 	
 	playerProgressionGroup.x = W * .5 - playerProgression.background.width * .5
 	playerProgressionGroup.y = H * .05
