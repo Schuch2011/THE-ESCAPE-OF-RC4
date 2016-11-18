@@ -581,12 +581,14 @@ function scene:create(event)
 	local hRatio = playerProgression.position.height / playerProgression.position.width
 	local imageWidth
 	
-	if charId == 1 or charId == 4 then
-		imageWidth = 14
+	if charId == 1 then
+		imageWidth = 20
 	elseif charId == 2 then
-		imageWidth = 18
+		imageWidth = 27
 	elseif charId == 3 then
-		imageWidth = 11
+		imageWidth = 16
+	elseif charId == 4 then
+		imageWidth = 18
 	end
 	
 	playerProgression.position.width = imageWidth
