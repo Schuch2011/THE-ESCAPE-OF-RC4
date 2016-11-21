@@ -15,6 +15,8 @@ local initXPos = 0
 local xView = 0
 local difX = 0
 
+local parDistance = W*.6
+
 local sfxButton
 local sfxSwipe
 
@@ -41,7 +43,7 @@ local function scrollListener(event) -- CONTROLA O SCROLL DA SELEÇÃO DOS PERSO
 				audio.play(sfxSwipe)
 				scrollView:scrollToPosition			
 				{
-   					x = -W+initXPos,
+   					x = -parDistance+initXPos,
    					time = 200,
 				}
 				slotSelected = slotSelected +1 
@@ -57,7 +59,7 @@ local function scrollListener(event) -- CONTROLA O SCROLL DA SELEÇÃO DOS PERSO
 				audio.play(sfxSwipe)
 				scrollView:scrollToPosition			
 				{
-   					x = initXPos+W,
+   					x = initXPos+parDistance,
    					time = 200,
 				}
 				slotSelected = slotSelected - 1 
@@ -94,7 +96,7 @@ function scene:create(event)
 	scrollView = widget.newScrollView({
 		left = 0,
 		top = 0,
-		width = W,
+		width = W*1.2,
 		height = H,
 		verticalScrollDisabled = true,		
 		horizontalScrollDisabled = false,
@@ -138,7 +140,7 @@ function scene:create(event)
 			id = i,			
 			defaultFile = "images/characterSelection/character_"..i..".png",
 			width = cWidth, height = cHeight,
-			x = W*0.5+(i-1)*W, y = H*.55,
+			x = W*0.5+(i-1)*parDistance, y = H*.55,
 			onRelease = onCharacterButtonRelease,
 		})
 
@@ -146,7 +148,7 @@ function scene:create(event)
 			{
 				parent = sceneGroup,
 				text = "CHARACTER "..i,
-				x = W*0.5+(i-1)*W, 
+				x = W*0.5+(i-1)*parDistance, 
 				y = H*.9, 
 				font = native.systemFontBold, 
 				fontSize = 25,

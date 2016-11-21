@@ -10,10 +10,12 @@ local saveState = require("classes.preference")
 local scene = composer.newScene()
 local scrollView
 
-local slotSelected = 1
+local slotSelected = 0
 local initXPos = 0
 local xView = 0
 local difX = 0
+
+local parDistance = W*.6
 
 local sfxButton
 local sfxSwipe
@@ -42,7 +44,7 @@ local function scrollListener(event)
 				audio.play(sfxSwipe)
 				scrollView:scrollToPosition			
 				{
-   					x = -W+initXPos,
+   					x = -parDistance+initXPos,
    					time = 200,
 				}
 				slotSelected = slotSelected +1 
@@ -54,11 +56,11 @@ local function scrollListener(event)
 				}
 			end
 		elseif (difX < -40) then
-			if (slotSelected>1) then
+			if (slotSelected>0) then
 				audio.play(sfxSwipe)
 				scrollView:scrollToPosition			
 				{
-   					x = initXPos+W,
+   					x = initXPos+parDistance,
    					time = 200,
 				}
 				slotSelected = slotSelected - 1 
@@ -91,7 +93,7 @@ function scene:create(event)
 	scrollView = widget.newScrollView({
 		left = 0,
 		top = 0,
-		width = W,
+		width = W*1.2,
 		height = H,
 		verticalScrollDisabled = true,		
 		horizontalScrollDisabled = false,
@@ -119,42 +121,66 @@ function scene:create(event)
 	saveState.save({["stage3".."totalCoins"] = 8})
 	saveState.save({["stage4".."totalCoins"] = 8})
 
-	for i = 1, 4 do
-		if saveState.getValue("stage"..i.."Coins")==nil then
-			saveState.save({["stage"..i.."Coins"] = 0})
-		end
+	for i = 0, 4 do
+		if i==0 then
+			local button = widget.newButton({
+				id = i,
+				defaultFile = "images/tutorial.png",
+				width = 104, height = 104,
+				x = W*0.5+(i)*parDistance, y = H*.45,
+				onRelease = onLevelButtonRelease,
+			})
 
-		if saveState.getValue("stage"..i.."Score")==nil then
-			saveState.save({["stage"..i.."Score"] = 0})
-		end
-
-		local maxCoinsTaken = saveState.getValue("stage"..i.."Coins")
-		local maxHighscore = saveState.getValue("stage"..i.."Score")
-
-
-		local button = widget.newButton({
-			id = i,			
-			shape = "roundedRect",
-			cornerRadius = 10,
-			width = W*.45, height = H*.35,
-			x = W*0.5+(i-1)*W, y = H*.45,
-			onRelease = onLevelButtonRelease,
-		})
-
-
-		local text = display.newText({
+			local text = display.newText({
 				parent = sceneGroup,
-				text = "STAGE "..i.."\nCOINS: "..maxCoinsTaken.." / "..saveState.getValue("stage"..i.."totalCoins").."\nHIGHSCORE: "..maxHighscore, 
-				x = W*0.5+(i-1)*W, 
+				text = "TUTORIAL", 
+				x = W*0.5+(i)*parDistance, 
 				y = H*.8, 
 				font = native.systemFontBold, 
 				fontSize = 25,
 				align = "center"
 			})
-		text:setFillColor(1)
+			text:setFillColor(1)
 
-		scrollView:insert(text)
-		scrollView:insert(button)
+			scrollView:insert(text)
+			scrollView:insert(button)
+
+		else
+			if saveState.getValue("stage"..i.."Coins")==nil then
+				saveState.save({["stage"..i.."Coins"] = 0})
+			end
+	
+				if saveState.getValue("stage"..i.."Score")==nil then
+					saveState.save({["stage"..i.."Score"] = 0})
+				end
+	
+				local maxCoinsTaken = saveState.getValue("stage"..i.."Coins")
+				local maxHighscore = saveState.getValue("stage"..i.."Score")
+	
+	
+				local button = widget.newButton({
+					id = i,			
+					shape = "roundedRect",
+					cornerRadius = 10,
+					width = W*.45, height = H*.35,
+					x = W*0.5+(i)*parDistance, y = H*.45,
+					onRelease = onLevelButtonRelease,
+				})
+	
+				local text = display.newText({
+						parent = sceneGroup,
+						text = "STAGE "..i.."\nCOINS: "..maxCoinsTaken.." / "..saveState.getValue("stage"..i.."totalCoins").."\nHIGHSCORE: "..maxHighscore, 
+						x = W*0.5+(i)*parDistance, 
+						y = H*.8, 
+						font = native.systemFontBold, 
+						fontSize = 25,
+						align = "center"
+					})
+				text:setFillColor(1)
+	
+				scrollView:insert(text)
+				scrollView:insert(button)
+		end
 	end
 
 	local menuTitle = display.newText("STAGE SELECTION",W/2,H*.15,native.systemFontBold,30)
