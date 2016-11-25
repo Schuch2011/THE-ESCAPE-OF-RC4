@@ -160,8 +160,7 @@ function scene:create(event)
 	
 				local button = widget.newButton({
 					id = i,			
-					shape = "roundedRect",
-					cornerRadius = 10,
+					defaultFile = "images/thumbnails/"..i..".png",
 					width = W*.45, height = H*.35,
 					x = W*0.5+(i)*parDistance, y = H*.45,
 					onRelease = onLevelButtonRelease,
