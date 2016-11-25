@@ -298,7 +298,6 @@ local function playerCollider( self,event )
 			display.remove(temp)
 			coins = coins +1
 			score = score + 250
-			--coinsCounter.text = "COINS: "..coins.." / "..totalCoins
 			coinsCounter.text = coins
 			audio.play(sfxCoin)
       	end
@@ -386,7 +385,6 @@ function scene:create(event)
 	sfxGameWin = audio.loadSound("audios/gameWin.wav")
 	sfxButton = audio.loadSound("audios/button.wav")
 	sfxBGMusic = audio.loadStream("audios/music.wav")
-
 
 	-- CRIAR GRUPOS
 
@@ -482,9 +480,6 @@ function scene:create(event)
 	pauseButton.anchorX, pauseButton.anchorY = 1, 0
 	
 	-- CONTADOR DE MOEDAS
-
-	--scoreCounter = display.newText(HUDGroup,"SCORE: "..score,W*.4,H*.11,native.systemFontBold,25)
-	--scoreCounter:setFillColor(1,1,0)
 	
 	local scoreBackground = display.newRoundedRect(HUDGroup, W * .985, 10, 80, 25, 5)
 	scoreBackground:setFillColor(0, 0, 0, .35)
@@ -511,10 +506,6 @@ function scene:create(event)
 	
 	scoreCounter:setFillColor(1)
 	scoreCounter.anchorX, scoreCounter.anchorY = 1, .5
-
-	--totalCoins = saveState.getValue("stage"..currentLevel.."totalCoins")
-	--coinsCounter = display.newText(HUDGroup,"COINS: "..coins.." / "..totalCoins,W*.8,H*.11,native.systemFontBold,25)
-	--coinsCounter:setFillColor(1,1,0)
 
 	local coinIcon = display.newImageRect(HUDGroup, "images/coin.png", 30, 30)
 	coinIcon.x = W * .87
@@ -594,32 +585,6 @@ function scene:create(event)
 	playerProgression.position.width = imageWidth
 	playerProgression.position.height = imageWidth * hRatio
 	
-	--[[
-	display.newRoundedRect(playerProgressionGroup, 0, 0, H * 0.03, H * 0.03, H * 0.03)
-	
-	local playerColor = {}
-	
-	if charId == 1 then
-		playerColor.red = .97
-		playerColor.green = .58
-		playerColor.blue = .35
-	elseif charId == 2 then
-		playerColor.red = 0
-		playerColor.green = .32
-		playerColor.blue = .16
-	elseif charId == 3 then
-		playerColor.red = .92
-		playerColor.green = .19
-		playerColor.blue = .22
-	elseif charId == 4 then
-		playerColor.red = .43
-		playerColor.green = .39
-		playerColor.blue = .3
-	end
-	
-	playerProgression.position:setFillColor(playerColor.red, playerColor.green, playerColor.blue)
-	--]]
-	
 	playerProgressionGroup.x = W * .5 - playerProgression.background.width * .5
 	playerProgressionGroup.y = H * .05
 	
@@ -637,7 +602,6 @@ function scene:create(event)
 	sceneGroup:insert(movableGroup)
 	sceneGroup:insert(HUDGroup)
 	sceneGroup:insert(fpsCounter)
-
 end
 
 function scene:show( event )     
@@ -686,7 +650,6 @@ function updateFrames()
 
 		score = score + 1*(parScoreMultiplier)
 		if score%10 == 0 then
-			--scoreCounter.text= "SCORE: "..score
 			scoreCounter.text = score
 		end
 
@@ -719,8 +682,7 @@ function updateFrames()
  			end
  			if backgroundGroup[i].x < -1* backgroundGroup[i].width*backgroundGroup[i].xScale-100 then
  				backgroundGroup[i].x = 3* backgroundGroup[i].width*backgroundGroup[i].xScale-100
- 			end 
-
+ 			end
  		end
 
  		moviment = parSpeed*dt
@@ -759,7 +721,6 @@ function updateFrames()
 		end
 
 		--HORIZONTALMENTE, APÓS O FIM DA OBSTRUÇÃO
-
 
 		if (playerLocalX < parPlayerXPosition or playerLocalX > parPlayerXPosition) then
 			local difX
