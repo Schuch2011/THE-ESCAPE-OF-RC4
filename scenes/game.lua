@@ -111,7 +111,7 @@ local function switch() -- MECÂNICA DE INVERSÃO DOS ELEMENTOS DO CENÁRIO
 	audio.play(sfxSwitch)
 	if(switchTime == false) then
 		for i=1, lightGroup.numChildren do
-			lightGroup[i].alpha = 0.1
+			lightGroup[i].alpha = 0.35
 			lightGroup[i].isBodyActive = false
 		end
 		for i=1, darkGroup.numChildren do
@@ -125,7 +125,7 @@ local function switch() -- MECÂNICA DE INVERSÃO DOS ELEMENTOS DO CENÁRIO
 			lightGroup[i].isBodyActive = true
 		end
 		for i=1, darkGroup.numChildren do
-			darkGroup[i].alpha = 0.1
+			darkGroup[i].alpha = 0.35
 			darkGroup[i].isBodyActive = false			
 		end
 		switchTime = false
@@ -458,6 +458,29 @@ function scene:create(event)
 
 	-- INSTANCIAR BOTÕES DE AÇÃO
 
+	local leftButton = widget.newButton({
+		shape = "circle",
+		radius=W*.4,
+		x=W*-.05,
+		y=H*1,
+		fillColor = {default={0.8}, over={0.6}},
+	})
+	leftButton.alpha = 0.12
+	leftButton.isHitTestable = false
+	HUDGroup:insert(leftButton)
+
+
+	local rightButton = widget.newButton({
+		shape = "circle",
+		radius=W*.4,
+		x=W*1.05,
+		y=H*1,
+		fillColor = {default={0.8}, over={0.6}},
+	})
+	rightButton.alpha = 0.12
+	rightButton.isHitTestable = false
+	HUDGroup:insert(rightButton)
+
 	jumpButtonArea = display.newRect(HUDGroup, W * .5 , H * .5 , display.actualContentWidth * .5, display.actualContentHeight)
 	jumpButtonArea.anchorX = 0
 	jumpButtonArea.alpha = 0
@@ -593,6 +616,10 @@ function scene:create(event)
 	
 	playerProgression.position.width = imageWidth
 	playerProgression.position.height = imageWidth * hRatio
+
+
+
+
 	
 	--[[
 	display.newRoundedRect(playerProgressionGroup, 0, 0, H * 0.03, H * 0.03, H * 0.03)

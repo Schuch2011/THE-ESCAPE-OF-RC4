@@ -56,12 +56,14 @@ function _M.newTile(type,xPos,yPos,width,height)
 			movableGroup:insert(box)
 		elseif (type == "L") then
 			box.objType="ground"
+			box:setFillColor(106/255,47/255,238/255)
 			lightGroup:insert(box)
 		elseif (type == "D") then
 			box.objType="ground"
+			box:setFillColor(106/255,47/255,238/255)
 			darkGroup:insert(box)
 			box.isBodyActive = false
-			box.alpha = 0.1 
+			box.alpha = 0.35 
 		elseif (type == "EG") then
 			movableGroup:insert(box)
 			box.isSensor=true

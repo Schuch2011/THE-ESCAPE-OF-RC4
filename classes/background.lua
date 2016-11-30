@@ -154,34 +154,40 @@ function _M.newBackground(stageID)
 	 -- 	backgroundUpperFill.speed = {x = 0, y = 0.05}
 	
 	 	for i = 1, 5 do
-			local background = display.newImage(backgroundGroup, "images/background/stage_4/background_"..math.random(2)..".png",0, 0)
+			local background = display.newImage(backgroundGroup, "images/background/stage_4/background_"..math.random(3)..".png",0, 0)
 			background.anchorX, background.anchorY = 0,0
 			background.xScale, background.yScale = 0.5,0.5
 			background.x = (i-1)*background.width*background.xScale-100-(i-2)*1
 			background.speed = {x = 0.03, y=0.05}
 		end
 	
-		-- local middleGroundUpperFill = display.newRect(backgroundGroup,W/2,-10, W*1.2,H*3)
-	 -- 	middleGroundUpperFill.anchorY = 1
-		-- middleGroundUpperFill:setFillColor(121/255, 23/255, 24/255)
-	 -- 	middleGroundUpperFill.speed = {x = 0, y = 0.05}
+		local middleGroundBottonFill = display.newRect(backgroundGroup,W/2,H+10, W*1.2,H*.455)
+	 	middleGroundBottonFill.anchorY = 1
+		middleGroundBottonFill:setFillColor(49/255, 96/255, 49/255)
+	 	middleGroundBottonFill.speed = {x = 0, y = 0.05}
 	
-		for i = 1, 5 do
-			local middleGround = display.newImage(backgroundGroup, "images/background/stage_4/middleGround_"..i..".png",0, 0)
+		for i = 1, 10 do
+			local tempI
+			if i <= 5 then
+				tempI = i
+			else 
+				tempI = i-5
+			end 
+			local middleGround = display.newImage(backgroundGroup, "images/background/stage_4/middleGround_"..tempI..".png",0, 25)
 			middleGround.anchorX, middleGround.anchorY = 0,0
 			middleGround.xScale, middleGround.yScale = 0.5,0.5
-			middleGround.x = (i-1)*middleGround.width*middleGround.xScale-100-(i-1)*2
+			middleGround.x = (i-1)*middleGround.width/2*middleGround.xScale-100-(i-1)*2
 			middleGround.speed = {x = 0.07, y=0.05}
 		end
 	
 		local foreGroundUpperFill = display.newRect(backgroundGroup,W/2,10, W*1.2,H*3)
 	 		foreGroundUpperFill.anchorY = 1
-			foreGroundUpperFill:setFillColor(41/255, 90/255, 41/255)
+			foreGroundUpperFill:setFillColor(89/255, 167/255, 92/255)
 	 		foreGroundUpperFill.speed = {x = 0, y = 0.1}
 
 	    local foreGroundBottonFill = display.newRect(backgroundGroup,W/2,H*.75, W*1.2,H*3)
 	 	foreGroundBottonFill.anchorY = -1
-		foreGroundBottonFill:setFillColor(137/255, 137/255, 137/255)
+		foreGroundBottonFill:setFillColor(3/255, 100/255, 1/255)
 	 	foreGroundBottonFill.speed = {x = 0, y = 0.1}
 	
 		for i = 1, 5 do
