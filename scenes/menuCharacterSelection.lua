@@ -15,6 +15,11 @@ local initXPos = 0
 local xView = 0
 local difX = 0
 
+local isChar1Unlocked
+local isChar2Unlocked
+local isChar3Unlocked
+local isChar4Unlocked
+
 local parDistance = W*.5
 
 local sfxButton
@@ -28,11 +33,14 @@ local function onCharacterButtonTouch(event)
             scrollView:takeFocus( event )
         end
     elseif ( phase == "ended" ) then
-		audio.play(sfxButton)
-		scrollView:removeSelf()
-		scrollView=nil
-		composer.setVariable("selectedCharacter" , event.target.id)
-		composer.gotoScene("scenes.menuStageSelection", {effect = "slideLeft", time = 500})
+    	print(composer.getVariable("isChar"..event.target.id.."Unlocked_"))
+    	if (composer.getVariable("isChar"..event.target.id.."Unlocked_") == true) then
+			audio.play(sfxButton)
+			scrollView:removeSelf()
+			scrollView=nil
+			composer.setVariable("selectedCharacter" , event.target.id)
+			composer.gotoScene("scenes.menuStageSelection", {effect = "slideLeft", time = 500})
+		end
     end
     return true
 end
@@ -102,6 +110,9 @@ function scene:create(event)
 	sfxButton = audio.loadSound("audios/button.wav")
 	sfxSwipe = audio.loadSound("audios/swipe.wav")
 
+	local background = display.newRect(sceneGroup, W/2, H/2, W*1.2, H)
+	background:setFillColor(67/255, 107/255, 149/255) 
+
 	scrollView = widget.newScrollView({
 		x = W/2,
 		y = H/2,
@@ -130,15 +141,25 @@ function scene:create(event)
 		local cWidth = 1
 		local cHeight = 1
 
+		local isCharUnlocked
+
 		local charName
 		if i == 1 then
 			charName = "RC4-101"
+			isCharUnlocked = saveState.getValue("isChar"..i.."Unlocked") or true
+			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked)
 		elseif i == 2 then
 			charName = "RC4-CRV1"
+			isCharUnlocked = saveState.getValue("isChar"..i.."Unlocked") or false
+			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked)
 		elseif i == 3 then
 			charName = "RC4-FR53"
+			isCharUnlocked = saveState.getValue("isChar"..i.."Unlocked") or false
+			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked)
 		elseif i == 4 then
 			charName = "RC4-SPY14"
+			isCharUnlocked = saveState.getValue("isChar"..i.."Unlocked") or false
+			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked)
 		end
 		
 
@@ -156,24 +177,30 @@ function scene:create(event)
 
 		local button = widget.newButton({
 			id = i,			
-			defaultFile = "images/characterSelection/character_"..i..".png",
+			defaultFile = "images/characterSelection/character_"..i.."_"..tostring(isCharUnlocked)..".png",
 			width = cWidth, height = cHeight,
 			x = W*0.64+(i-1)*parDistance, y = H*.55,
 			onEvent = onCharacterButtonTouch,
 		})
 
 		local text = display.newText(
-			{
-				parent = sceneGroup,
-				text = charName,
-				x = W*0.64+(i-1)*parDistance, 
-				y = H*.9, 
-				font = native.systemFontBold, 
-				fontSize = 25,
-				align = "center"
-			}
-				)
-		text:setFillColor(1)
+		{
+			parent = sceneGroup,
+			text = charName,
+			x = W*0.64+(i-1)*parDistance, 
+			y = H*.9, 
+			font = native.systemFontBold, 
+			fontSize = 25,
+			align = "center"
+		})
+		if isCharUnlocked == false then
+			text.text = "LOCKED"
+			text:setFillColor(230/255,43/255,30/255)
+		else
+			text:setFillColor(1)
+		end
+
+
 
 		scrollView:insert(text)
 		scrollView:insert(button)

@@ -16,6 +16,9 @@ function scene:create(event)
 
 	sfxButton = audio.loadSound("audios/button.wav")
 
+	local background = display.newRect(sceneGroup, W/2, H/2, W*1.2, H)
+	background:setFillColor(67/255, 107/255, 149/255) 
+
 	local gameTitle = display.newText("THE ESCAPE OF RC4",W/2,H*.35,native.systemFontBold,40)
 	gameTitle:setFillColor(1)
 

@@ -100,6 +100,9 @@ function scene:create(event)
 	sfxButton = audio.loadSound("audios/button.wav")
 	sfxSwipe = audio.loadSound("audios/swipe.wav")
 
+	local background = display.newRect(sceneGroup, W/2, H/2, W*1.2, H)
+	background:setFillColor(67/255, 107/255, 149/255) 
+
 	scrollView = widget.newScrollView({
 		x = W/2,
 		y = H/2,
