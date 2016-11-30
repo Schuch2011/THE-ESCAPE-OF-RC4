@@ -143,18 +143,18 @@ function scene:create(event)
 
 		if i==0 then
 			local button = widget.newButton({
-				id = i,
-				defaultFile = "images/tutorial.png",
-				width = 104, height = 104,
-				x = W*0.63+(i)*parDistance, y = H*.45,
-				onEvent = onLevelButtonTouch,
+					id = i,			
+					defaultFile = "images/thumbnails/"..i..".png",
+					width = W*.45, height = H*.35,
+					x = W*0.63+(i)*parDistance, y = H*.45,
+					onEvent = onLevelButtonTouch,
 			})
 
 			local text = display.newText({
 				parent = sceneGroup,
 				text = "TRAINING ROOM", 
 				x = W*0.63+(i)*parDistance, 
-				y = H*.8, 
+				y = H*.7, 
 				font = native.systemFontBold, 
 				fontSize = 25,
 				align = "center"

@@ -5,8 +5,27 @@ local _M = {}
 
 function _M.newBackground(stageID)
 	if (stageID == 0) then
-		local background = display.newRect(backgroundGroup,W/2,H/2, W*1.2,H*1.2)
-		background:setFillColor(0.6)
+		for i=1, 5 do 
+			local foreGround = display.newImage(backgroundGroup, "images/background/stage_0/foreGround_1.png",0, 0)
+			foreGround.anchorX, foreGround.anchorY = 0,0
+			foreGround.xScale, foreGround.yScale = 0.5,0.5
+			foreGround.x = (i-1)*foreGround.width*foreGround.xScale-100---(i-1)*2
+			foreGround.speed = {x = 0.15, y=0.1}
+
+			local foreGroundUp = display.newImage(backgroundGroup, "images/background/stage_0/foreGround_1.png",0, 0)
+			foreGroundUp.anchorX, foreGroundUp.anchorY = foreGround.anchorX, foreGround.anchorY
+			foreGroundUp.xScale, foreGroundUp.yScale = foreGround.xScale, foreGround.yScale
+			foreGroundUp.x = foreGround.x
+			foreGroundUp.speed = foreGround.speed
+			foreGroundUp.y = foreGround.y - foreGround.height/2
+
+			local foreGroundDown = display.newImage(backgroundGroup, "images/background/stage_0/foreGround_1.png",0, 0)
+			foreGroundDown.anchorX, foreGroundDown.anchorY = foreGround.anchorX, foreGround.anchorY
+			foreGroundDown.xScale, foreGroundDown.yScale = foreGround.xScale, foreGround.yScale
+			foreGroundDown.x = foreGround.x
+			foreGroundDown.speed = foreGround.speed
+			foreGroundDown.y = foreGround.y + foreGround.height/2
+		end
 	elseif (stageID == 1) then
 
 		local backgroundBottonColor = display.newRect(backgroundGroup,W/2,H/2, W*1.2,H*1.2)
