@@ -298,8 +298,7 @@ local function playerCollider( self,event )
 			display.remove(temp)
 			coins = coins +1
 			score = score + 250
-			--coinsCounter.text = "COINS: "..coins.." / "..totalCoins
-			coinsCounter.text = coins
+			if coinsCounter then coinsCounter.text = coins.." / "..totalCoins end
 			audio.play(sfxCoin)
       	end
       	    -- COLISÃO COM BLOCOS FATAIS
@@ -517,61 +516,58 @@ function scene:create(event)
 	pauseButton.anchorX, pauseButton.anchorY = 1, 0
 	
 	-- CONTADOR DE MOEDAS
-
-	--scoreCounter = display.newText(HUDGroup,"SCORE: "..score,W*.4,H*.11,native.systemFontBold,25)
-	--scoreCounter:setFillColor(1,1,0)
+	coinsCounter = nil
+	if currentLevel ~= 0 then	
+		local scoreBackground = display.newRoundedRect(HUDGroup, W * 1.05, 10, 110, 25, 5)
+		scoreBackground:setFillColor(0, 0, 0, .35)
+		scoreBackground.anchorX, scoreBackground.anchorY = 1, 0
+			
+		local coinsBackground = display.newRoundedRect(HUDGroup, W * 1.05, 48, 110, 38, 5)
+		coinsBackground:setFillColor(0, 0, 0, .35)
+		coinsBackground.anchorX, coinsBackground.anchorY = 1, 0
+			
+		scoreCounter = display.newEmbossedText({
+			parent = HUDGroup,
+			text = score,
+			x = W * .9725,
+			y = H * .0725,
+			font = native.systemFont,
+			fontSize = 19,
+			align = "center"
+		})
+			
+		scoreCounter:setEmbossColor({
+			highlight = {r = 1, g = 1, b = 1},
+			shadow = {r = 1, g = 1, b = 1}
+		})
+			
+		scoreCounter:setFillColor(1)
+		scoreCounter.anchorX, scoreCounter.anchorY = 1, .5
 	
-	local scoreBackground = display.newRoundedRect(HUDGroup, W * .985, 10, 80, 25, 5)
-	scoreBackground:setFillColor(0, 0, 0, .35)
-	scoreBackground.anchorX, scoreBackground.anchorY = 1, 0
+		totalCoins = composer.getVariable("stage"..currentLevel.."TotalCoins")
 	
-	local coinsBackground = display.newRoundedRect(HUDGroup, W * .985, 48, 80, 38, 5)
-	coinsBackground:setFillColor(0, 0, 0, .35)
-	coinsBackground.anchorX, coinsBackground.anchorY = 1, 0
-	
-	scoreCounter = display.newEmbossedText({
-		parent = HUDGroup,
-		text = score,
-		x = W * .9675,
-		y = H * .0725,
-		font = native.systemFont,
-		fontSize = 19,
-		align = "right"
-	})
-	
-	scoreCounter:setEmbossColor({
-		highlight = {r = 1, g = 1, b = 1},
-		shadow = {r = 1, g = 1, b = 1}
-	})
-	
-	scoreCounter:setFillColor(1)
-	scoreCounter.anchorX, scoreCounter.anchorY = 1, .5
-
-	--totalCoins = saveState.getValue("stage"..currentLevel.."totalCoins")
-	--coinsCounter = display.newText(HUDGroup,"COINS: "..coins.." / "..totalCoins,W*.8,H*.11,native.systemFontBold,25)
-	--coinsCounter:setFillColor(1,1,0)
-
-	local coinIcon = display.newImageRect(HUDGroup, "images/coin.png", 30, 30)
-	coinIcon.x = W * .87
-	coinIcon.y = H * .2105
-	
-	coinsCounter = display.newEmbossedText({
-		parent = HUDGroup,
-		text = score,
-		x = W * .9675,
-		y = H * .21,
-		font = native.systemFont,
-		fontSize = 25,
-		align = "right"
-	})
-	
-	coinsCounter:setEmbossColor({
-		highlight = {r = 1, g = 1, b = 1},
-		shadow = {r = 1, g = 1, b = 1}
-	})
-	
-	coinsCounter:setFillColor(1)
-	coinsCounter.anchorX, coinsCounter.anchorY = 1, .5
+		local coinIcon = display.newImageRect(HUDGroup, "images/coin.png", 30, 30)
+		coinIcon.x = W * .87
+		coinIcon.y = H * .2105
+		
+		coinsCounter = display.newEmbossedText({
+			parent = HUDGroup,
+			text = "0 / "..totalCoins,
+			x = W * 1.025,
+			y = H * .21,
+			font = native.systemFont,
+			fontSize = 25,
+			align = "right"
+		})
+		
+		coinsCounter:setEmbossColor({
+			highlight = {r = 1, g = 1, b = 1},
+			shadow = {r = 1, g = 1, b = 1}
+		})
+		
+		coinsCounter:setFillColor(1)
+		coinsCounter.anchorX, coinsCounter.anchorY = 1, .5
+	end
 	
 	-- POWER UP ATIVO
 	
@@ -724,7 +720,7 @@ function updateFrames()
 		end
 
 		score = score + 1*(parScoreMultiplier)
-		if score%10 == 0 then
+		if score%10 == 0 and scoreCounter then
 			--scoreCounter.text= "SCORE: "..score
 			scoreCounter.text = score
 		end

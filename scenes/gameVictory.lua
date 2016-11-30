@@ -17,7 +17,7 @@ local sfxButton
 function scene:create(event)
 	local sceneGroup = self.view
 	currentLevel = composer.getVariable("selectedStage") or 1
-	totalCoins = saveState.getValue("stage"..currentLevel.."totalCoins") or 0
+	totalCoins = composer.getVariable("stage"..currentLevel.."TotalCoins") or 0
 	local coinsTaken = event.params
 	sfxButton = audio.loadSound("audios/button.wav")
 

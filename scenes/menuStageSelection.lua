@@ -124,12 +124,19 @@ function scene:create(event)
 	})
 	buttonGroup:insert(backButton)
 
-	saveState.save({["stage1".."totalCoins"] = 8})
-	saveState.save({["stage2".."totalCoins"] = 8})
-	saveState.save({["stage3".."totalCoins"] = 8})
-	saveState.save({["stage4".."totalCoins"] = 8})
-
 	for i = 0, 4 do
+		local level = require("levels."..i)
+		local totalCoins = 0
+
+		for j = 1, #level.layers[1].objects do
+			local t = level.layers[1].objects[j]
+			if t.type == "C" then
+				totalCoins = totalCoins +1
+			end
+		end
+
+		composer.setVariable("stage"..i.."TotalCoins",totalCoins)
+
 		local stageName
 		if i == 1 then
 			stageName = "WAREHOUSE"
@@ -165,51 +172,42 @@ function scene:create(event)
 			scrollView:insert(button)
 
 		else
-			if saveState.getValue("stage"..i.."Coins")==nil then
-				saveState.save({["stage"..i.."Coins"] = 0})
-			end
+			local maxCoinsTaken = saveState.getValue("stage"..i.."Coins") or 0
+			local maxHighscore = saveState.getValue("stage"..i.."Score") or 0	
 	
-				if saveState.getValue("stage"..i.."Score")==nil then
-					saveState.save({["stage"..i.."Score"] = 0})
-				end
-	
-				local maxCoinsTaken = saveState.getValue("stage"..i.."Coins")
-				local maxHighscore = saveState.getValue("stage"..i.."Score")
-	
-	
-				local button = widget.newButton({
-					id = i,			
-					defaultFile = "images/thumbnails/"..i..".png",
-					width = W*.45, height = H*.35,
-					x = W*0.63+(i)*parDistance, y = H*.45,
-					onEvent = onLevelButtonTouch,
-				})
+			local button = widget.newButton({
+				id = i,			
+				defaultFile = "images/thumbnails/"..i..".png",
+				width = W*.45, height = H*.35,
+				x = W*0.63+(i)*parDistance, y = H*.45,
+				onEvent = onLevelButtonTouch,
+			})
 
-				local nameText = display.newText({
-						parent = sceneGroup,
-						text = stageName, 
-						x = W*0.63+(i)*parDistance, 
-						y = H*.70, 
-						font = native.systemFontBold, 
-						fontSize = 25,
-						align = "center"
-					})
-				nameText:setFillColor(1)
+			local nameText = display.newText({
+				parent = sceneGroup,
+				text = stageName, 
+				x = W*0.63+(i)*parDistance, 
+				y = H*.70, 
+				font = native.systemFontBold, 
+				fontSize = 25,
+				align = "center"
+			})
+			nameText:setFillColor(1)
 	
-				local text = display.newText({
-						parent = sceneGroup,
-						text = "COINS: "..maxCoinsTaken.." / "..saveState.getValue("stage"..i.."totalCoins").."\nHIGHSCORE: "..maxHighscore, 
-						x = W*0.63+(i)*parDistance, 
-						y = H*.82, 
-						font = native.systemFontBold, 
-						fontSize = 15,
-						align = "center"
-					})
-				text:setFillColor(1)
+			local text = display.newText({
+				parent = sceneGroup,
+				text = "COINS: "..maxCoinsTaken.." / "..totalCoins.."\nHIGHSCORE: "..maxHighscore, 
+				x = W*0.63+(i)*parDistance, 
+				y = H*.82, 
+				font = native.systemFontBold, 
+				fontSize = 15,
+				align = "center"
+			})
+			text:setFillColor(1)
 
-				scrollView:insert(nameText)
-				scrollView:insert(text)
-				scrollView:insert(button)
+			scrollView:insert(nameText)
+			scrollView:insert(text)
+			scrollView:insert(button)
 		end
 	end
 
