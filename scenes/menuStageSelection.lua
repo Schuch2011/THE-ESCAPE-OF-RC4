@@ -20,12 +20,21 @@ local parDistance = W*.6
 local sfxButton
 local sfxSwipe
 
-local function onLevelButtonRelease(event)
-	audio.play(sfxButton)
-	scrollView:removeSelf()
-	scrollView=nil
-	composer.setVariable("selectedStage", event.target.id)
-	composer.gotoScene("scenes.game")
+local function onLevelButtonTouch(event)
+	local phase = event.phase
+    if ( phase == "moved" ) then
+        local dx = math.abs( ( event.x - event.xStart ) )
+        if ( dx > 10 ) then
+            scrollView:takeFocus( event )
+        end
+    elseif ( phase == "ended" ) then
+    	audio.play(sfxButton)
+		scrollView:removeSelf()
+		scrollView=nil
+		composer.setVariable("selectedStage", event.target.id)
+		composer.gotoScene("scenes.game")
+    end
+    return true
 end
 
 local function scrollListener(event)
@@ -39,35 +48,36 @@ local function scrollListener(event)
 		xView = scrollView:getContentPosition()
 		difX = initXPos-xView
 
-		if (difX > 40) then
+		if (difX > 20) then
 			if (slotSelected<4) then
+				slotSelected = slotSelected +1 
 				audio.play(sfxSwipe)
 				scrollView:scrollToPosition			
 				{
-   					x = -parDistance+initXPos,
+   					x = slotSelected*-parDistance,
    					time = 200,
 				}
-				slotSelected = slotSelected +1 
 			else
 				scrollView:scrollToPosition			
 				{
-   					x = initXPos,
+   					x = slotSelected*-parDistance,
    					time = 200,
 				}
 			end
-		elseif (difX < -40) then
+		elseif (difX < -20) then
 			if (slotSelected>0) then
+				slotSelected = slotSelected - 1 
 				audio.play(sfxSwipe)
 				scrollView:scrollToPosition			
 				{
-   					x = initXPos+parDistance,
+   					x = slotSelected*-parDistance,
    					time = 200,
 				}
-				slotSelected = slotSelected - 1 
+
 			else
 				scrollView:scrollToPosition			
 				{
-   					x = initXPos,
+   					x = slotSelected*-parDistance,
    					time = 200,
 				}
 			end
@@ -91,15 +101,13 @@ function scene:create(event)
 	sfxSwipe = audio.loadSound("audios/swipe.wav")
 
 	scrollView = widget.newScrollView({
-		left = 0,
-		top = 0,
+		x = W/2,
+		y = H/2,
 		width = W*1.2,
 		height = H,
 		verticalScrollDisabled = true,		
 		horizontalScrollDisabled = false,
 		listener = scrollListener,
-		leftPadding = W*0,
-		rightPadding = W*0.25,
 		hideBackground = true
 	})
 
@@ -122,19 +130,30 @@ function scene:create(event)
 	saveState.save({["stage4".."totalCoins"] = 8})
 
 	for i = 0, 4 do
+		local stageName
+		if i == 1 then
+			stageName = "WAREHOUSE"
+		elseif i == 2 then
+			stageName = "FACTORY"
+		elseif i == 3 then
+			stageName = "SERVER'S ROOM"
+		elseif i == 4 then
+			stageName = "OFFICE"
+		end
+
 		if i==0 then
 			local button = widget.newButton({
 				id = i,
 				defaultFile = "images/tutorial.png",
 				width = 104, height = 104,
-				x = W*0.5+(i)*parDistance, y = H*.45,
-				onRelease = onLevelButtonRelease,
+				x = W*0.63+(i)*parDistance, y = H*.45,
+				onEvent = onLevelButtonTouch,
 			})
 
 			local text = display.newText({
 				parent = sceneGroup,
-				text = "TUTORIAL", 
-				x = W*0.5+(i)*parDistance, 
+				text = "TRAINING ROOM", 
+				x = W*0.63+(i)*parDistance, 
 				y = H*.8, 
 				font = native.systemFontBold, 
 				fontSize = 25,
@@ -162,21 +181,33 @@ function scene:create(event)
 					id = i,			
 					defaultFile = "images/thumbnails/"..i..".png",
 					width = W*.45, height = H*.35,
-					x = W*0.5+(i)*parDistance, y = H*.45,
-					onRelease = onLevelButtonRelease,
+					x = W*0.63+(i)*parDistance, y = H*.45,
+					onEvent = onLevelButtonTouch,
 				})
-	
-				local text = display.newText({
+
+				local nameText = display.newText({
 						parent = sceneGroup,
-						text = "STAGE "..i.."\nCOINS: "..maxCoinsTaken.." / "..saveState.getValue("stage"..i.."totalCoins").."\nHIGHSCORE: "..maxHighscore, 
-						x = W*0.5+(i)*parDistance, 
-						y = H*.8, 
+						text = stageName, 
+						x = W*0.63+(i)*parDistance, 
+						y = H*.70, 
 						font = native.systemFontBold, 
 						fontSize = 25,
 						align = "center"
 					})
-				text:setFillColor(1)
+				nameText:setFillColor(1)
 	
+				local text = display.newText({
+						parent = sceneGroup,
+						text = "COINS: "..maxCoinsTaken.." / "..saveState.getValue("stage"..i.."totalCoins").."\nHIGHSCORE: "..maxHighscore, 
+						x = W*0.63+(i)*parDistance, 
+						y = H*.82, 
+						font = native.systemFontBold, 
+						fontSize = 15,
+						align = "center"
+					})
+				text:setFillColor(1)
+
+				scrollView:insert(nameText)
 				scrollView:insert(text)
 				scrollView:insert(button)
 		end

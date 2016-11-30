@@ -15,17 +15,26 @@ local initXPos = 0
 local xView = 0
 local difX = 0
 
-local parDistance = W*.6
+local parDistance = W*.5
 
 local sfxButton
 local sfxSwipe
 
-local function onCharacterButtonRelease(event)
-	audio.play(sfxButton)
-	scrollView:removeSelf()
-	scrollView=nil
-	composer.setVariable("selectedCharacter" , event.target.id)
-	composer.gotoScene("scenes.menuStageSelection", {effect = "slideLeft", time = 500})
+local function onCharacterButtonTouch(event)
+	local phase = event.phase
+    if ( phase == "moved" ) then
+        local dx = math.abs( ( event.x - event.xStart ) )
+        if ( dx > 10 ) then
+            scrollView:takeFocus( event )
+        end
+    elseif ( phase == "ended" ) then
+		audio.play(sfxButton)
+		scrollView:removeSelf()
+		scrollView=nil
+		composer.setVariable("selectedCharacter" , event.target.id)
+		composer.gotoScene("scenes.menuStageSelection", {effect = "slideLeft", time = 500})
+    end
+    return true
 end
 
 local function scrollListener(event) -- CONTROLA O SCROLL DA SELEÇÃO DOS PERSONAGENS 
@@ -38,35 +47,35 @@ local function scrollListener(event) -- CONTROLA O SCROLL DA SELEÇÃO DOS PERSO
 		xView = scrollView:getContentPosition()
 		difX = initXPos-xView
 
-		if (difX > 40) then
+		if (difX > 20) then
 			if (slotSelected<4) then
 				audio.play(sfxSwipe)
+				slotSelected = slotSelected +1 
 				scrollView:scrollToPosition			
 				{
-   					x = -parDistance+initXPos,
+   					x = (slotSelected-1)*-parDistance,
    					time = 200,
 				}
-				slotSelected = slotSelected +1 
 			else
 				scrollView:scrollToPosition			
 				{
-   					x = initXPos,
+   					x = (slotSelected-1)*-parDistance,
    					time = 200,
 				}
 			end
-		elseif (difX < -40) then
+		elseif (difX < -20) then
 			if (slotSelected>1) then
+				slotSelected = slotSelected - 1 
 				audio.play(sfxSwipe)
 				scrollView:scrollToPosition			
 				{
-   					x = initXPos+parDistance,
+   					x = (slotSelected-1)*-parDistance,
    					time = 200,
 				}
-				slotSelected = slotSelected - 1 
 			else
 				scrollView:scrollToPosition			
 				{
-   					x = initXPos,
+   					x = (slotSelected-1)*-parDistance,
    					time = 200,
 				}
 			end
@@ -94,17 +103,14 @@ function scene:create(event)
 	sfxSwipe = audio.loadSound("audios/swipe.wav")
 
 	scrollView = widget.newScrollView({
-		left = 0,
-		top = 0,
+		x = W/2,
+		y = H/2,
 		width = W*1.2,
 		height = H,
 		verticalScrollDisabled = true,		
 		horizontalScrollDisabled = false,
 		listener = scrollListener,
-		leftPadding = W*0,
-		rightPadding = W*0.25,
 		hideBackground = true,
-		--friction = 10, 
 	})
 
 	local backButton = widget.newButton({
@@ -124,6 +130,16 @@ function scene:create(event)
 		local cWidth = 1
 		local cHeight = 1
 
+		local charName
+		if i == 1 then
+			charName = "RC4-101"
+		elseif i == 2 then
+			charName = "RC4-CRV1"
+		elseif i == 3 then
+			charName = "RC4-FR53"
+		elseif i == 4 then
+			charName = "RC4-SPY14"
+		end
 		
 
 		if i==1 then
@@ -136,19 +152,21 @@ function scene:create(event)
 			cWidth, cHeight = W*.15, H*.5
 		end
 
+
+
 		local button = widget.newButton({
 			id = i,			
 			defaultFile = "images/characterSelection/character_"..i..".png",
 			width = cWidth, height = cHeight,
-			x = W*0.5+(i-1)*parDistance, y = H*.55,
-			onRelease = onCharacterButtonRelease,
+			x = W*0.64+(i-1)*parDistance, y = H*.55,
+			onEvent = onCharacterButtonTouch,
 		})
 
 		local text = display.newText(
 			{
 				parent = sceneGroup,
-				text = "CHARACTER "..i,
-				x = W*0.5+(i-1)*parDistance, 
+				text = charName,
+				x = W*0.64+(i-1)*parDistance, 
 				y = H*.9, 
 				font = native.systemFontBold, 
 				fontSize = 25,

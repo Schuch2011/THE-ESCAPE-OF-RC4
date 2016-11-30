@@ -459,6 +459,12 @@ function scene:create(event)
 	-- INSTANCIAR BOTÕES DE AÇÃO
 
 	local leftButton = widget.newButton({
+		label = "SWITCH",
+		labelColor = {default={1}},
+		labelXOffset = W*.13,
+		labelYOffset = W*-.15,
+		fontSize = 30,
+		font = native.systemFontBold,
 		shape = "circle",
 		radius=W*.4,
 		x=W*-.05,
@@ -471,6 +477,12 @@ function scene:create(event)
 
 
 	local rightButton = widget.newButton({
+		label = "JUMP",
+		labelColor = {default={1}},
+		labelXOffset = W*-.13,
+		labelYOffset = W*-.15,
+		fontSize = 30,
+		font = native.systemFontBold,
 		shape = "circle",
 		radius=W*.4,
 		x=W*1.05,
