@@ -18,6 +18,7 @@ local currentLevel
 local charID
 
 local isPaused = true
+local isGameFinished = false
 local switchTime=false
 local coins = 0
 local totalCoins
@@ -59,6 +60,7 @@ local parDefaultScoreMultiplier = 1
 local parPowerUpScoreMultiplier = 2
 local parScoreMultiplier = 1
 
+local player
 local playerLocalX
 local playerLocalY
 local parPlayerYPosition = 0.55*H
@@ -132,11 +134,15 @@ local function switch() -- MECÂNICA DE INVERSÃO DOS ELEMENTOS DO CENÁRIO
 	end
 end
 
-local function gameOver()
+local function stopGame()
+	isPaused = true
 	audio.stop(1)
-	audio.play(sfxGameOver)
-    Runtime:removeEventListener( "accelerometer", onAccelerate )
     parIsZeroGravity = false
+end
+
+local function gameOver()
+	stopGame()
+	audio.play(sfxGameOver)
 	composer.gotoScene("scenes.gameOver",{effect="slideLeft",time = 500})
 end
 
@@ -254,6 +260,10 @@ local function onPaused()
 	composer.showOverlay("scenes.pause", {effect = "fade", time = 200, isModal = true})
 end
 
+function scene:finishGame()
+	isGameFinished = true
+end
+
 function scene:resumeGame()
 	isPaused = false
 	
@@ -276,7 +286,7 @@ local function playerCollider( self,event )
     	end
     	-- DETECTA SE O PERSONAGEM ALCANÇA O FIM DA FASE
 		if ( event.selfElement == 1 and event.other.objType == "endStage") then
-			audio.stop(1)
+			stopGame()
 			audio.play(sfxGameWin)
 
 			local tempScore = saveState.getValue("stage"..currentLevel.."Score") or 0
@@ -287,9 +297,7 @@ local function playerCollider( self,event )
 			end
 			if (coins > tempCoins) then
 				saveState.save{["stage"..currentLevel.."Coins"]=coins}
-			end			
-			Runtime:removeEventListener( "accelerometer", onAccelerate )			
-			parIsZeroGravity = false
+			end	
 			composer.gotoScene("scenes.gameVictory",{params=coins, effect="slideLeft",time = 500})
     	end
     	    -- DETECTA A COLISÃO DO PERSONAGEM COM AS MOEDAS
@@ -673,18 +681,25 @@ function scene:create(event)
 	sceneGroup:insert(HUDGroup)
 	sceneGroup:insert(fpsCounter)
 
+
 end
 
 function scene:show( event )     
     local sceneGroup = self.view
     local phase = event.phase    
     if ( phase == "will" ) then
+		Runtime:addEventListener("enterFrame",updateFrames)
+   		Runtime:addEventListener( "accelerometer", onAccelerate)
 
     elseif ( phase == "did" ) then
+    	local previous = composer.getSceneName("previous")
+		if previous ~= nil then
+			composer.removeScene(composer.getSceneName("previous"))
+		end
 		isPaused = false
+		isGameFinished = false
     	local dt = getDeltaTime()
-    	Runtime:addEventListener("enterFrame",updateFrames)
-    	Runtime:addEventListener( "accelerometer", onAccelerate)
+
     	physics.setGravity(0,parGravity)
 
     	audio.setVolume(0.05, {channel = 1})
@@ -696,10 +711,10 @@ function scene:hide(event)
 	local phase = event.phase
 	
 	if (phase == "will") then
+
+	elseif (phase == "did") then
 		Runtime:removeEventListener("enterFrame",updateFrames)
 		Runtime:removeEventListener( "accelerometer", onAccelerate )
-	elseif (phase == "did") then
-		
 	end
 end
 
@@ -711,7 +726,7 @@ function updateFrames()
 	local dt = getDeltaTime()
 	fpsCounter:updateCounter(dt)
 	
-	if not isPaused then
+	if not isPaused and isGameFinished == false then
 		if not audio.isChannelActive(1) then
     		bgMusic = audio.play(sfxBGMusic, {channel = 1, loops = -1})
 		end
@@ -724,8 +739,8 @@ function updateFrames()
 			--scoreCounter.text= "SCORE: "..score
 			scoreCounter.text = score
 		end
-
-		local vx, vy = player:getLinearVelocity()
+	
+		local vx, vy = player:getLinearVelocity() 
 		
 		if not parIsZeroGravity then
 			-- ANIMAÇÃO DO PERSONAGEM CAINDO

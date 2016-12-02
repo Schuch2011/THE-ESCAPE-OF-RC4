@@ -74,7 +74,14 @@ function scene:create(event)
 	sceneGroup:insert(backButton)
 end
 
+function scene:show(event)
+	if event.phase == "did" then
+		composer.removeScene("scenes.game")
+	end
+end
+
 scene:addEventListener("create",scene)
+scene:addEventListener("show",scene)
 
 return scene
 

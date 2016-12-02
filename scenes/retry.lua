@@ -4,7 +4,8 @@ local scene = composer.newScene()
 
 function scene:show(event)
 	if (event.phase == "will") then
-		composer.removeScene("scenes.game")
+		composer.removeScene("scenes.game")		
+		
 	elseif (event.phase == "did") then
 		composer.gotoScene("scenes.game")
 	end

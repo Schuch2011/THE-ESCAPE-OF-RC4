@@ -28,11 +28,11 @@ local function onLevelButtonTouch(event)
             scrollView:takeFocus( event )
         end
     elseif ( phase == "ended" ) then
-    	audio.play(sfxButton)
-		scrollView:removeSelf()
-		scrollView=nil
-		composer.setVariable("selectedStage", event.target.id)
-		composer.gotoScene("scenes.game")
+    	if composer.getVariable("isStage"..event.target.id.."Unlocked_") or event.target.id == 0 then
+    		audio.play(sfxButton)
+			composer.setVariable("selectedStage", event.target.id)
+			composer.gotoScene("scenes.game")
+		end
     end
     return true
 end
@@ -120,8 +120,6 @@ function scene:create(event)
 		x = W*0.1, y = H*0.85,
 		onRelease = function()
 			audio.play(sfxButton)
-			scrollView:removeSelf()
-			scrollView=nil
 			composer.gotoScene("scenes.menuCharacterSelection", {time=500, effect="slideRight"})
 		end
 	})
@@ -140,14 +138,28 @@ function scene:create(event)
 
 		composer.setVariable("stage"..i.."TotalCoins",totalCoins)
 
+		local isStageUnlocked
+
 		local stageName
 		if i == 1 then
+			isStageUnlocked = saveState.getValue("isStage"..i.."Unlocked") or true
+			saveState.save{["isStage"..i.."Unlocked"]=isStageUnlocked}
+			composer.setVariable("isStage"..i.."Unlocked_",isStageUnlocked)
 			stageName = "WAREHOUSE"
 		elseif i == 2 then
+			isStageUnlocked = saveState.getValue("isStage"..i.."Unlocked") or false
+			saveState.save{["isStage"..i.."Unlocked"]=isStageUnlocked}
+			composer.setVariable("isStage"..i.."Unlocked_",isStageUnlocked)
 			stageName = "FACTORY"
 		elseif i == 3 then
+			isStageUnlocked = saveState.getValue("isStage"..i.."Unlocked") or false
+			saveState.save{["isStage"..i.."Unlocked"]=isStageUnlocked}
+			composer.setVariable("isStage"..i.."Unlocked_",isStageUnlocked)
 			stageName = "SERVER'S ROOM"
 		elseif i == 4 then
+			isStageUnlocked = saveState.getValue("isStage"..i.."Unlocked") or false
+			saveState.save{["isStage"..i.."Unlocked"]=isStageUnlocked}
+			composer.setVariable("isStage"..i.."Unlocked_",isStageUnlocked)
 			stageName = "OFFICE"
 		end
 
@@ -180,7 +192,7 @@ function scene:create(event)
 	
 			local button = widget.newButton({
 				id = i,			
-				defaultFile = "images/thumbnails/"..i..".png",
+				defaultFile = "images/thumbnails/"..i.."_"..tostring(isStageUnlocked)..".png",
 				width = W*.45, height = H*.35,
 				x = W*0.63+(i)*parDistance, y = H*.45,
 				onEvent = onLevelButtonTouch,
@@ -195,21 +207,25 @@ function scene:create(event)
 				fontSize = 25,
 				align = "center"
 			})
-			nameText:setFillColor(1)
+			if isStageUnlocked then
+				nameText:setFillColor(1)
+				local text = display.newText({
+					parent = sceneGroup,
+					text = "COINS: "..maxCoinsTaken.." / "..totalCoins.."\nHIGHSCORE: "..maxHighscore, 
+					x = W*0.63+(i)*parDistance, 
+					y = H*.82, 
+					font = native.systemFontBold, 
+					fontSize = 15,
+					align = "center"
+				})
+				text:setFillColor(1)
+				scrollView:insert(text)
+			else
+				nameText.text = "LOCKED"
+				nameText:setFillColor(230/255,43/255,30/255)
+			end
 	
-			local text = display.newText({
-				parent = sceneGroup,
-				text = "COINS: "..maxCoinsTaken.." / "..totalCoins.."\nHIGHSCORE: "..maxHighscore, 
-				x = W*0.63+(i)*parDistance, 
-				y = H*.82, 
-				font = native.systemFontBold, 
-				fontSize = 15,
-				align = "center"
-			})
-			text:setFillColor(1)
-
 			scrollView:insert(nameText)
-			scrollView:insert(text)
 			scrollView:insert(button)
 		end
 	end
@@ -222,7 +238,17 @@ function scene:create(event)
 	sceneGroup:insert(buttonGroup)
 end
 
+function scene:show(event)
+	if event.phase == "did" then
+		local previous = composer.getSceneName("previous")
+		if previous ~= nil then
+			composer.removeScene(composer.getSceneName("previous"))
+		end
+	end
+end
+
 scene:addEventListener("create",scene)
+scene:addEventListener("show",scene)
 
 return scene
 

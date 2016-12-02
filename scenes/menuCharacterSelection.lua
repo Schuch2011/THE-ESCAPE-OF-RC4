@@ -33,11 +33,8 @@ local function onCharacterButtonTouch(event)
             scrollView:takeFocus( event )
         end
     elseif ( phase == "ended" ) then
-    	print(composer.getVariable("isChar"..event.target.id.."Unlocked_"))
     	if (composer.getVariable("isChar"..event.target.id.."Unlocked_") == true) then
 			audio.play(sfxButton)
-			scrollView:removeSelf()
-			scrollView=nil
 			composer.setVariable("selectedCharacter" , event.target.id)
 			composer.gotoScene("scenes.menuStageSelection", {effect = "slideLeft", time = 500})
 		end
@@ -104,6 +101,32 @@ end
 
 
 function scene:create(event)
+	-- CONTAR TOTAL DE MOEDAS COLETADAS E A SEREM COLETADAS
+	local maxCoins = 0
+	local coinsTaken = 0
+
+	for i=1, 4 do
+		local level = require("levels."..i)
+
+		local stageCoins = 0
+		for j = 1, #level.layers[1].objects do
+			local t = level.layers[1].objects[j]
+			if t.type == "C" then
+				stageCoins = stageCoins +1
+			end
+
+		end
+		composer.setVariable("stage"..i.."TotalCoins_",stageCoins)
+
+		local stageCoinsCollected = saveState.getValue("stage"..i.."Coins") or 0
+
+		maxCoins = maxCoins + stageCoins
+		coinsTaken = coinsTaken + stageCoinsCollected
+	end
+	print(coinsTaken.." / "..maxCoins)
+	--
+
+
 	local sceneGroup = self.view
 	local buttonGroup = display.newGroup()
 
@@ -130,8 +153,6 @@ function scene:create(event)
 		x = W*0.1, y = H*0.85,
 		onRelease = function() 
 			audio.play(sfxButton)
-			scrollView:removeSelf()
-			scrollView=nil
 			composer.gotoScene("scenes.menu", {time=500, effect="slideRight"})
 		end
 	})
@@ -148,18 +169,22 @@ function scene:create(event)
 			charName = "RC4-101"
 			isCharUnlocked = saveState.getValue("isChar"..i.."Unlocked") or true
 			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked)
+			saveState.save{["isChar"..i.."Unlocked"]=isCharUnlocked}
 		elseif i == 2 then
 			charName = "RC4-CRV1"
 			isCharUnlocked = saveState.getValue("isChar"..i.."Unlocked") or false
 			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked)
+			saveState.save{["isChar"..i.."Unlocked"]=isCharUnlocked}
 		elseif i == 3 then
 			charName = "RC4-FR53"
 			isCharUnlocked = saveState.getValue("isChar"..i.."Unlocked") or false
 			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked)
+			saveState.save{["isChar"..i.."Unlocked"]=isCharUnlocked}
 		elseif i == 4 then
 			charName = "RC4-SPY14"
 			isCharUnlocked = saveState.getValue("isChar"..i.."Unlocked") or false
 			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked)
+			saveState.save{["isChar"..i.."Unlocked"]=isCharUnlocked}
 		end
 		
 
@@ -173,13 +198,13 @@ function scene:create(event)
 			cWidth, cHeight = W*.15, H*.5
 		end
 
-
+		local parCharSizeScale = .8
 
 		local button = widget.newButton({
 			id = i,			
 			defaultFile = "images/characterSelection/character_"..i.."_"..tostring(isCharUnlocked)..".png",
-			width = cWidth, height = cHeight,
-			x = W*0.64+(i-1)*parDistance, y = H*.55,
+			width = cWidth*parCharSizeScale, height = cHeight*parCharSizeScale,
+			x = W*0.64+(i-1)*parDistance, y = H*.45,
 			onEvent = onCharacterButtonTouch,
 		})
 
@@ -188,14 +213,23 @@ function scene:create(event)
 			parent = sceneGroup,
 			text = charName,
 			x = W*0.64+(i-1)*parDistance, 
-			y = H*.9, 
+			y = H*.70, 
 			font = native.systemFontBold, 
 			fontSize = 25,
 			align = "center"
 		})
+
+		local coinsRemaining = 0
+
+		for j=i, 1, -1 do
+			coinsRemaining = coinsRemaining + composer.getVariable("stage"..j.."TotalCoins_")
+		end
+		coinsRemaining = coinsRemaining - coinsTaken
+
 		if isCharUnlocked == false then
-			text.text = "LOCKED"
-			text:setFillColor(230/255,43/255,30/255)
+			text.text = "\n\nCOLLECT MORE "..coinsRemaining.." COINS\nTO UNLOCK THIS CHARACTER"
+			text:setFillColor(1)--(230/255,43/255,30/255)
+			text.size = 15
 		else
 			text:setFillColor(1)
 		end
@@ -206,7 +240,7 @@ function scene:create(event)
 		scrollView:insert(button)
 	end
 
-	local menuTitle = display.newText("CHARACTER SELECTION",W/2,H*.15,native.systemFontBold,30)
+	local menuTitle = display.newText("CHARACTER SELECTION",W/2,H*.1,native.systemFontBold,30)
 	menuTitle:setFillColor(1)
 
 	sceneGroup:insert(menuTitle)
@@ -214,7 +248,17 @@ function scene:create(event)
 	sceneGroup:insert(buttonGroup)
 end
 
+function scene:show(event)
+	if event.phase == "did" then
+		local previous = composer.getSceneName("previous")
+		if previous ~= nil then
+			composer.removeScene(composer.getSceneName("previous"))
+		end
+	end
+end
+
 scene:addEventListener("create",scene)
+scene:addEventListener("show",scene)
 
 return scene
 

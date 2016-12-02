@@ -6,13 +6,13 @@ local _H = display.contentHeight
 
 local scene = composer.newScene()
 
+local isClosing = false
+
 -- AUDIOS
 
 local sfxButton
 
---
-
-function scene:create()
+function scene:create(event)
 	local sceneGroup = self.view
 
 	sfxButton = audio.loadSound("audios/button.wav")
@@ -40,6 +40,8 @@ function scene:create()
 		end
 	})
 
+	local parent = composer.getScene("scenes.game")
+
 	local restartButton = widget.newButton({
 		x = _W * .5,
 		y = _H * .5,
@@ -55,11 +57,12 @@ function scene:create()
 		strokeColor = { default={0}, over={0} },
 		font = native.systemFontBold,
 		onRelease = function()
+			parent:finishGame()
 			audio.play(sfxButton)
 			composer.gotoScene("scenes.retry")
 		end
 	})
-	
+
 	local backToMenuButton = widget.newButton({
 		x = _W * .5,
 		y = _H * .8,
@@ -75,7 +78,8 @@ function scene:create()
 		strokeColor = { default={0}, over={0} },
 		font = native.systemFontBold,
 		onRelease = function()
-			audio.play(sfxButton)
+			isClosing = true
+			audio.stop(1)
 			composer.gotoScene("scenes.menu","slideRight",500)
 		end
 	})
@@ -90,7 +94,7 @@ function scene:hide(event)
 	local phase = event.phase
 	local parent = event.parent
 
-	if phase == "did" then
+	if phase == "did" and isClosing == false then
 		parent:resumeGame()
 	end
 end

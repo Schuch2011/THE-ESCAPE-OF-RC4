@@ -21,6 +21,13 @@ function scene:create(event)
 	local coinsTaken = event.params
 	sfxButton = audio.loadSound("audios/button.wav")
 
+	--DESBLOQUEAR PRÓXIMA FASE
+
+	if composer.getVariable("isStage"..(currentLevel+1).."Unlocked_") ~= true then
+		composer.setVariable("isStage"..(currentLevel+1).."Unlocked_", true)
+		saveState.save{["isStage"..(currentLevel+1).."Unlocked"] = true}
+	end
+
 	--TEXTO DE VICTORY
 
 	local victoryText = display.newText(sceneGroup,"YOU DID IT!",W/2,H*.25,native.systemFontBold,40)
@@ -92,7 +99,34 @@ function scene:create(event)
 	sceneGroup:insert(backButton)
 end
 
+function scene:show(event)
+	if event.phase=="did" then
+		composer.removeScene("scenes.game")
+	--DESBLOQUEAR PERSONAGEM
+		local gameTotalCoins = 0
+		local totalCoinsCollected = 0
+
+		for i=1, 4 do
+			local stageCoinsCollected = saveState.getValue("stage"..i.."Coins") or 0
+			totalCoinsCollected = totalCoinsCollected + stageCoinsCollected
+		end
+		for i=1, 4 do
+			local coinsRemaining = 0
+			for j=i, 1, -1 do
+				coinsRemaining = coinsRemaining + composer.getVariable("stage"..j.."TotalCoins")
+			end
+			if totalCoinsCollected >= coinsRemaining and composer.getVariable("isChar"..i.."Unlocked_")~=true then
+				composer.setVariable("isChar"..i.."Unlocked_",true)
+				saveState.save{["isChar"..i.."Unlocked"]=true}
+				composer.showOverlay("scenes.characterUnlockedMenu", {effect = "fade", time = 200, isModal = true, params = i})			
+			end
+		end
+	end
+end
+
 scene:addEventListener("create",scene)
+scene:addEventListener("show",scene)
+
 
 return scene
 

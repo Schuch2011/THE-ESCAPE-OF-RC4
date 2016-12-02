@@ -10,7 +10,6 @@ local scene = composer.newScene()
 
 local sfxButton
 
-
 function scene:create(event)
 	local sceneGroup = self.view
 
@@ -19,7 +18,7 @@ function scene:create(event)
 	local background = display.newRect(sceneGroup, W/2, H/2, W*1.2, H)
 	background:setFillColor(67/255, 107/255, 149/255) 
 
-	local gameTitle = display.newText("THE ESCAPE OF RC4",W/2,H*.35,native.systemFontBold,40)
+	local gameTitle = display.newText(sceneGroup,"THE ESCAPE OF RC4",W/2,H*.35,native.systemFontBold,40)
 	gameTitle:setFillColor(1)
 
 	local startButton = widget.newButton(
@@ -68,10 +67,19 @@ function scene:create(event)
 
 	sceneGroup:insert(startButton)
 	sceneGroup:insert(creditsButton)
-	sceneGroup:insert(gameTitle)
+end
+
+function scene:show(event)
+	if event.phase == "did" then
+		local previous = composer.getSceneName("previous")
+		if previous ~= nil then
+			composer.removeScene(composer.getSceneName("previous"))
+		end
+	end
 end
 
 scene:addEventListener("create",scene)
+scene:addEventListener("show",scene)
 
 return scene
 
