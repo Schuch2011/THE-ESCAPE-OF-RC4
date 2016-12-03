@@ -6,6 +6,7 @@ local H = display.contentHeight
 local composer = require("composer")
 local widget = require("widget")
 local saveState = require("classes.preference")
+local loadsave = require("classes.loadsave")
 
 local scene = composer.newScene()
 local currentLevel
@@ -110,14 +111,22 @@ function scene:show(event)
 			local stageCoinsCollected = saveState.getValue("stage"..i.."Coins") or 0
 			totalCoinsCollected = totalCoinsCollected + stageCoinsCollected
 		end
+
+		local tempTable = {}
+
+		tempTable = loadsave.loadTable("isCharUnlocked.json")
+
 		for i=1, 4 do
 			local coinsRemaining = 0
-			for j=i, 1, -1 do
-				coinsRemaining = coinsRemaining + composer.getVariable("stage"..j.."TotalCoins")
+			for j=i-1, 1, -1 do
+				if j~=0 then
+					coinsRemaining = coinsRemaining + composer.getVariable("stage"..j.."TotalCoins")
+				end
 			end
 			if totalCoinsCollected >= coinsRemaining and composer.getVariable("isChar"..i.."Unlocked_")~=true then
+				tempTable[i] = true
+				loadsave.saveTable(tempTable,"isCharUnlocked.json")
 				composer.setVariable("isChar"..i.."Unlocked_",true)
-				saveState.save{["isChar"..i.."Unlocked"]=true}
 				composer.showOverlay("scenes.characterUnlockedMenu", {effect = "fade", time = 200, isModal = true, params = i})			
 			end
 		end

@@ -6,6 +6,7 @@ local H = display.contentHeight
 local composer = require("composer")
 local widget = require("widget")
 local saveState = require("classes.preference")
+local loadsave = require("classes.loadsave")
 
 local scene = composer.newScene()
 local scrollView
@@ -158,33 +159,26 @@ function scene:create(event)
 	})
 	buttonGroup:insert(backButton)
 
+	local isCharUnlocked = {}
+	isCharUnlocked = loadsave.loadTable("isCharUnlocked.json") or {true, false, false, false}
+
 	for i = 1, 4 do
 		local cWidth = 1
 		local cHeight = 1
 
-		local isCharUnlocked
-
 		local charName
 		if i == 1 then
 			charName = "RC4-101"
-			isCharUnlocked = saveState.getValue("isChar"..i.."Unlocked") or true
-			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked)
-			saveState.save{["isChar"..i.."Unlocked"]=isCharUnlocked}
+			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked[i])
 		elseif i == 2 then
 			charName = "RC4-CRV1"
-			isCharUnlocked = saveState.getValue("isChar"..i.."Unlocked") or false
-			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked)
-			saveState.save{["isChar"..i.."Unlocked"]=isCharUnlocked}
+			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked[i])
 		elseif i == 3 then
 			charName = "RC4-FR53"
-			isCharUnlocked = saveState.getValue("isChar"..i.."Unlocked") or false
-			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked)
-			saveState.save{["isChar"..i.."Unlocked"]=isCharUnlocked}
+			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked[i])
 		elseif i == 4 then
 			charName = "RC4-SPY14"
-			isCharUnlocked = saveState.getValue("isChar"..i.."Unlocked") or false
-			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked)
-			saveState.save{["isChar"..i.."Unlocked"]=isCharUnlocked}
+			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked[i])
 		end
 		
 
@@ -202,7 +196,7 @@ function scene:create(event)
 
 		local button = widget.newButton({
 			id = i,			
-			defaultFile = "images/characterSelection/character_"..i.."_"..tostring(isCharUnlocked)..".png",
+			defaultFile = "images/characterSelection/character_"..i.."_"..tostring(isCharUnlocked[i])..".png",
 			width = cWidth*parCharSizeScale, height = cHeight*parCharSizeScale,
 			x = W*0.64+(i-1)*parDistance, y = H*.45,
 			onEvent = onCharacterButtonTouch,
@@ -221,12 +215,14 @@ function scene:create(event)
 
 		local coinsRemaining = 0
 
-		for j=i, 1, -1 do
-			coinsRemaining = coinsRemaining + composer.getVariable("stage"..j.."TotalCoins_")
+		for j=i-1, 1, -1 do
+			if j ~= 0 then
+				coinsRemaining = coinsRemaining + composer.getVariable("stage"..j.."TotalCoins_")
+			end
 		end
 		coinsRemaining = coinsRemaining - coinsTaken
 
-		if isCharUnlocked == false then
+		if isCharUnlocked[i] == false then
 			text.text = "\n\nCOLLECT MORE "..coinsRemaining.." COINS\nTO UNLOCK THIS CHARACTER"
 			text:setFillColor(1)--(230/255,43/255,30/255)
 			text.size = 15
@@ -239,6 +235,7 @@ function scene:create(event)
 		scrollView:insert(text)
 		scrollView:insert(button)
 	end
+	loadsave.saveTable(isCharUnlocked,"isCharUnlocked.json")
 
 	local menuTitle = display.newText("CHARACTER SELECTION",W/2,H*.1,native.systemFontBold,30)
 	menuTitle:setFillColor(1)
