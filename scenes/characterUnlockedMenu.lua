@@ -53,13 +53,13 @@ function scene:create(event)
 		charDescription = "Nothing Special About"
 	elseif characterUnlocked == 2 then
 		charName = "RC4-CRV1"
-		charDescription = "Toxic Gas Resistant"
+		charDescription = "Toxic Gas Resistance"
 	elseif characterUnlocked == 3 then
 		charName = "RC4-FR53"
-		charDescription = "Fire Resistant"
+		charDescription = "Fire Resistance"
 	elseif characterUnlocked == 4 then
 		charName = "RC4-SPY14"
-		charDescription = "Laser Resistant"
+		charDescription = "Laser Resistance"
 	end
 
 	local charNameText = display.newText(sceneGroup, charName, W*.75, H*.3, native.systemFontBold, 25)

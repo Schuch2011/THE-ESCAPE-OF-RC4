@@ -5,7 +5,9 @@ local physics = require("physics")
 
 local _M = {}
 
-function _M.newTile(type,xPos,yPos,width,height)
+function _M.newTile(type,xPos,yPos,width,height, stageCoinsTable, coinID)
+	local coinsTable = stageCoinsTable
+
 	yPos = yPos - 300--420
 	if (type == "C") then
 		box = display.newImageRect(movableGroup, "images/coin.png", 25, 25)
@@ -13,6 +15,13 @@ function _M.newTile(type,xPos,yPos,width,height)
 		box.y = yPos-box.width/2
 		box.objType = "coin"
 		physics.addBody(box,"static",{bounce=0, isSensor=true})
+		box.ID = coinID
+		if coinsTable[coinID] == true then
+			box.collected = true
+			box.alpha = .5
+		else
+			box.collected = false
+		end
 	elseif (type == "S") then
 		box = display.newImageRect(movableGroup,"images/spike.png",35, 35)
 		box.anchorX, box.anchorY = 0,1

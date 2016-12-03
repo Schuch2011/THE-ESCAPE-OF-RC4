@@ -9,6 +9,7 @@ local widget = require( "widget" )
 local tiles = require("classes.tiles")
 local background = require("classes.background")
 local saveState = require("classes.preference")
+local loadsave = require("classes.loadsave")
 local animation = require("classes.animation")
 local fpsCounter = require("classes.fpsCounter").newFpsCounter()
 
@@ -22,6 +23,7 @@ local isGameFinished = false
 local switchTime=false
 local coins = 0
 local totalCoins
+local stageCoinsTable = {}
 local score = 0
 
 -- VARIÁVEIS DE SOM
@@ -278,8 +280,7 @@ end
 
 local function playerCollider( self,event ) 
     if (event.phase == "began") then
-		-- RECOMEÇA A CONTAGEM DE PULOS QUANDO O PERSONAGEM ESTÁ COM OS PÉS NO CHÃO
-		
+		-- RECOMEÇA A CONTAGEM DE PULOS QUANDO O PERSONAGEM ESTÁ COM OS PÉS NO CHÃO		
     	if ( event.selfElement == 2 and event.other.objType == "ground") then
         	audio.play(sfxJumpLanding, {channel = 2})
         	self.canJump = 2
@@ -290,24 +291,30 @@ local function playerCollider( self,event )
 			audio.play(sfxGameWin)
 
 			local tempScore = saveState.getValue("stage"..currentLevel.."Score") or 0
-			local tempCoins = saveState.getValue("stage"..currentLevel.."Coins") or 0
-			score = (math.floor(score/10))*10			
+			score = (math.floor(score/10))*10
+
 			if (score>tempScore) then
 				saveState.save{["stage"..currentLevel.."Score"]=score}
 			end
-			if (coins > tempCoins) then
-				saveState.save{["stage"..currentLevel.."Coins"]=coins}
-			end	
+
+			saveState.save{["stage"..currentLevel.."Coins"]=coins}					
+
+			loadsave.saveTable(stageCoinsTable, "stage"..currentLevel.."Coins.json")
+
 			composer.gotoScene("scenes.gameVictory",{params=coins, effect="slideLeft",time = 500})
     	end
     	    -- DETECTA A COLISÃO DO PERSONAGEM COM AS MOEDAS
-    	if ( event.selfElement == 1 and event.other.objType == "coin" ) then
+    	if ( event.selfElement == 1 and event.other.objType == "coin") then
 			local temp = event.other
 			display.remove(temp)
-			coins = coins +1
-			score = score + 250
-			if coinsCounter then coinsCounter.text = coins.." / "..totalCoins end
-			audio.play(sfxCoin)
+			if event.other.collected == false then
+				stageCoinsTable[event.other.ID]=true
+				coins = coins +1
+				score = score + 250
+				if coinsCounter then coinsCounter.text = coins.." / "..totalCoins end
+				
+			end
+			audio.play(sfxCoin)			
       	end
       	    -- COLISÃO COM BLOCOS FATAIS
 		if ( event.selfElement == 1 and event.other.objType == "fatal" and canDie==true) then
@@ -452,6 +459,19 @@ function scene:create(event)
 	playerGroup.x = 0
 	playerGroup:insert(player)
 
+	totalCoins = composer.getVariable("stage"..currentLevel.."TotalCoins")
+
+	if not loadsave.loadTable("stage"..currentLevel.."Coins.json") then
+		for i= 1, totalCoins do 
+			table.insert(stageCoinsTable, i, false)
+		end
+		loadsave.saveTable(stageCoinsTable,"stage"..currentLevel.."Coins.json")
+	else
+		stageCoinsTable = loadsave.loadTable("stage"..currentLevel.."Coins.json")
+	end
+
+	local currentCoinID = 1
+
 	for i = 1, #self.level.layers[1].objects do
 		local t = self.level.layers[1].objects[i]
 		if t.type == "EG" then
@@ -459,7 +479,12 @@ function scene:create(event)
 		end
 		
 		if t.type ~= "Z" then
-			tiles.newTile(t.type,t.x,t.y,t.width,t.height)
+			if t.type == "C" then
+				tiles.newTile(t.type,t.x,t.y,t.width,t.height, stageCoinsTable, currentCoinID)
+				currentCoinID = currentCoinID +1
+			else
+				tiles.newTile(t.type,t.x,t.y,t.width,t.height)
+			end
 		end
 	end
 
@@ -525,6 +550,10 @@ function scene:create(event)
 	
 	-- CONTADOR DE MOEDAS
 	coinsCounter = nil
+	for i,v in ipairs(stageCoinsTable) do
+		if v then coins = coins +1 end
+	end
+
 	if currentLevel ~= 0 then	
 		local scoreBackground = display.newRoundedRect(HUDGroup, W * 1.05, 10, 110, 25, 5)
 		scoreBackground:setFillColor(0, 0, 0, .35)
@@ -551,16 +580,14 @@ function scene:create(event)
 			
 		scoreCounter:setFillColor(1)
 		scoreCounter.anchorX, scoreCounter.anchorY = 1, .5
-	
-		totalCoins = composer.getVariable("stage"..currentLevel.."TotalCoins")
-	
+		
 		local coinIcon = display.newImageRect(HUDGroup, "images/coin.png", 30, 30)
 		coinIcon.x = W * .87
 		coinIcon.y = H * .2105
 		
 		coinsCounter = display.newEmbossedText({
 			parent = HUDGroup,
-			text = "0 / "..totalCoins,
+			text = coins.." / "..totalCoins,
 			x = W * 1.025,
 			y = H * .21,
 			font = native.systemFont,
