@@ -229,9 +229,7 @@ function scene:create(event)
 		else
 			text:setFillColor(1)
 		end
-
-
-
+		
 		scrollView:insert(text)
 		scrollView:insert(button)
 	end
@@ -258,6 +256,3 @@ scene:addEventListener("create",scene)
 scene:addEventListener("show",scene)
 
 return scene
-
-
-
