@@ -5,6 +5,41 @@ local physics = require("physics")
 
 local _M = {}
 
+local toxicGasSequence = {
+	{
+		name = "default",
+		start = 1,
+		count = 24,
+		time = 1000,
+		loopCount = 0,
+		loopDirection = "forward"
+	}
+}
+
+
+local fireSequence = {
+	{
+		name = "default",
+		start = 1,
+		count = 21,
+		time = 600,
+		loopCount = 0,
+		loopDirection = "forward"
+	}
+}
+
+
+local laserSequence = {
+	{
+		name = "default",
+		start = 1,
+		count = 19,
+		time = 1200,
+		loopCount = 0,
+		loopDirection = "forward"
+	}
+}
+
 function _M.newTile(type,xPos,yPos,width,height, stageCoinsTable, coinID)
 	local coinsTable = stageCoinsTable
 
@@ -53,6 +88,63 @@ function _M.newTile(type,xPos,yPos,width,height, stageCoinsTable, coinID)
 		box.y = yPos-12.5
 		box.objType = "powerUp4"
 		physics.addBody(box,"static",{bounce=0, isSensor=true})
+	elseif (type == "P1") then
+		local sheetOptions = {
+			width = 104,
+			height = 227,
+			numFrames = 24
+		}
+		local sheet = graphics.newImageSheet("images/barriers/toxicGasBarrier.png", sheetOptions)
+		box = display.newSprite(sheet, toxicGasSequence)
+		box.anchorX, box.anchorY = 0,1
+		box.x = xPos
+		box.y = yPos
+		box.xScale = width/box.width; box.yScale = height/box.height	
+		box.width = width; box.height = height
+		movableGroup:insert(box)
+		physics.addBody(box, "static", {bounce = 0, isSensor=true,
+			chain={ box.width/-2,box.height*.5, box.width/2,box.height*.5, box.width/2,box.height*-.35, box.width/-2,box.height*-.35},
+        	connectFirstAndLastChainVertex = true})
+		box.objType = "portal1"
+		box:play()
+	elseif (type == "P2") then
+		local sheetOptions = {
+			width = 106.4,
+			height = 253.55,
+			numFrames = 29
+		}
+		local sheet = graphics.newImageSheet("images/barriers/fireBarrier.png", sheetOptions)
+		box = display.newSprite(sheet, fireSequence)
+		box.anchorX, box.anchorY = 0,1
+		box.x = xPos
+		box.y = yPos
+		box.xScale = width/box.width; box.yScale = height/box.height	
+		box.width = width; box.height = height
+		movableGroup:insert(box)
+		physics.addBody(box, "static", {bounce = 0, isSensor=true,
+			chain={ box.width/-2,box.height*.5, box.width/2,box.height*.5, box.width/2,box.height*-.35, box.width/-2,box.height*-.35},
+        	connectFirstAndLastChainVertex = true})
+		box.objType = "portal2"
+		box:play()
+	elseif (type == "P3") then
+		local sheetOptions = {
+			width = 94,
+			height = 311,
+			numFrames = 19
+		}
+		local sheet = graphics.newImageSheet("images/barriers/laserBarrier.png", sheetOptions)
+		box = display.newSprite(sheet, laserSequence)
+		box.anchorX, box.anchorY = 0,1
+		box.x = xPos
+		box.y = yPos+H*.014
+		box.xScale = width/box.width; box.yScale = height/box.height	
+		box.width = width; box.height = height
+		movableGroup:insert(box)
+		physics.addBody(box, "static", {bounce = 0, isSensor=true,
+			chain={ box.width/-2,box.height*.43, box.width/2,box.height*.43, box.width/2,box.height*-.42, box.width/-2,box.height*-.42},
+        	connectFirstAndLastChainVertex = true})
+		box.objType = "portal3"
+		box:play()
 	else
 		box = display.newRect(0,0,width, height)
 		box.anchorX, box.anchorY = 0,1
@@ -84,30 +176,6 @@ function _M.newTile(type,xPos,yPos,width,height, stageCoinsTable, coinID)
 			movableGroup:insert(box)
 			box.isSensor=true
 			box.objType = "fatal"
-		elseif (type == "P1") then
-			box:setFillColor(1,0.5,0)
-			box.alpha=0.5
-			movableGroup:insert(box)
-			box.isSensor=true
-			box.objType = "portal1"
-		elseif (type == "P2") then
-			box:setFillColor(0,1,0)
-			box.alpha=0.5
-			movableGroup:insert(box)
-			box.isSensor=true
-			box.objType = "portal2"
-		elseif (type == "P3") then
-			box:setFillColor(1,0,0)
-			box.alpha=0.5
-			movableGroup:insert(box)
-			box.isSensor=true
-			box.objType = "portal3"
-		elseif (type == "P4") then
-			box:setFillColor(1,1,0)
-			box.alpha=0.5
-			movableGroup:insert(box)
-			box.isSensor=true
-			box.objType = "portal4"
 		elseif (type == "SZG") then
 			movableGroup:insert(box)
 			box.isSensor=true

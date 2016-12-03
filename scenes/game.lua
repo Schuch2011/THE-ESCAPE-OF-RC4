@@ -322,16 +322,13 @@ local function playerCollider( self,event )
     	end
 
     		-- PORTAIS ESPECIAIS
-    	if ( event.selfElement == 1 and event.other.objType == "portal1" and charId~=1) then
+    	if ( event.selfElement == 1 and event.other.objType == "portal1" and charId~=2) then
 			gameOver()
     	end
-    	if ( event.selfElement == 1 and event.other.objType == "portal2" and charId~=2) then
+    	if ( event.selfElement == 1 and event.other.objType == "portal2" and charId~=3) then
 			gameOver()
     	end
-    	if ( event.selfElement == 1 and event.other.objType == "portal3" and charId~=3) then
-    		gameOver()
-    	end
-    	if ( event.selfElement == 1 and event.other.objType == "portal4" and charId~=4) then
+    	if ( event.selfElement == 1 and event.other.objType == "portal3" and charId~=4) then
     		gameOver()
     	end
 

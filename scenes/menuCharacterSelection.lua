@@ -124,9 +124,6 @@ function scene:create(event)
 		maxCoins = maxCoins + stageCoins
 		coinsTaken = coinsTaken + stageCoinsCollected
 	end
-	print(coinsTaken.." / "..maxCoins)
-	--
-
 
 	local sceneGroup = self.view
 	local buttonGroup = display.newGroup()
