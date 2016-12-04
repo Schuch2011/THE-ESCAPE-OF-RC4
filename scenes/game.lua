@@ -252,6 +252,12 @@ local function onPaused()
 	isPaused = true
 	
 	physics.pause()
+
+	for i=1, movableGroup.numChildren do
+		if movableGroup[i].isBarrier==true then			
+			movableGroup[i]:pause()
+		end
+	end
 	
 	jumpButtonArea.isHitTestable = false
 	switchButtonArea.isHitTestable = false
@@ -274,6 +280,12 @@ function scene:resumeGame()
 	jumpButtonArea.isHitTestable = true
 	switchButtonArea.isHitTestable = true
 	pauseButton.isVisible = true
+
+	for i=1, movableGroup.numChildren do
+		if movableGroup[i].isBarrier==true then			
+			movableGroup[i]:play()
+		end
+	end
 	
 	player:play()
 end

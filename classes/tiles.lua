@@ -99,6 +99,7 @@ function _M.newTile(type,xPos,yPos,width,height, stageCoinsTable, coinID)
 		box.anchorX, box.anchorY = 0,1
 		box.x = xPos
 		box.y = yPos
+		box.isBarrier = true
 		box.xScale = width/box.width; box.yScale = height/box.height	
 		box.width = width; box.height = height
 		movableGroup:insert(box)
@@ -118,6 +119,7 @@ function _M.newTile(type,xPos,yPos,width,height, stageCoinsTable, coinID)
 		box.anchorX, box.anchorY = 0,1
 		box.x = xPos
 		box.y = yPos
+		box.isBarrier = true
 		box.xScale = width/box.width; box.yScale = height/box.height	
 		box.width = width; box.height = height
 		movableGroup:insert(box)
@@ -137,6 +139,7 @@ function _M.newTile(type,xPos,yPos,width,height, stageCoinsTable, coinID)
 		box.anchorX, box.anchorY = 0,1
 		box.x = xPos
 		box.y = yPos+H*.014
+		box.isBarrier = true
 		box.xScale = width/box.width; box.yScale = height/box.height	
 		box.width = width; box.height = height
 		movableGroup:insert(box)
