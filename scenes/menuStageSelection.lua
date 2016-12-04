@@ -28,9 +28,12 @@ local function onLevelButtonTouch(event)
             scrollView:takeFocus( event )
         end
     elseif ( phase == "ended" ) then
-    	if composer.getVariable("isStage"..event.target.id.."Unlocked_") or event.target.id == 0 then
-    		audio.play(sfxButton)
-			composer.setVariable("selectedStage", event.target.id)
+    	audio.play(sfxButton)
+    	composer.setVariable("selectedStage", event.target.id)
+
+    	if (saveState.getValue("isCutscene") == nil or saveState.getValue("isCutscene")) and event.target.id == 1 then
+    		composer.gotoScene("scenes.cutscene")
+    	elseif composer.getVariable("isStage"..event.target.id.."Unlocked_") or event.target.id == 0 then
 			composer.gotoScene("scenes.game")
 		end
     end
@@ -91,7 +94,6 @@ local function scrollListener(event)
 	end
 	return true
 end
-
 
 function scene:create(event)
 	local sceneGroup = self.view
