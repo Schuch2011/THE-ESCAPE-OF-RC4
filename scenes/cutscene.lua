@@ -29,6 +29,7 @@ local background
 local sfxButton = audio.loadSound("audios/button.wav")
 
 local pageGroup = display.newGroup()
+local topGroup = display.newGroup()
 local bottomGroup = display.newGroup()
 
 local function onNextRelease()
@@ -84,35 +85,26 @@ end
 function scene:create(event)
 	local sceneGroup = self.view
 
-	background = display.newRect(_W * .5, _H * .5, display.actualContentWidth, display.actualContentHeight)
-	background:setFillColor(.26, .42, .58)
+	local background = display.newImageRect(sceneGroup, "images/background.jpg", display.actualContentWidth, _H)
+	background.x = _W * .5
+	background.y = _H * .5
 
 	currentPage = display.newImage(pageGroup, images.intro[currentPageIndex])
 
 	pageGroup.x = _W * .5
-	pageGroup.y = _H * .5 - 18
+	pageGroup.y = _H * .465
 
 	buttons.skip = widget.newButton({
 		x = _W * .5,
 		y = 0 + 5,
-		shape = "roundedRect",
-		label = "SKIP",
-		width = 55,
-		height = 20,
-		corderRadius = 1,
-		labelColor = {default = {0, 0, 0}, over = {0, 0, 0}},
-		font = native.systemFontBold,
-		fontSize = 12,
-		strokeWidth = 2,
-		strokeColor = {default = {0, 0, 0}, over = {0, 0, 0}},
-		fillColor = {default = {0, 1, 0}, over = {0, 1, 0}},
+		defaultFile = "images/skip-button.png",
 		onRelease = onSkipRelease
 	})
 
 	buttons.next = widget.newButton({
 		x = _W - 5,
 		y = 0,
-		defaultFile = "images/arrow-right.png",
+		defaultFile = "images/arrow-right-small.png",
 		onRelease = onNextRelease
 	})
 
@@ -121,7 +113,7 @@ function scene:create(event)
 	buttons.previous = widget.newButton({
 		x = 0 + 5,
 		y = 0,
-		defaultFile = "images/arrow-left.png",
+		defaultFile = "images/arrow-left-small.png",
 		onRelease = onPrevRelease
 	})
 
@@ -130,18 +122,8 @@ function scene:create(event)
 
 	buttons.start = widget.newButton({
 		x = _W - 5,
-		y = 0,
-		shape = "roundedRect",
-		label = "START",
-		width = 65,
-		height = 28,
-		corderRadius = 1,
-		labelColor = {default = {0, 0, 0}, over = {0, 0, 0}},
-		font = native.systemFontBold,
-		fontSize = 14,
-		strokeWidth = 2,
-		strokeColor = {default = {0, 0, 0}, over = {0, 0, 0}},
-		fillColor = {default = {0, 1, 0}, over = {0, 1, 0}},
+		y = 0 + 5,
+		defaultFile = "images/start-button.png",
 		onRelease = onStartRelease
 	})
 
@@ -149,9 +131,9 @@ function scene:create(event)
 	buttons.start.isVisible = false
 
 	text.page = display.newText({
-		parent = bottomGroup,
+		parent = topGroup,
 		x = _W * .5,
-		y = 0 - 13,
+		y = 0,
 		text = currentPageIndex .. " / " .. #images.intro,
 		font = native.systemFontBold,
 		fontSize = 11,
@@ -160,7 +142,8 @@ function scene:create(event)
 
 	text.page:setFillColor(0, 0, 0)
 
-	bottomGroup.y = _H - 20
+	topGroup.y = _H * .0315
+	bottomGroup.y = _H * .925
 
 	bottomGroup:insert(buttons.skip)
 	bottomGroup:insert(buttons.next)
@@ -169,6 +152,7 @@ function scene:create(event)
 
 	sceneGroup:insert(background)
 	sceneGroup:insert(pageGroup)
+	sceneGroup:insert(topGroup)
 	sceneGroup:insert(bottomGroup)
 end
 

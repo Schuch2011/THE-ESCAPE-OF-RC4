@@ -22,18 +22,8 @@ function scene:create(event)
 	
 	local resumeButton = widget.newButton({
 		x = _W * .5,
-		y = _H * .2,
-		width = _W * .6,
-		height = _H * .2,
-		shape = "roundedRect",
-		fillColor = {default = {0, 1, 0}, over = {0, 1, 0}},
-		cornerRadius = 15,
-		label = "RESUME",
-		labelColor = {default = {0, 0, 0}, over = {0, 0, 0}},
-		fontSize = 35,
-		strokeWidth = 3,
-		strokeColor = { default={0}, over={0} },
-		font = native.systemFontBold,
+		y = _H * .27,
+		defaultFile = "images/continue-button.png",
 		onRelease = function()
 			audio.play(sfxButton)
 			composer.hideOverlay("fade", 200)
@@ -44,18 +34,8 @@ function scene:create(event)
 
 	local restartButton = widget.newButton({
 		x = _W * .5,
-		y = _H * .5,
-		width = _W * .6,
-		height = _H * .2,
-		shape = "roundedRect",
-		fillColor = {default = {0, 1, 0}, over = {0, 1, 0}},
-		cornerRadius = 15,
-		label = "RESTART",
-		labelColor = {default = {0, 0, 0}, over = {0, 0, 0}},
-		fontSize = 35,
-		strokeWidth = 3,
-		strokeColor = { default={0}, over={0} },
-		font = native.systemFontBold,
+		y = _H * .55,
+		defaultFile = "images/retry-button.png",
 		onRelease = function()
 			parent:finishGame()
 			audio.play(sfxButton)
@@ -66,17 +46,7 @@ function scene:create(event)
 	local backToMenuButton = widget.newButton({
 		x = _W * .5,
 		y = _H * .8,
-		width = _W * .6,
-		height = _H * .2,
-		shape = "roundedRect",
-		fillColor = {default = {0, 1, 0}, over = {0, 1, 0}},
-		cornerRadius = 15,
-		label = "BACK TO MENU",
-		labelColor = {default = {0, 0, 0}, over = {0, 0, 0}},
-		fontSize = 35,
-		strokeWidth = 3,
-		strokeColor = { default={0}, over={0} },
-		font = native.systemFontBold,
+		defaultFile = "images/back-to-menu-button.png",
 		onRelease = function()
 			isClosing = true
 			audio.stop(1)

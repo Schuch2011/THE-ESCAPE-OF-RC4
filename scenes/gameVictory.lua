@@ -22,6 +22,10 @@ function scene:create(event)
 	local coinsTaken = event.params
 	sfxButton = audio.loadSound("audios/button.wav")
 
+	local background = display.newImageRect(sceneGroup, "images/background-victory.jpg", display.actualContentWidth, H)
+	background.x = W * .5
+	background.y = H * .5
+
 	--DESBLOQUEAR PRÓXIMA FASE
 
 	if composer.getVariable("isStage"..(currentLevel+1).."Unlocked_") ~= true then
@@ -31,37 +35,26 @@ function scene:create(event)
 
 	--TEXTO DE VICTORY
 
+	--[[
 	local victoryText = display.newText(sceneGroup,"YOU DID IT!",W/2,H*.25,native.systemFontBold,40)
 	victoryText:setFillColor(0,1,0)
 	if currentLevel == 4 then
 		victoryText.text = "YOU FINALLY ESCAPE!"
 	end
-
+	--]]
 
 	if currentLevel ~= 0 then
-		local coinsTakenText = display.newText(sceneGroup,"COINS: "..coinsTaken.." / "..totalCoins,W/4,H*.32,native.systemFontBold,25)
-		local scoreText = display.newText(sceneGroup,"SCORE: "..saveState.getValue("stage"..currentLevel.."Score"),(W/4)*3,H*.32,native.systemFontBold,25)
-		victoryText.y = H*.15
+		local coinsTakenText = display.newText(sceneGroup,"COINS: "..coinsTaken.." / "..totalCoins,W/4,H*.33,native.systemFontBold,25)
+		local scoreText = display.newText(sceneGroup,"SCORE: "..saveState.getValue("stage"..currentLevel.."Score"),(W/4)*3,H*.33,native.systemFontBold,25)
+		--victoryText.y = H*.15
 	end
-
-	-- BOTAO DE RETRY
 
 	if currentLevel ~= 4 then
 		local nextStageButton = widget.newButton(
 			{
 				x = W/2,
-				y = H*.53,
-				shape = "roundedRect",
-				width = W*.6,
-				height = H*.20,
-				cornerRadius = 15,
-				label= "NEXT STAGE",
-				font = native.systemFontBold,
-				fontSize = 35,
-				labelColor = { default={0}, over={0} },
-				fillColor = { default={0,1,0}, over={0,1,0} },
-				strokeWidth = 3,
-				strokeColor = { default={0}, over={0} },
+				y = H*.52,
+				defaultFile = "images/continue-button.png",
 				onPress = function ()
 					audio.play(sfxButton)
 					composer.setVariable("selectedStage",currentLevel+1)
@@ -77,18 +70,8 @@ function scene:create(event)
 	local backButton = widget.newButton(
 		{
 			x = W/2,
-			y = H*.8,
-			shape = "roundedRect",
-			width = W*.6,
-			height = H*.20,
-			cornerRadius = 15,
-			label= "BACK TO MENU",
-			font = native.systemFontBold,
-			fontSize = 35,
-			labelColor = { default={0}, over={0} },
-			fillColor = { default={0,1,0}, over={0,1,0} },
-			strokeWidth = 3,
-			strokeColor = { default={0}, over={0} },
+			y = currentLevel == 4 and H * .6 or H * .76,
+			defaultFile = "images/back-to-menu-button.png",
 			onPress = function ()
 				audio.play(sfxButton)
 				composer.gotoScene("scenes.menu", {time=500, effect="slideRight"})

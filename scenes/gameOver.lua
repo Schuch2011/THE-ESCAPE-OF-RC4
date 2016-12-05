@@ -18,26 +18,20 @@ function scene:create(event)
 
 	--TEXTO DE GAME OVER
 
-	local gameOverText = display.newText("GAME OVER",W/2,H*.15,native.systemFontBold,40)
-	gameOverText:setFillColor(1,0,0)
+	--local gameOverText = display.newText("GAME OVER",W/2,H*.15,native.systemFontBold,40)
+	--gameOverText:setFillColor(1,0,0)
+
+	local background = display.newImageRect(sceneGroup, "images/background-game-over.jpg", display.actualContentWidth, H)
+	background.x = W * .5
+	background.y = H * .5
 
 	-- BOTAO DE RETRY
 
 	local retryButton = widget.newButton(
 		{
 			x = W/2,
-			y = H*.47,
-			shape = "roundedRect",
-			width = W*.6,
-			height = H*.20,
-			cornerRadius = 15,
-			label= "RETRY",
-			font = native.systemFontBold,
-			fontSize = 35,
-			labelColor = { default={0}, over={0} },
-			fillColor = { default={0,1,0}, over={0,1,0} },
-			strokeWidth = 3,
-			strokeColor = { default={0}, over={0} },
+			y = H*.425,
+			defaultFile = "images/retry-button.png",
 			onPress = function ()
 				audio.play(sfxButton)
 				composer.gotoScene("scenes.game", {time=500, effect="slideRight"})
@@ -50,18 +44,8 @@ function scene:create(event)
 	local backButton = widget.newButton(
 		{
 			x = W/2,
-			y = H*.8,
-			shape = "roundedRect",
-			width = W*.6,
-			height = H*.20,
-			cornerRadius = 15,
-			label= "BACK TO MENU",
-			font = native.systemFontBold,
-			fontSize = 35,
-			labelColor = { default={0}, over={0} },
-			fillColor = { default={0,1,0}, over={0,1,0} },
-			strokeWidth = 3,
-			strokeColor = { default={0}, over={0} },
+			y = H*.7,
+			defaultFile = "images/back-to-menu-button.png",
 			onPress = function ()
 				audio.play(sfxButton)
 				composer.gotoScene("scenes.menu", {time=500, effect="slideRight"})
@@ -69,7 +53,7 @@ function scene:create(event)
 		}
 	)
 
-	sceneGroup:insert(gameOverText)
+	--sceneGroup:insert(gameOverText)
 	sceneGroup:insert(retryButton)
 	sceneGroup:insert(backButton)
 end

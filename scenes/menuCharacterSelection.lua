@@ -131,12 +131,13 @@ function scene:create(event)
 	sfxButton = audio.loadSound("audios/button.wav")
 	sfxSwipe = audio.loadSound("audios/swipe.wav")
 
-	local background = display.newRect(sceneGroup, W/2, H/2, W*1.2, H)
-	background:setFillColor(67/255, 107/255, 149/255) 
+	local background = display.newImageRect(sceneGroup, "images/background-character-selection.jpg", display.actualContentWidth, H)
+	background.x = W * .5
+	background.y = H * .5
 
 	scrollView = widget.newScrollView({
 		x = W/2,
-		y = H/2,
+		y = H * .54,
 		width = W*1.2,
 		height = H,
 		verticalScrollDisabled = true,		
@@ -146,7 +147,7 @@ function scene:create(event)
 	})
 
 	local backButton = widget.newButton({
-		defaultFile = "images/backButton.png",
+		defaultFile = "images/arrow-left.png",
 		width = H*.22, height = H*.22,
 		x = W*0.1, y = H*0.85,
 		onRelease = function() 
@@ -232,10 +233,6 @@ function scene:create(event)
 	end
 	loadsave.saveTable(isCharUnlocked,"isCharUnlocked.json")
 
-	local menuTitle = display.newText("CHARACTER SELECTION",W/2,H*.1,native.systemFontBold,30)
-	menuTitle:setFillColor(1)
-
-	sceneGroup:insert(menuTitle)
 	sceneGroup:insert(scrollView)
 	sceneGroup:insert(buttonGroup)
 end

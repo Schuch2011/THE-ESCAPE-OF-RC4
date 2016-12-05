@@ -75,18 +75,8 @@ function scene:create(event)
 
 	local resumeButton = widget.newButton({
 		x = W * .5,
-		y = H * .9,
-		width = W * .375,
-		height = H * .125,
-		shape = "roundedRect",
-		fillColor = {default = {0, 1, 0}, over = {0, 1, 0}},
-		cornerRadius = 15,
-		label = "CONTINUE",
-		labelColor = {default = {0, 0, 0}, over = {0, 0, 0}},
-		fontSize = 25,
-		strokeWidth = 3,
-		strokeColor = { default={0}, over={0} },
-		font = native.systemFontBold,
+		y = H * .85,
+		defaultFile = "images/continue-button-small.png",
 		onRelease = function()
 			audio.play(sfxButton)
 			composer.hideOverlay("fade", 200)
