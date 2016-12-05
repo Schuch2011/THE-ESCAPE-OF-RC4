@@ -115,7 +115,7 @@ local function switch() -- MECÂNICA DE INVERSÃO DOS ELEMENTOS DO CENÁRIO
 	audio.play(sfxSwitch)
 	if(switchTime == false) then
 		for i=1, lightGroup.numChildren do
-			lightGroup[i].alpha = 0.35
+			lightGroup[i].alpha = 0.15
 			lightGroup[i].isBodyActive = false
 		end
 		for i=1, darkGroup.numChildren do
@@ -129,7 +129,7 @@ local function switch() -- MECÂNICA DE INVERSÃO DOS ELEMENTOS DO CENÁRIO
 			lightGroup[i].isBodyActive = true
 		end
 		for i=1, darkGroup.numChildren do
-			darkGroup[i].alpha = 0.35
+			darkGroup[i].alpha = 0.15
 			darkGroup[i].isBodyActive = false			
 		end
 		switchTime = false
@@ -144,6 +144,7 @@ end
 
 local function gameOver()
 	stopGame()
+	isPaused = true
 	audio.play(sfxGameOver)
 	composer.gotoScene("scenes.gameOver",{effect="slideLeft",time = 500})
 end
@@ -600,7 +601,7 @@ function scene:create(event)
 			x = W * 1.025,
 			y = H * .21,
 			font = native.systemFont,
-			fontSize = 25,
+			fontSize = 21,
 			align = "right"
 		})
 		
@@ -888,7 +889,7 @@ function updateFrames()
 		end
 		
 		-- GAMEOVER QUANDO PERSONAGEM SAI PARA FORA DA TELA
-		if ((playerLocalX) < 0) then
+		if ((playerLocalX) < -60) then
 			gameOver()
 		end
 	end

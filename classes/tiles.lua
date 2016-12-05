@@ -164,7 +164,7 @@ function _M.newTile(type,xPos,yPos,width,height, stageCoinsTable, coinID)
 			lightGroup:insert(box)
 		elseif (type == "D") then
 			box.objType="ground"
-			box:setFillColor(106/255,47/255,238/255)
+			box:setFillColor(0/255,51/255,102/255)
 			darkGroup:insert(box)
 			box.isBodyActive = false
 			box.alpha = 0.35 
