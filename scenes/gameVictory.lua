@@ -22,7 +22,7 @@ function scene:create(event)
 	local coinsTaken = event.params
 	sfxButton = audio.loadSound("audios/button.wav")
 
-	local background = display.newImageRect(sceneGroup, "images/background-victory.jpg", display.actualContentWidth, H)
+	local background = display.newImageRect(sceneGroup, "images/background-2.jpg", display.actualContentWidth, H)
 	background.x = W * .5
 	background.y = H * .5
 
@@ -35,26 +35,36 @@ function scene:create(event)
 
 	--TEXTO DE VICTORY
 
-	--[[
-	local victoryText = display.newText(sceneGroup,"YOU DID IT!",W/2,H*.25,native.systemFontBold,40)
-	victoryText:setFillColor(0,1,0)
-	if currentLevel == 4 then
-		victoryText.text = "YOU FINALLY ESCAPE!"
-	end
-	--]]
+	local victoryText = display.newText({
+		x = W * .52,
+		y = H * .15,
+		width = W * .4,
+		align = "center",
+		text = currentLevel == 0 and "TRAINNING COMPLETE! " or ("STAGE " .. currentLevel .. " COMPLETE! "),
+		font = "airstrike.ttf",
+		fontSize = 30,
+	})
+	victoryText:setFillColor(.97, .95, 0)
 
 	if currentLevel ~= 0 then
 		local coinsTakenText = display.newText(sceneGroup,"COINS: "..coinsTaken.." / "..totalCoins,W/4,H*.33,native.systemFontBold,25)
 		local scoreText = display.newText(sceneGroup,"SCORE: "..saveState.getValue("stage"..currentLevel.."Score"),(W/4)*3,H*.33,native.systemFontBold,25)
-		--victoryText.y = H*.15
 	end
 
 	if currentLevel ~= 4 then
 		local nextStageButton = widget.newButton(
 			{
 				x = W/2,
-				y = H*.52,
-				defaultFile = "images/continue-button.png",
+				y = H*.425,
+				width = 320,
+				height = 50,
+				shape = "roundedRect",
+				cornerRadius = 15,
+				fillColor = {default = {.76, .34, .29}, over = {.76, .34, .29}},
+				label = "NEXT STAGE ",
+				labelColor = {default = {1, 1, 1}, over = {1, 1, 1}},
+				font = "airstrike.ttf",
+				fontSize = 35,
 				onPress = function ()
 					audio.play(sfxButton)
 					composer.setVariable("selectedStage",currentLevel+1)
@@ -70,8 +80,16 @@ function scene:create(event)
 	local backButton = widget.newButton(
 		{
 			x = W/2,
-			y = currentLevel == 4 and H * .6 or H * .76,
-			defaultFile = "images/back-to-menu-button.png",
+			y = currentLevel == 4 and H * .55 or H*.7,
+			width = 320,
+			height = 50,
+			shape = "roundedRect",
+			cornerRadius = 15,
+			fillColor = {default = {.76, .34, .29}, over = {.76, .34, .29}},
+			label = "BACK TO MENU ",
+			labelColor = {default = {1, 1, 1}, over = {1, 1, 1}},
+			font = "airstrike.ttf",
+			fontSize = 35,
 			onPress = function ()
 				audio.play(sfxButton)
 				composer.gotoScene("scenes.menu", {time=500, effect="slideRight"})
@@ -81,6 +99,7 @@ function scene:create(event)
 
 
 	sceneGroup:insert(backButton)
+	sceneGroup:insert(victoryText)
 end
 
 function scene:show(event)

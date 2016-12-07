@@ -31,9 +31,15 @@ local function onLevelButtonTouch(event)
     	audio.play(sfxButton)
     	composer.setVariable("selectedStage", event.target.id)
 
+    	--[[
     	if (saveState.getValue("isCutscene") == nil or saveState.getValue("isCutscene")) and event.target.id == 1 then
     		composer.gotoScene("scenes.cutscene")
     	elseif composer.getVariable("isStage"..event.target.id.."Unlocked_") or event.target.id == 0 then
+			composer.gotoScene("scenes.game")
+		end
+		--]]
+
+		if composer.getVariable("isStage"..event.target.id.."Unlocked_") or event.target.id == 0 then
 			composer.gotoScene("scenes.game")
 		end
     end
@@ -102,9 +108,21 @@ function scene:create(event)
 	sfxButton = audio.loadSound("audios/button.wav")
 	sfxSwipe = audio.loadSound("audios/swipe.wav")
 
-	local background = display.newImageRect(sceneGroup, "images/background-stage-selection.jpg", display.actualContentWidth, H)
+	local background = display.newImageRect(sceneGroup, "images/background-2.jpg", display.actualContentWidth, H)
 	background.x = W * .5
 	background.y = H * .5
+
+	local menuTitle = display.newText({
+		x = W * .52,
+		y = H * .15,
+		width = W * .4,
+		align = "center",
+		text = "STAGE SELECTION ",
+		font = "airstrike.ttf",
+		fontSize = 30,
+
+	})
+	menuTitle:setFillColor(.97, .95, 0)
 
 	scrollView = widget.newScrollView({
 		x = W/2,
@@ -148,22 +166,22 @@ function scene:create(event)
 			isStageUnlocked = saveState.getValue("isStage"..i.."Unlocked") or true
 			saveState.save{["isStage"..i.."Unlocked"]=isStageUnlocked}
 			composer.setVariable("isStage"..i.."Unlocked_",isStageUnlocked)
-			stageName = "WAREHOUSE"
+			stageName = "WAREHOUSE "
 		elseif i == 2 then
 			isStageUnlocked = saveState.getValue("isStage"..i.."Unlocked") or false
 			saveState.save{["isStage"..i.."Unlocked"]=isStageUnlocked}
 			composer.setVariable("isStage"..i.."Unlocked_",isStageUnlocked)
-			stageName = "FACTORY"
+			stageName = "FACTORY "
 		elseif i == 3 then
 			isStageUnlocked = saveState.getValue("isStage"..i.."Unlocked") or false
 			saveState.save{["isStage"..i.."Unlocked"]=isStageUnlocked}
 			composer.setVariable("isStage"..i.."Unlocked_",isStageUnlocked)
-			stageName = "SERVER'S ROOM"
+			stageName = "SERVER'S ROOM "
 		elseif i == 4 then
 			isStageUnlocked = saveState.getValue("isStage"..i.."Unlocked") or false
 			saveState.save{["isStage"..i.."Unlocked"]=isStageUnlocked}
 			composer.setVariable("isStage"..i.."Unlocked_",isStageUnlocked)
-			stageName = "OFFICE"
+			stageName = "OFFICE "
 		end
 
 		if i==0 then
@@ -177,10 +195,10 @@ function scene:create(event)
 
 			local text = display.newText({
 				parent = sceneGroup,
-				text = "TRAINING ROOM", 
+				text = "TRAINING ROOM ", 
 				x = W*0.63+(i)*parDistance, 
-				y = H*.7, 
-				font = native.systemFontBold, 
+				y = H*.68, 
+				font = "airstrike.ttf", 
 				fontSize = 25,
 				align = "center"
 			})
@@ -205,8 +223,8 @@ function scene:create(event)
 				parent = sceneGroup,
 				text = stageName, 
 				x = W*0.63+(i)*parDistance, 
-				y = H*.70, 
-				font = native.systemFontBold, 
+				y = H*.68, 
+				font = "airstrike.ttf", 
 				fontSize = 25,
 				align = "center"
 			})
@@ -214,10 +232,11 @@ function scene:create(event)
 				nameText:setFillColor(1)
 				local text = display.newText({
 					parent = sceneGroup,
-					text = "COINS: "..maxCoinsTaken.." / "..totalCoins.."\nHIGHSCORE: "..maxHighscore, 
+					text = "COINS: "..maxCoinsTaken.." / "..totalCoins.." HIGHSCORE: "..maxHighscore, 
 					x = W*0.63+(i)*parDistance, 
-					y = H*.82, 
-					font = native.systemFontBold, 
+					y = H*.77,
+					width = W * .375,
+					font = "airstrike.ttf", 
 					fontSize = 15,
 					align = "center"
 				})
@@ -233,12 +252,9 @@ function scene:create(event)
 		end
 	end
 
-	--local menuTitle = display.newText("STAGE SELECTION",W/2,H*.15,native.systemFontBold,30)
-	--menuTitle:setFillColor(1)
-
-	--sceneGroup:insert(menuTitle)
 	sceneGroup:insert(scrollView)
 	sceneGroup:insert(buttonGroup)
+	sceneGroup:insert(menuTitle)
 end
 
 function scene:show(event)

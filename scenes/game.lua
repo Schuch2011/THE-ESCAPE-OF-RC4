@@ -324,7 +324,7 @@ local function playerCollider( self,event )
 				stageCoinsTable[event.other.ID]=true
 				coins = coins +1
 				score = score + 250
-				if coinsCounter then coinsCounter.text = coins.." / "..totalCoins end
+				if coinsCounter then coinsCounter.text = coins.." / "..totalCoins .. " " end
 				
 			end
 			audio.play(sfxCoin)			
@@ -501,12 +501,12 @@ function scene:create(event)
 	-- INSTANCIAR BOTÕES DE AÇÃO
 
 	local leftButton = widget.newButton({
-		label = "SWITCH",
+		label = "SWITCH ",
 		labelColor = {default={1}},
 		labelXOffset = W*.13,
 		labelYOffset = W*-.15,
 		fontSize = 30,
-		font = native.systemFontBold,
+		font = "airstrike.ttf",
 		shape = "circle",
 		radius=W*.4,
 		x=W*-.05,
@@ -519,12 +519,12 @@ function scene:create(event)
 
 
 	local rightButton = widget.newButton({
-		label = "JUMP",
+		label = "JUMP ",
 		labelColor = {default={1}},
 		labelXOffset = W*-.13,
 		labelYOffset = W*-.15,
 		fontSize = 30,
-		font = native.systemFontBold,
+		font = "airstrike.ttf",
 		shape = "circle",
 		radius=W*.4,
 		x=W*1.05,
@@ -575,12 +575,12 @@ function scene:create(event)
 			
 		scoreCounter = display.newEmbossedText({
 			parent = HUDGroup,
-			text = score,
-			x = W * .9725,
+			text = score .. " ",
+			x = W * 1.03,
 			y = H * .0725,
-			font = native.systemFont,
+			font = "airstrike.ttf",
 			fontSize = 19,
-			align = "center"
+			align = "right"
 		})
 			
 		scoreCounter:setEmbossColor({
@@ -591,17 +591,17 @@ function scene:create(event)
 		scoreCounter:setFillColor(1)
 		scoreCounter.anchorX, scoreCounter.anchorY = 1, .5
 		
-		local coinIcon = display.newImageRect(HUDGroup, "images/coin.png", 30, 30)
+		local coinIcon = display.newImageRect(HUDGroup, "images/coin.png", 25, 25)
 		coinIcon.x = W * .87
 		coinIcon.y = H * .2105
 		
 		coinsCounter = display.newEmbossedText({
 			parent = HUDGroup,
-			text = coins.." / "..totalCoins,
-			x = W * 1.025,
+			text = coins.." / "..totalCoins .. " ",
+			x = W * 1.03,
 			y = H * .21,
-			font = native.systemFont,
-			fontSize = 21,
+			font = "airstrike.ttf",
+			fontSize = 16,
 			align = "right"
 		})
 		
@@ -773,8 +773,7 @@ function updateFrames()
 
 		score = score + 1*(parScoreMultiplier)
 		if score%10 == 0 and scoreCounter then
-			--scoreCounter.text= "SCORE: "..score
-			scoreCounter.text = score
+			scoreCounter.text = score .. " "
 		end
 	
 		local vx, vy = player:getLinearVelocity() 

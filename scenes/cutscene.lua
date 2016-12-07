@@ -89,6 +89,7 @@ function scene:create(event)
 	background.x = _W * .5
 	background.y = _H * .5
 
+	--[[
 	currentPage = display.newImage(pageGroup, images.intro[currentPageIndex])
 
 	pageGroup.x = _W * .5
@@ -154,6 +155,7 @@ function scene:create(event)
 	sceneGroup:insert(pageGroup)
 	sceneGroup:insert(topGroup)
 	sceneGroup:insert(bottomGroup)
+	]]
 end
 
 function scene:show(event)

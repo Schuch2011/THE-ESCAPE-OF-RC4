@@ -23,7 +23,15 @@ function scene:create(event)
 	local resumeButton = widget.newButton({
 		x = _W * .5,
 		y = _H * .27,
-		defaultFile = "images/continue-button.png",
+		width = 320,
+		height = 50,
+		shape = "roundedRect",
+		cornerRadius = 15,
+		fillColor = {default = {.76, .34, .29}, over = {.76, .34, .29}},
+		label = "RESUME ",
+		labelColor = {default = {1, 1, 1}, over = {1, 1, 1}},
+		font = "airstrike.ttf",
+		fontSize = 35,
 		onRelease = function()
 			audio.play(sfxButton)
 			composer.hideOverlay("fade", 200)
@@ -34,8 +42,16 @@ function scene:create(event)
 
 	local restartButton = widget.newButton({
 		x = _W * .5,
-		y = _H * .55,
-		defaultFile = "images/retry-button.png",
+		y = _H * .535,
+		width = 320,
+		height = 50,
+		shape = "roundedRect",
+		cornerRadius = 15,
+		fillColor = {default = {.76, .34, .29}, over = {.76, .34, .29}},
+		label = "RESTART ",
+		labelColor = {default = {1, 1, 1}, over = {1, 1, 1}},
+		font = "airstrike.ttf",
+		fontSize = 35,
 		onRelease = function()
 			parent:finishGame()
 			audio.play(sfxButton)
@@ -46,7 +62,15 @@ function scene:create(event)
 	local backToMenuButton = widget.newButton({
 		x = _W * .5,
 		y = _H * .8,
-		defaultFile = "images/back-to-menu-button.png",
+		width = 320,
+		height = 50,
+		shape = "roundedRect",
+		cornerRadius = 15,
+		fillColor = {default = {.76, .34, .29}, over = {.76, .34, .29}},
+		label = "BACK TO MENU ",
+		labelColor = {default = {1, 1, 1}, over = {1, 1, 1}},
+		font = "airstrike.ttf",
+		fontSize = 35,
 		onRelease = function()
 			isClosing = true
 			audio.stop(1)

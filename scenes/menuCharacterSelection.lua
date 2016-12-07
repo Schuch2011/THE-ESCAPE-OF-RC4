@@ -131,7 +131,19 @@ function scene:create(event)
 	sfxButton = audio.loadSound("audios/button.wav")
 	sfxSwipe = audio.loadSound("audios/swipe.wav")
 
-	local background = display.newImageRect(sceneGroup, "images/background-character-selection.jpg", display.actualContentWidth, H)
+	local menuTitle = display.newText({
+		x = W * .52,
+		y = H * .15,
+		width = W * .4,
+		align = "center",
+		text = "CHARACTER SELECTION ",
+		font = "airstrike.ttf",
+		fontSize = 30,
+
+	})
+	menuTitle:setFillColor(.97, .95, 0)
+
+	local background = display.newImageRect(sceneGroup, "images/background-2.jpg", display.actualContentWidth, H)
 	background.x = W * .5
 	background.y = H * .5
 
@@ -166,16 +178,16 @@ function scene:create(event)
 
 		local charName
 		if i == 1 then
-			charName = "RC4-101"
+			charName = "RC4-101 "
 			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked[i])
 		elseif i == 2 then
-			charName = "RC4-CRV1"
+			charName = "RC4-CRV1 "
 			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked[i])
 		elseif i == 3 then
-			charName = "RC4-FR53"
+			charName = "RC4-FR53 "
 			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked[i])
 		elseif i == 4 then
-			charName = "RC4-SPY14"
+			charName = "RC4-SPY14 "
 			composer.setVariable("isChar"..i.."Unlocked_",isCharUnlocked[i])
 		end
 		
@@ -206,7 +218,7 @@ function scene:create(event)
 			text = charName,
 			x = W*0.64+(i-1)*parDistance, 
 			y = H*.70, 
-			font = native.systemFontBold, 
+			font = "airstrike.ttf", 
 			fontSize = 25,
 			align = "center"
 		})
@@ -235,6 +247,7 @@ function scene:create(event)
 
 	sceneGroup:insert(scrollView)
 	sceneGroup:insert(buttonGroup)
+	sceneGroup:insert(menuTitle)
 end
 
 function scene:show(event)

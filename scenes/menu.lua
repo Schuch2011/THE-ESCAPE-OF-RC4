@@ -23,7 +23,15 @@ function scene:create(event)
 		{
 			x = W/2,
 			y = H*.5,
-			defaultFile = "images/play-button.png",
+			width = 250,
+			height = 50,
+			shape = "roundedRect",
+			cornerRadius = 15,
+			fillColor = {default = {.76, .34, .29}, over = {.76, .34, .29}},
+			label = "PLAY ",
+			labelColor = {default = {1, 1, 1}, over = {1, 1, 1}},
+			font = "airstrike.ttf",
+			fontSize = 40,
 			onPress = function ()
 				audio.play(sfxButton)
 				composer.gotoScene("scenes.menuCharacterSelection", {time=500, effect="slideLeft"})
@@ -35,7 +43,15 @@ function scene:create(event)
 		{
 			x = W/2,
 			y = H*.79,
-			defaultFile = "images/credits-button.png",
+			width = 160,
+			height = 30,
+			shape = "roundedRect",
+			cornerRadius = 12,
+			fillColor = {default = {.76, .34, .29}, over = {.76, .34, .29}},
+			label = "CREDITS ",
+			labelColor = {default = {1, 1, 1}, over = {1, 1, 1}},
+			font = "airstrike.ttf",
+			fontSize = 22,
 			onPress = function ()
 				audio.play(sfxButton)
 				composer.gotoScene("scenes.credits", {time=500, effect="slideRight"})

@@ -14,7 +14,17 @@ function scene:create(event)
 	
 	sfxButton = audio.loadSound("audios/button.wav")
 	
-	local background = display.newImageRect(creditsGroup, "images/background-credits.jpg", display.actualContentWidth, H)
+	local menuTitle = display.newText({
+		x = W * .52,
+		y = H * .185,
+		align = "center",
+		text = "CREDITS ",
+		font = "airstrike.ttf",
+		fontSize = 30,
+	})
+	menuTitle:setFillColor(.97, .95, 0)
+
+	local background = display.newImageRect(creditsGroup, "images/background.jpg", display.actualContentWidth, H)
 	background.x = W * .5
 	background.y = H * .5
 
@@ -28,19 +38,20 @@ function scene:create(event)
 		end
 	})
 	
-	display.newText({parent = creditsGroup, text = "Programming", x = W * .25, y = H * .37, font = native.systemFontBold, fontSize = 22})
-	display.newText({parent = creditsGroup, text = "André Schuch", x = W * .25, y = H * .47, font = native.systemFont, fontSize = 16})
-	display.newText({parent = creditsGroup, text = "Jonas Pohren", x = W * .25, y = H * .545, font = native.systemFont, fontSize = 16})
+	display.newText({parent = creditsGroup, text = "Programming ", x = W * .25, y = H * .37, font = "airstrikebold.ttf", fontSize = 22})
+	display.newText({parent = creditsGroup, text = "André Schuch ", x = W * .25, y = H * .47, font = "airstrike.ttf", fontSize = 16})
+	display.newText({parent = creditsGroup, text = "Jonas Pohren ", x = W * .25, y = H * .545, font = "airstrike.ttf", fontSize = 16})
 	
-	display.newText({parent = creditsGroup, text = "Art", x = W * .75, y = H * .37, font = native.systemFontBold, fontSize = 22})
-	display.newText({parent = creditsGroup, text = "Murilo Fazan", x = W * .75, y = H * .47, font = native.systemFont, fontSize = 16})
-	display.newText({parent = creditsGroup, text = "Sérgio Alves", x = W * .75, y = H * .545, font = native.systemFont, fontSize = 16})
+	display.newText({parent = creditsGroup, text = "Art ", x = W * .75, y = H * .37, font = "airstrikebold.ttf", fontSize = 22})
+	display.newText({parent = creditsGroup, text = "Murilo Fazan ", x = W * .75, y = H * .47, font = "airstrike.ttf", fontSize = 16})
+	display.newText({parent = creditsGroup, text = "Sérgio Alves ", x = W * .75, y = H * .545, font = "airstrike.ttf", fontSize = 16})
 	
-	display.newText({parent = creditsGroup, text = "Coordinator", x = W * .5, y = H * .7, font = native.systemFontBold, fontSize = 22})
-	display.newText({parent = creditsGroup, text = "Eduardo Muller", x = W * .5, y = H * .775, font = native.systemFont, fontSize = 16})
+	display.newText({parent = creditsGroup, text = "Coordinator ", x = W * .5, y = H * .7, font = "airstrikebold.ttf", fontSize = 22})
+	display.newText({parent = creditsGroup, text = "Eduardo 'EdH' Muller ", x = W * .5, y = H * .775, font = "airstrike.ttf", fontSize = 16})
 	
 	sceneGroup:insert(creditsGroup)
 	sceneGroup:insert(backButton)
+	sceneGroup:insert(menuTitle)
 end
 
 scene:addEventListener("create",scene)
