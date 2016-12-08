@@ -9,11 +9,15 @@ local widget = require("widget")
 local scene = composer.newScene()
 
 local sfxButton
+local sfxMenuMusic
 
 function scene:create(event)
 	local sceneGroup = self.view
 
+	audio.reserveChannels(1)
+
 	sfxButton = audio.loadSound("audios/button.wav")
+	sfxMenuMusic = audio.loadStream("audios/musicMenu.wav")
 
 	local background = display.newImageRect(sceneGroup, "images/main-menu.jpg", display.actualContentWidth, H)
 	background.x = W * .5
@@ -64,10 +68,16 @@ function scene:create(event)
 end
 
 function scene:show(event)
-	if event.phase == "did" then
+	if event.phase == "will" then
+		audio.setVolume(0.3,{channel =1})
+	elseif event.phase == "did" then
 		local previous = composer.getSceneName("previous")
 		if previous ~= nil then
 			composer.removeScene(composer.getSceneName("previous"))
+		end
+		if not audio.isChannelActive(1) then
+    		audio.play(sfxMenuMusic, {channel = 1, loops = -1})
+    		audio.setVolume(0.3,{channel =1})
 		end
 	end
 end

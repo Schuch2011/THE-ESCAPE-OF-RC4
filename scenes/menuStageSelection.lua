@@ -29,6 +29,7 @@ local function onLevelButtonTouch(event)
         end
     elseif ( phase == "ended" ) then
     	audio.play(sfxButton)
+    	audio.stop(1)
     	composer.setVariable("selectedStage", event.target.id)
 
     	--[[

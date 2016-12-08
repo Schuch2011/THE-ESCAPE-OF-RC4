@@ -3,5 +3,5 @@ system.activate('multitouch')
 
 local composer = require("composer")
 
-composer.gotoScene("scenes.menu",{time=0, effect="slideLeft"})
+composer.gotoScene("scenes.intro")
 

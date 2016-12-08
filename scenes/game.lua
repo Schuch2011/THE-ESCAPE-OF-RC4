@@ -145,7 +145,9 @@ end
 local function gameOver()
 	stopGame()
 	isPaused = true
-	audio.play(sfxGameOver)
+	if not audio.isChannelActive(3) then
+    	audio.play(sfxGameOver, {channel = 3})
+    end
 	composer.gotoScene("scenes.gameOver",{effect="slideLeft",time = 500})
 end
 
@@ -398,7 +400,7 @@ function scene:create(event)
 
 	-- CARREGAR SONS
 
-	audio.reserveChannels(2)
+	audio.reserveChannels(3)
 
 	sfxCoin = audio.loadSound("audios/coin.wav")
 	sfxJump1 = audio.loadSound("audios/jump1.wav")
