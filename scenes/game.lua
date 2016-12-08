@@ -169,7 +169,7 @@ end
 
 local function onAccelerate( event )
 	if (parIsZeroGravity==true) then
-    	physics.setGravity(0,event.zInstant*1*parAccelerometerSensitivity)
+    	physics.setGravity(0,event.ynstant*-1*parAccelerometerSensitivity)
     	parSpeed = parZeroChamberSpeed
 	end
 end
