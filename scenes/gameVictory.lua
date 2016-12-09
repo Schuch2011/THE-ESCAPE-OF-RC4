@@ -50,7 +50,7 @@ function scene:create(event)
 		local temp = saveState.getValue("stage"..currentLevel.."Score") or 0
 
 		local coinsTakenText = display.newText(sceneGroup,"COINS: "..coinsTaken.." / "..totalCoins .. " ",W/4,H*.34,"airstrikebold.ttf",25)
-		local scoreText = display.newText(sceneGroup,"SCORE: ".. (temp or 0) .. " ",(W/4)*3,H*.34,"airstrikebold.ttf",25)
++		local scoreText = display.newText(sceneGroup,"SCORE: ".. (temp or 0) .. " ",(W/4)*3,H*.34,"airstrikebold.ttf",25)
 	end
 
 	if currentLevel ~= 4 then
