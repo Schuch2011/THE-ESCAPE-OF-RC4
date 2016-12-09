@@ -173,6 +173,9 @@ function _M.newTile(type,xPos,yPos,width,height, stageCoinsTable, coinID)
 			box.isSensor=true
 			box.alpha=0
 			box.objType="endStage"
+			board = display.newImage(movableGroup , "images/exitBoard.png",(box.x+box.width/2), (box.y))
+			board.anchorY = 1
+			board.xScale, board.yScale = .18,.18
 		elseif (type == "F") then
 			box:setFillColor(1,0,0)
 			box.alpha=0

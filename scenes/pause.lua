@@ -22,7 +22,7 @@ function scene:create(event)
 	
 	local resumeButton = widget.newButton({
 		x = _W * .5,
-		y = _H * .27,
+		y = _H * .22,
 		width = 320,
 		height = 50,
 		shape = "roundedRect",
@@ -42,7 +42,7 @@ function scene:create(event)
 
 	local restartButton = widget.newButton({
 		x = _W * .5,
-		y = _H * .535,
+		y = _H * .485,
 		width = 320,
 		height = 50,
 		shape = "roundedRect",
@@ -61,7 +61,7 @@ function scene:create(event)
 
 	local backToMenuButton = widget.newButton({
 		x = _W * .5,
-		y = _H * .8,
+		y = _H * .75,
 		width = 320,
 		height = 50,
 		shape = "roundedRect",

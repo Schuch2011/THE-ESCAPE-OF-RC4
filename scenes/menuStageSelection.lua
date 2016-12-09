@@ -24,13 +24,12 @@ local function onLevelButtonTouch(event)
 	local phase = event.phase
     if ( phase == "moved" ) then
         local dx = math.abs( ( event.x - event.xStart ) )
-        if ( dx > 10 ) then
+        if ( dx > 20 ) then
             scrollView:takeFocus( event )
         end
     elseif ( phase == "ended" ) then
     	audio.play(sfxButton)
     	audio.stop(1)
-    	composer.setVariable("selectedStage", event.target.id)
 
     	--[[
     	if (saveState.getValue("isCutscene") == nil or saveState.getValue("isCutscene")) and event.target.id == 1 then
@@ -40,7 +39,9 @@ local function onLevelButtonTouch(event)
 		end
 		--]]
 
-		if composer.getVariable("isStage"..event.target.id.."Unlocked_") or event.target.id == 0 then
+		if composer.getVariable("isStage"..event.target.id.."Unlocked_") or event.target.id == 0 or event.target.id==1 then
+			
+    		composer.setVariable("selectedStage", event.target.id)
 			composer.gotoScene("scenes.game")
 		end
     end

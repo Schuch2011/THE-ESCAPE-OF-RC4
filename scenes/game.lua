@@ -20,6 +20,7 @@ local charID
 
 local isPaused = true
 local isGameFinished = false
+local isFinishing
 local switchTime=false
 local coins = 0
 local totalCoins
@@ -87,7 +88,10 @@ local canDie = true
 
 local jumpButtonArea
 local switchButtonArea
+local rightButton
 local pauseButton
+
+local accelerometerInstruction
 
 local function setPhysics() -- INICIAR E CONFIGURAR A SIMULAÇÃO DE FÍSICA
 	physics.start(true)
@@ -171,7 +175,7 @@ end
 
 local function onAccelerate( event )
 	if (parIsZeroGravity==true) then
-    	physics.setGravity(0,event.ynstant*-1*parAccelerometerSensitivity)
+    	physics.setGravity(0,event.yInstant*-1*parAccelerometerSensitivity)
     	parSpeed = parZeroChamberSpeed
 	end
 end
@@ -267,6 +271,7 @@ local function onPaused()
 	pauseButton.isVisible = false
 	
 	player:pause()
+	accelerometerInstruction:pause()
 	
 	composer.showOverlay("scenes.pause", {effect = "fade", time = 200, isModal = true})
 end
@@ -291,6 +296,7 @@ function scene:resumeGame()
 	end
 	
 	player:play()
+	accelerometerInstruction:play()
 end
 
 local function playerCollider( self,event ) 
@@ -302,21 +308,27 @@ local function playerCollider( self,event )
     	end
     	-- DETECTA SE O PERSONAGEM ALCANÇA O FIM DA FASE
 		if ( event.selfElement == 1 and event.other.objType == "endStage") then
-			stopGame()
-			audio.play(sfxGameWin)
+			
+			isFinishing = true
+			timer.performWithDelay(2500, function()
+				print("oi")
+				stopGame()
+				audio.play(sfxGameWin)
+				local tempScore = saveState.getValue("stage"..currentLevel.."Score") or 0
+				score = (math.floor(score/10))*10
 
-			local tempScore = saveState.getValue("stage"..currentLevel.."Score") or 0
-			score = (math.floor(score/10))*10
+				if (score>tempScore) then
+					saveState.save{["stage"..currentLevel.."Score"]=score}
+				end
 
-			if (score>tempScore) then
-				saveState.save{["stage"..currentLevel.."Score"]=score}
-			end
+				saveState.save{["stage"..currentLevel.."Coins"]=coins}					
 
-			saveState.save{["stage"..currentLevel.."Coins"]=coins}					
+				loadsave.saveTable(stageCoinsTable, "stage"..currentLevel.."Coins.json")
 
-			loadsave.saveTable(stageCoinsTable, "stage"..currentLevel.."Coins.json")
+				composer.gotoScene("scenes.gameVictory",{params=coins, effect="slideLeft",time = 500})
+			end)
 
-			composer.gotoScene("scenes.gameVictory",{params=coins, effect="slideLeft",time = 500})
+
     	end
     	    -- DETECTA A COLISÃO DO PERSONAGEM COM AS MOEDAS
     	if ( event.selfElement == 1 and event.other.objType == "coin") then
@@ -381,13 +393,20 @@ local function playerCollider( self,event )
         	jumpButtonArea.isHitTestable=false
 			player:setSequence("zeroGravity")
 			player:play()
+			accelerometerInstruction.alpha=1
+			accelerometerInstruction:play()
+			rightButton.alpha = 0
     	end  
     	if ( event.selfElement == 1 and event.other.objType == "endZeroGravity" ) then
+    		parSpeed = parDefaultSpeed
         	parIsZeroGravity=false
         	physics.setGravity(0,parGravity)
         	jumpButtonArea.isHitTestable=true
 			player:setSequence("running")
 			player:play()
+			accelerometerInstruction.alpha=0
+			accelerometerInstruction:pause()
+			rightButton.alpha = 0.12
     	end  
     end
 end
@@ -520,7 +539,7 @@ function scene:create(event)
 	HUDGroup:insert(leftButton)
 
 
-	local rightButton = widget.newButton({
+	rightButton = widget.newButton({
 		label = "JUMP ",
 		labelColor = {default={1}},
 		labelXOffset = W*-.13,
@@ -548,6 +567,19 @@ function scene:create(event)
 	switchButtonArea.alpha = 0
 	switchButtonArea:addEventListener("touch",onSwitchButtonTouch)	
 	switchButtonArea.isHitTestable = true
+
+	local accelerometerSheetOptions = {
+		width = 472/2,
+		height = 216,
+		numFrames = 2,
+	}
+	
+	local accelerometerSheet = graphics.newImageSheet("images/accelerometerInstruction.png", accelerometerSheetOptions)
+	
+	accelerometerInstruction = display.newSprite(HUDGroup, accelerometerSheet, {name="default", start=1, count=2, loopCount=0, time = 1500, loopDirection="forward"})
+	accelerometerInstruction.x= W*.1; accelerometerInstruction.y = H*.45
+	accelerometerInstruction.xScale, accelerometerInstruction.yScale = .4, .4
+	accelerometerInstruction.alpha=0
 
 	pauseButton = widget.newButton({
 		x = W * .15,
@@ -672,36 +704,6 @@ function scene:create(event)
 	playerProgression.position.width = imageWidth
 	playerProgression.position.height = imageWidth * hRatio
 
-
-
-
-	
-	--[[
-	display.newRoundedRect(playerProgressionGroup, 0, 0, H * 0.03, H * 0.03, H * 0.03)
-	
-	local playerColor = {}
-	
-	if charId == 1 then
-		playerColor.red = .97
-		playerColor.green = .58
-		playerColor.blue = .35
-	elseif charId == 2 then
-		playerColor.red = 0
-		playerColor.green = .32
-		playerColor.blue = .16
-	elseif charId == 3 then
-		playerColor.red = .92
-		playerColor.green = .19
-		playerColor.blue = .22
-	elseif charId == 4 then
-		playerColor.red = .43
-		playerColor.green = .39
-		playerColor.blue = .3
-	end
-	
-	playerProgression.position:setFillColor(playerColor.red, playerColor.green, playerColor.blue)
-	--]]
-	
 	playerProgressionGroup.x = W * .5 - playerProgression.background.width * .5
 	playerProgressionGroup.y = H * .05
 	
@@ -719,8 +721,6 @@ function scene:create(event)
 	sceneGroup:insert(movableGroup)
 	sceneGroup:insert(HUDGroup)
 	sceneGroup:insert(fpsCounter)
-
-
 end
 
 function scene:show( event )     
@@ -737,6 +737,7 @@ function scene:show( event )
 		end
 		isPaused = false
 		isGameFinished = false
+		isFinishing = false
     	local dt = getDeltaTime()
 
     	physics.setGravity(0,parGravity)
@@ -764,8 +765,12 @@ scene:addEventListener("hide",scene)
 function updateFrames()
 	local dt = getDeltaTime()
 	fpsCounter:updateCounter(dt)
+
+	if not isPaused and isFinishing==true and isGameFinished == false then
+		player.x = player.x + parSpeed*dt
+	end
 	
-	if not isPaused and isGameFinished == false then
+	if not isPaused and isFinishing==false and isGameFinished == false then
 		if not audio.isChannelActive(1) then
     		bgMusic = audio.play(sfxBGMusic, {channel = 1, loops = -1})
 		end
@@ -799,14 +804,15 @@ function updateFrames()
 		-- MOVIMENTAR ELEMENTOS DE CENÁRIO
 
 		for i = 1, backgroundGroup.numChildren do
- 			if backgroundGroup[i].speed then
- 				backgroundGroup[i].x = backgroundGroup[i].x - (parSpeed * backgroundGroup[i].speed.x) * dt
- 				if backgroundGroup[i].x < -backgroundGroup[i].width then
- 					backgroundGroup[i].x = W*1+backgroundGroup[i].width
+			local bg = backgroundGroup[i]
+ 			if bg.speed then
+ 				bg.x = bg.x - (parSpeed * bg.speed.x) * dt
+ 				if bg.x < -bg.width then
+ 					bg.x = W*1+bg.width
  				end
  			end
- 			if backgroundGroup[i].x < -1* backgroundGroup[i].width*backgroundGroup[i].xScale-100 then
- 				backgroundGroup[i].x = 3* backgroundGroup[i].width*backgroundGroup[i].xScale-100
+ 			if bg.x < -1* bg.width*bg.xScale-100 then
+ 				bg.x = 3* bg.width*bg.xScale-100
  			end 
 
  		end

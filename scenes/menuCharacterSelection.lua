@@ -30,11 +30,13 @@ local function onCharacterButtonTouch(event)
 	local phase = event.phase
     if ( phase == "moved" ) then
         local dx = math.abs( ( event.x - event.xStart ) )
-        if ( dx > 10 ) then
+        if ( dx > 20 ) then
             scrollView:takeFocus( event )
         end
     elseif ( phase == "ended" ) then
-    	if (composer.getVariable("isChar"..event.target.id.."Unlocked_") == true) then
+   		local _isCharUnlocked = {}
+		_isCharUnlocked = loadsave.loadTable("isCharUnlocked.json")
+    	if (_isCharUnlocked[event.target.id] == true) then
 			audio.play(sfxButton)
 			composer.setVariable("selectedCharacter" , event.target.id)
 			composer.gotoScene("scenes.menuStageSelection", {effect = "slideLeft", time = 500})

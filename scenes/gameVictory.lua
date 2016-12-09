@@ -19,10 +19,10 @@ function scene:create(event)
 	local sceneGroup = self.view
 	currentLevel = composer.getVariable("selectedStage") or 1
 	totalCoins = composer.getVariable("stage"..currentLevel.."TotalCoins") or 0
-	local coinsTaken = event.params
+	local coinsTaken = event.params or 0
 	sfxButton = audio.loadSound("audios/button.wav")
 
-	local background = display.newImageRect(sceneGroup, "images/background-2.jpg", display.actualContentWidth, H)
+	local background = display.newImageRect(sceneGroup, "images/background-3.jpg", display.actualContentWidth, H)
 	background.x = W * .5
 	background.y = H * .5
 
@@ -47,17 +47,19 @@ function scene:create(event)
 	victoryText:setFillColor(.97, .95, 0)
 
 	if currentLevel ~= 0 then
+		local temp = saveState.getValue("stage"..currentLevel.."Score") or 0
+
 		local coinsTakenText = display.newText(sceneGroup,"COINS: "..coinsTaken.." / "..totalCoins,W/4,H*.33,native.systemFontBold,25)
-		local scoreText = display.newText(sceneGroup,"SCORE: "..saveState.getValue("stage"..currentLevel.."Score"),(W/4)*3,H*.33,native.systemFontBold,25)
+		local scoreText = display.newText(sceneGroup,"SCORE: ".. temp or 0,(W/4)*3,H*.33,native.systemFontBold,25)
 	end
 
 	if currentLevel ~= 4 then
 		local nextStageButton = widget.newButton(
 			{
 				x = W/2,
-				y = H*.425,
+				y = H*.55,
 				width = 320,
-				height = 50,
+				height = 55,
 				shape = "roundedRect",
 				cornerRadius = 15,
 				fillColor = {default = {.76, .34, .29}, over = {.76, .34, .29}},
@@ -80,7 +82,7 @@ function scene:create(event)
 	local backButton = widget.newButton(
 		{
 			x = W/2,
-			y = currentLevel == 4 and H * .55 or H*.7,
+			y = currentLevel == 4 and H * .55 or H*.80,
 			width = 320,
 			height = 50,
 			shape = "roundedRect",
@@ -122,7 +124,8 @@ function scene:show(event)
 			local coinsRemaining = 0
 			for j=i-1, 1, -1 do
 				if j~=0 then
-					coinsRemaining = coinsRemaining + composer.getVariable("stage"..j.."TotalCoins")
+					local tempTotalCoins = composer.getVariable("stage"..j.."TotalCoins") or 0
+					coinsRemaining = coinsRemaining + tempTotalCoins
 				end
 			end
 			if totalCoinsCollected >= coinsRemaining and composer.getVariable("isChar"..i.."Unlocked_")~=true then
