@@ -69,7 +69,7 @@ end
 
 function scene:show(event)
 	if event.phase == "will" then
-		audio.setVolume(0.3,{channel =1})
+		audio.setVolume(0.15,{channel =1})
 	elseif event.phase == "did" then
 		local previous = composer.getSceneName("previous")
 		if previous ~= nil then
@@ -77,7 +77,7 @@ function scene:show(event)
 		end
 		if not audio.isChannelActive(1) then
     		audio.play(sfxMenuMusic, {channel = 1, loops = -1})
-    		audio.setVolume(0.3,{channel =1})
+    		audio.setVolume(0.15,{channel =1})
 		end
 	end
 end

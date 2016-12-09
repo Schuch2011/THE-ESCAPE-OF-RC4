@@ -40,7 +40,7 @@ local laserSequence = {
 	}
 }
 
-function _M.newTile(type,xPos,yPos,width,height, stageCoinsTable, coinID)
+function _M.newTile(type,xPos,yPos,width,height, stageCoinsTable, coinID, tutorialStep)
 	local coinsTable = stageCoinsTable
 
 	yPos = yPos - 300--420
@@ -176,6 +176,12 @@ function _M.newTile(type,xPos,yPos,width,height, stageCoinsTable, coinID)
 			board = display.newImage(movableGroup , "images/exitBoard.png",(box.x+box.width/2), (box.y))
 			board.anchorY = 1
 			board.xScale, board.yScale = .18,.18
+		elseif (type == "T") then
+			movableGroup:insert(box)
+			box.isSensor=true
+			box.alpha=0
+			box.objType="tutorial"
+			box.tutorialStep=tutorialStep
 		elseif (type == "F") then
 			box:setFillColor(1,0,0)
 			box.alpha=0

@@ -29,7 +29,6 @@ local function onLevelButtonTouch(event)
         end
     elseif ( phase == "ended" ) then
     	audio.play(sfxButton)
-    	audio.stop(1)
 
     	--[[
     	if (saveState.getValue("isCutscene") == nil or saveState.getValue("isCutscene")) and event.target.id == 1 then
@@ -40,7 +39,7 @@ local function onLevelButtonTouch(event)
 		--]]
 
 		if composer.getVariable("isStage"..event.target.id.."Unlocked_") or event.target.id == 0 or event.target.id==1 then
-			
+			audio.stop(1)
     		composer.setVariable("selectedStage", event.target.id)
 			composer.gotoScene("scenes.game")
 		end

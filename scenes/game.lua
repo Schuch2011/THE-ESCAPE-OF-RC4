@@ -21,6 +21,7 @@ local charID
 local isPaused = true
 local isGameFinished = false
 local isFinishing
+local isInTutorial = 0
 local switchTime=false
 local coins = 0
 local totalCoins
@@ -88,8 +89,25 @@ local canDie = true
 
 local jumpButtonArea
 local switchButtonArea
+local leftButton
 local rightButton
 local pauseButton
+
+local message1
+local message2
+local message3
+local message4
+local message5
+local message6
+local message7
+local message8
+local message9
+local message10
+
+local iconPU1
+local iconPU2
+local iconPU3
+local iconPU4
 
 local accelerometerInstruction
 
@@ -156,6 +174,21 @@ local function gameOver()
 end
 
 local function onJumpButtonTouch( event )
+	if isInTutorial ~= 0 then
+    	isPaused = false
+		player:play()
+		physics.start(true)
+		for i=1, movableGroup.numChildren do
+				if movableGroup[i].isBarrier==true then			
+				movableGroup[i]:play()
+			end
+		end
+		message1.alpha=0
+		message2.alpha=0
+		transition.cancel("button")
+		rightButton.alpha=.12
+		
+	end
 	if not isPaused then
 		if ( event.phase == "began" and player.canJump > 0) then
 			jump()
@@ -163,13 +196,68 @@ local function onJumpButtonTouch( event )
 			return true
 		end
 	end
+	if isInTutorial ~= 0 then
+		if isInTutorial == 3 then
+			timer.performWithDelay(150, function()
+				isPaused = true
+				physics.pause()
+				player:pause()
+				for i=1, movableGroup.numChildren do
+					if movableGroup[i].isBarrier==true then			
+						movableGroup[i]:pause()
+					end
+				end
+				message2.alpha = 1
+				glow(rightButton)
+			end)
+			isInTutorial = 1
+		else
+			isInTutorial = 0
+
+		end
+	end
 end
 
+function fade(object)
+	local object = object
+	transition.to(object, {time=600, tag="button", alpha=.2, onComplete= function()
+		glow(object)
+	end})
+end
+function glow(object)
+	local object = object
+	transition.to(object, {time=600, tag="button",alpha=.45, onComplete=function()
+		fade(object)
+	end})
+end
+
+
 local function onSwitchButtonTouch( event )
-    if ( event.phase == "began") then
-    switch()
+	if isInTutorial == 4 or isInTutorial == 5 then
+		isPaused = false
+		player:play()
+		physics.start(true)
+		for i=1, movableGroup.numChildren do
+			if movableGroup[i].isBarrier==true then			
+				movableGroup[i]:play()
+			end
+		end
+		message3.alpha=0
+		transition.cancel("button")
+		leftButton.alpha=.12
+	end
+    if (not isPaused and event.phase == "began") then
+    	switch()
+    	if isInTutorial == 4 then
+    		switchButtonArea.isHitTestable = false    
+    		leftButton.alpha=0		
+    	elseif isInTutorial == 5 then
+			isInTutorial = 0
+			jumpButtonArea.isHitTestable=true
+			rightButton.alpha=.12
+    	end
     elseif ( event.phase == "ended") then
-    return true
+    	return true
 	end
 end
 
@@ -307,6 +395,146 @@ local function playerCollider( self,event )
         	self.canJump = 2
     	end
     	-- DETECTA SE O PERSONAGEM ALCANÇA O FIM DA FASE
+
+    	if ( event.selfElement == 1 and event.other.objType == "tutorial") then
+    		if event.other.tutorialStep~=2 then
+    			isPaused = true
+				player:pause()
+				physics.pause()
+				for i=1, movableGroup.numChildren do
+					if movableGroup[i].isBarrier==true then			
+						movableGroup[i]:pause()
+					end
+				end
+			end
+
+    		if (event.other.tutorialStep==1) then
+    			isInTutorial = 1
+    			jumpButtonArea.isHitTestable = true
+    			rightButton.alpha = 0.12
+    			glow(rightButton)
+    			message1.alpha=1
+    		end
+    		if (event.other.tutorialStep==2) then
+    			jumpButtonArea.isHitTestable = true
+    			rightButton.alpha = 0
+    		end
+    		if (event.other.tutorialStep==3) then
+    			isInTutorial = 3
+    			jumpButtonArea.isHitTestable = true
+    			rightButton.alpha = 0.12
+    			glow(rightButton)
+    			message1.alpha=1
+    		end
+    		if (event.other.tutorialStep==4 or event.other.tutorialStep==5) then
+    			isInTutorial = event.other.tutorialStep
+    			switchButtonArea.isHitTestable = true
+    			leftButton.alpha = 0.12
+    			jumpButtonArea.isHitTestable = false
+    			rightButton.alpha= 0
+    			glow(leftButton)
+    			message3.alpha=1
+    		end
+    		if (event.other.tutorialStep==6) then
+    			switchButtonArea.isHitTestable = false
+    			leftButton.alpha = 0
+    			jumpButtonArea.isHitTestable = false
+    			rightButton.alpha = 0
+
+    			transition.to(message4, {time=100, alpha = 1, onComplete= function()
+    				timer.performWithDelay(5000, function()
+    					message4.alpha=0
+    					message5.alpha=1
+    					iconPU1.alpha=1
+    					timer.performWithDelay(5000, function()
+    						message5.alpha=0
+    						message6.alpha=1
+    						iconPU1.alpha=0
+    						iconPU2.alpha=1
+    					    timer.performWithDelay(5000, function()
+    							message6.alpha=0
+    							message7.alpha=1
+    							iconPU2.alpha=0
+    							iconPU3.alpha=1
+    							timer.performWithDelay(5000, function()
+    								message7.alpha=0
+    								message8.alpha=1
+    								iconPU3.alpha=0
+    								iconPU4.alpha=1
+    								timer.performWithDelay(5000, function()
+    									message8.alpha=0
+    									iconPU4.alpha=0
+    									switchButtonArea.isHitTestable = true
+    									leftButton.alpha = .12
+    									jumpButtonArea.isHitTestable = true
+    									rightButton.alpha = .12
+    									isPaused = false
+										player:play()
+										physics.start(true)
+										for i=1, movableGroup.numChildren do
+												if movableGroup[i].isBarrier==true then			
+												movableGroup[i]:play()
+											end
+										end							
+    								end)
+    							end)
+    						end)
+    					end)
+    				end)
+    			end})
+    		end
+
+    		if (event.other.tutorialStep==7) then
+    			switchButtonArea.isHitTestable = false
+    			leftButton.alpha = 0
+    			jumpButtonArea.isHitTestable = false
+    			rightButton.alpha = 0
+    			message9.alpha=1
+    			timer.performWithDelay(5000, function()    				
+    				switchButtonArea.isHitTestable = true
+    				leftButton.alpha = 0.12
+    				jumpButtonArea.isHitTestable = true
+    				rightButton.alpha = 0.12
+    				message9.alpha=0
+    				isPaused = false
+					player:play()
+					physics.start(true)
+					for i=1, movableGroup.numChildren do
+						if movableGroup[i].isBarrier==true then			
+							movableGroup[i]:play()
+						end
+					end	
+    			end)
+    		end
+
+    		if (event.other.tutorialStep==8) then
+    			switchButtonArea.isHitTestable = false
+    			leftButton.alpha = 0
+    			jumpButtonArea.isHitTestable = false
+    			rightButton.alpha = 0
+    			message10.alpha=1
+    			accelerometerInstruction.alpha=1
+				accelerometerInstruction:play()
+    			timer.performWithDelay(5000, function()    				
+    				switchButtonArea.isHitTestable = true
+    				leftButton.alpha = 0.12
+    				jumpButtonArea.isHitTestable = true
+    				rightButton.alpha = 0.12
+    				message10.alpha=0
+    				isPaused = false
+					player:play()
+					physics.start(true)
+					for i=1, movableGroup.numChildren do
+						if movableGroup[i].isBarrier==true then			
+							movableGroup[i]:play()
+						end
+					end	
+    			end)
+    		end
+
+
+    	end
+
 		if ( event.selfElement == 1 and event.other.objType == "endStage") then
 			
 			isFinishing = true
@@ -341,7 +569,7 @@ local function playerCollider( self,event )
 				if coinsCounter then coinsCounter.text = coins.." / "..totalCoins .. " " end
 				
 			end
-			audio.play(sfxCoin)			
+			audio.play(sfxCoin, {channel=4})			
       	end
       	    -- COLISÃO COM BLOCOS FATAIS
 		if ( event.selfElement == 1 and event.other.objType == "fatal" and canDie==true) then
@@ -419,7 +647,7 @@ function scene:create(event)
 
 	-- CARREGAR SONS
 
-	audio.reserveChannels(3)
+	audio.reserveChannels(4)
 
 	sfxCoin = audio.loadSound("audios/coin.wav")
 	sfxJump1 = audio.loadSound("audios/jump1.wav")
@@ -513,6 +741,8 @@ function scene:create(event)
 			if t.type == "C" then
 				tiles.newTile(t.type,t.x,t.y,t.width,t.height, stageCoinsTable, currentCoinID)
 				currentCoinID = currentCoinID +1
+			elseif t.type == "T" then
+				tiles.newTile(t.type,t.x,t.y,t.width,t.height, stageCoinsTable, currentCoinID, t.properties.tutorialStep)
 			else
 				tiles.newTile(t.type,t.x,t.y,t.width,t.height)
 			end
@@ -521,7 +751,7 @@ function scene:create(event)
 
 	-- INSTANCIAR BOTÕES DE AÇÃO
 
-	local leftButton = widget.newButton({
+	leftButton = widget.newButton({
 		label = "SWITCH ",
 		labelColor = {default={1}},
 		labelXOffset = W*.13,
@@ -567,6 +797,59 @@ function scene:create(event)
 	switchButtonArea.alpha = 0
 	switchButtonArea:addEventListener("touch",onSwitchButtonTouch)	
 	switchButtonArea.isHitTestable = true
+
+	if currentLevel == 0 then
+		jumpButtonArea.isHitTestable=false
+		switchButtonArea.isHitTestable = false
+		leftButton.alpha = 0
+		rightButton.alpha = 0
+
+		message1 = display.newText(HUDGroup, "PRESS THE RIGHT SCREEN BUTTON TO JUMP ", W*.5, H*.3, "airstrike.ttf", 18)
+		message1.alpha=0
+
+		message2 = display.newText(HUDGroup, "JUMP WHILE IN THE AIR TO MAKE A DOUBLE JUMP ", W*.5, H*.3, "airstrike.ttf", 17)
+		message2.alpha=0
+
+		message3 = display.newText(HUDGroup, "PRESS THE LEFT SCREEN BUTTON TO SWITCH BETWEEN PLATFORMS ", W*.5, H*.3, "airstrike.ttf", 15)
+		message3.alpha=0
+
+		message4 = display.newText(HUDGroup, "POWERUPS GRANTS YOU TEMPORARILY POWERS ", W*.5, H*.3, "airstrike.ttf", 17)
+		message4.alpha=0
+
+		message5 = display.newText(HUDGroup, "THIS GIVES YOU A TEMPORARY INCREASE IN YOUR SPEED ", W*.5, H*.3, "airstrike.ttf", 16)
+		message5.alpha=0
+
+		message6 = display.newText(HUDGroup, "THIS GIVES YOU A TEMPORARY BOOST IN THE STRENGHTH OF YOUR JUMP ", W*.5, H*.3, "airstrike.ttf", 15)
+		message6.alpha=0
+
+		message7 = display.newText(HUDGroup, "THIS GIVES YOU A TEMPORARY INCREASE IN SCORE GAIN ", W*.5, H*.3, "airstrike.ttf", 15)
+		message7.alpha=0
+
+		message8 = display.newText(HUDGroup, "THIS TEMPORARILY PREVENTS YOU FROM DYING TO SPIKES ", W*.5, H*.3, "airstrike.ttf", 15)
+		message8.alpha=0
+
+		message9 = display.newText(HUDGroup, "COLLECT COINS TO UNLOCK NEW CHARACTERS ", W*.5, H*.3, "airstrike.ttf", 18)
+		message9.alpha=0
+
+		message10 = display.newText(HUDGroup, "ROTATE YOUR PHONE TO NAVIGATE IN ZERO GRAVITY ", W*.5, H*.3, "airstrike.ttf", 17)
+		message10.alpha=0
+
+		iconPU1 = display.newImage(HUDGroup, "images/powerUp1.png", W*.5, H*.17)
+		iconPU1.xScale, iconPU1.yScale = .35, .35
+		iconPU1.alpha = 0
+
+		iconPU2 = display.newImage(HUDGroup, "images/powerUp2.png", W*.5, H*.17)
+		iconPU2.xScale, iconPU2.yScale = .35, .35
+		iconPU2.alpha = 0
+
+		iconPU3 = display.newImage(HUDGroup, "images/powerUp3.png", W*.5, H*.17)
+		iconPU3.xScale, iconPU3.yScale = .35, .35
+		iconPU3.alpha = 0
+
+		iconPU4 = display.newImage(HUDGroup, "images/powerUp4.png", W*.5, H*.17)
+		iconPU4.xScale, iconPU4.yScale = .35, .35
+		iconPU4.alpha = 0
+	end
 
 	local accelerometerSheetOptions = {
 		width = 472/2,
@@ -742,8 +1025,9 @@ function scene:show( event )
 
     	physics.setGravity(0,parGravity)
 
-    	audio.setVolume(0.05, {channel = 1})
+    	audio.setVolume(0.1, {channel = 1})
     	audio.setVolume(0.3, {channel = 2})
+		audio.setVolume(0.5,{channel = 4})
     end
 end
 
