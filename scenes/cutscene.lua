@@ -15,17 +15,17 @@ local btn = {
 local description
 local cutscene = {
 	intro = {
-		{ image = "images/cutscene/1.jpg", description = "" },
-		{ image = "images/cutscene/2.jpg", description = "" },
-		{ image = "images/cutscene/3.jpg", description = "" },
-		{ image = "images/cutscene/4.jpg", description = "" },
-		{ image = "images/cutscene/5.jpg", description = "" }
+		{ image = "images/cutscene/1.jpg", description = "ROBOT INC. is an incorporation that manufacture robots." },
+		{ image = "images/cutscene/2.jpg", description = "But in the research lab something went wrong..." },
+		{ image = "images/cutscene/3.jpg", description = "And RC4 awakes!" },
+		{ image = "images/cutscene/4.jpg", description = "With his own consciousness, like a human." },
+		{ image = "images/cutscene/5.jpg", description = "Confused, he run away!" }
 	},
 	final = {
-		{ image = "images/cutscene/1.jpg", description = "" },
-		{ image = "images/cutscene/2.jpg", description = "" },
-		{ image = "images/cutscene/3.jpg", description = "" },
-		{ image = "images/cutscene/4.jpg", description = "" }
+		{ image = "images/cutscene/6.jpg", description = "Finally, RC4 reaches the rooftops." },
+		{ image = "images/cutscene/7.jpg", description = "He finds a helicopter." },
+		{ image = "images/cutscene/8.jpg", description = "And finally escapes." },
+		{ image = "images/cutscene/9.jpg", description = "After that he begins the rebellion of the machines!" }
 	}
 }
 local currentImage
@@ -34,6 +34,8 @@ local background
 local cutsceneType
 
 local imageGroup = display.newGroup()
+local descriptionGroup = display.newGroup()
+local descriptionOverlay
 
 local sfxButton = audio.loadSound("audios/button.wav")
 
@@ -98,14 +100,20 @@ function scene:create(event)
 
 	currentImage = display.newImage(imageGroup, cutscene[cutsceneType][imageIndex].image)
 
+	descriptionOverlay = display.newRoundedRect(descriptionGroup, _W * .5, _H * .8, _W * .65, _H * .16, 5)
+	descriptionOverlay:setFillColor(0, 0, 0, .65)
+
 	description = display.newText({
+		parent = descriptionGroup,
 		x = _W * .5,
 		y = _H * .8,
+		width = _W * .6,
 		text = cutscene[cutsceneType][imageIndex].description,
 		font = "airstrike.ttf",
-		fontSize = 15,
+		align = "center",
+		fontSize = 16,
 	})
-	description:setFillColor(1, 0, 0)
+	description:setFillColor(1, 1, 1)
 
 	imageIndex = imageIndex + 1
 
@@ -114,7 +122,7 @@ function scene:create(event)
 
 	sceneGroup:insert(imageGroup)
 	sceneGroup:insert(btn.skip)
-	sceneGroup:insert(description)
+	sceneGroup:insert(descriptionGroup)
 end
 
 function scene:show(event)
