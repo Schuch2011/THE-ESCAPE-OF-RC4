@@ -553,10 +553,12 @@ local function playerCollider( self,event )
 
 				loadsave.saveTable(stageCoinsTable, "stage"..currentLevel.."Coins.json")
 
-				composer.gotoScene("scenes.gameVictory",{params=coins, effect="slideLeft",time = 500})
+				if (saveState.getValue("showFinalCutscene") == nil or saveState.getValue("showFinalCutscene")) and currentLevel == 4 then
+					composer.gotoScene("scenes.cutscene", {effect="slideLeft",time = 500, params = {coins = coins, cutsceneType = "final"}})
+				else
+					composer.gotoScene("scenes.gameVictory",{params=coins, effect="slideLeft",time = 500})
+				end
 			end)
-
-
     	end
     	    -- DETECTA A COLISÃO DO PERSONAGEM COM AS MOEDAS
     	if ( event.selfElement == 1 and event.other.objType == "coin") then
