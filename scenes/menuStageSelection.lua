@@ -22,6 +22,7 @@ local sfxSwipe
 
 local function onLevelButtonTouch(event)
 	local phase = event.phase
+
     if ( phase == "moved" ) then
         local dx = math.abs( ( event.x - event.xStart ) )
         if ( dx > 20 ) then
@@ -29,22 +30,17 @@ local function onLevelButtonTouch(event)
         end
     elseif ( phase == "ended" ) then
     	audio.play(sfxButton)
-    	audio.stop(1)
 
-    	--[[
-    	if (saveState.getValue("isCutscene") == nil or saveState.getValue("isCutscene")) and event.target.id == 1 then
-    		composer.gotoScene("scenes.cutscene")
-    	elseif composer.getVariable("isStage"..event.target.id.."Unlocked_") or event.target.id == 0 then
-			composer.gotoScene("scenes.game")
-		end
-		--]]
+    	composer.setVariable("selectedStage", event.target.id)
 
-		if composer.getVariable("isStage"..event.target.id.."Unlocked_") or event.target.id == 0 or event.target.id==1 then
-			
-    		composer.setVariable("selectedStage", event.target.id)
+    	if (saveState.getValue("showIntroCutscene") == nil or saveState.getValue("showIntroCutscene")) and event.target.id == 1 then
+    		composer.gotoScene("scenes.cutscene", {effect="slideLeft",time = 500, params = {cutsceneType = "intro"}})
+    	elseif composer.getVariable("isStage"..event.target.id.."Unlocked_") or event.target.id == 0 or event.target.id==1 then
+    		audio.stop(1)
 			composer.gotoScene("scenes.game")
 		end
     end
+
     return true
 end
 
