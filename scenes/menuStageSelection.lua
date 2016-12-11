@@ -33,9 +33,9 @@ local function onLevelButtonTouch(event)
 
     	composer.setVariable("selectedStage", event.target.id)
 
-    	if (saveState.getValue("showIntroCutscene") == nil or saveState.getValue("showIntroCutscene")) and event.target.id == 1 then
+    	if event.target.id == 1 then
     		composer.gotoScene("scenes.cutscene", {effect="slideLeft",time = 500, params = {cutsceneType = "intro"}})
-    	elseif composer.getVariable("isStage"..event.target.id.."Unlocked_") or event.target.id == 0 or event.target.id==1 then
+    	elseif composer.getVariable("isStage"..event.target.id.."Unlocked_") or event.target.id == 0 then
     		audio.stop(1)
 			composer.gotoScene("scenes.game")
 		end

@@ -70,7 +70,11 @@ function scene:create(event)
 				onPress = function ()
 					audio.play(sfxButton)
 					composer.setVariable("selectedStage",currentLevel+1)
-					composer.gotoScene("scenes.game", {time=500, effect="slideRight"})
+					if currentLevel + 1 == 1 then
+						composer.gotoScene("scenes.cutscene", {effect="slideLeft",time = 500, params = {cutsceneType = "intro"}})
+					else
+						composer.gotoScene("scenes.game", {time=500, effect="slideRight"})
+					end
 				end
 			}
 		)

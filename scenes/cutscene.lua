@@ -41,11 +41,9 @@ local sfxButton = audio.loadSound("audios/button.wav")
 
 local function finishCutscene(param)
 	if param == "intro" then
-		saveState.save{["showIntroCutscene"] = false}
 		audio.stop(1)
 		composer.gotoScene("scenes.game")
 	else
-		saveState.save{["showFinalCutscene"] = false}
 		composer.gotoScene("scenes.gameVictory",{params=coins, effect="slideLeft",time = 500})
 	end
 end

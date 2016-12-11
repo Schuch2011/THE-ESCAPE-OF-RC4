@@ -553,7 +553,7 @@ local function playerCollider( self,event )
 
 				loadsave.saveTable(stageCoinsTable, "stage"..currentLevel.."Coins.json")
 
-				if (saveState.getValue("showFinalCutscene") == nil or saveState.getValue("showFinalCutscene")) and currentLevel == 4 then
+				if currentLevel == 4 then
 					composer.gotoScene("scenes.cutscene", {effect="slideLeft",time = 500, params = {coins = coins, cutsceneType = "final"}})
 				else
 					composer.gotoScene("scenes.gameVictory",{params=coins, effect="slideLeft",time = 500})
