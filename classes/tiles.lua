@@ -53,7 +53,7 @@ function _M.newTile(type,xPos,yPos,width,height, stageCoinsTable, coinID, tutori
 		box.ID = coinID
 		if coinsTable[coinID] == true then
 			box.collected = true
-			box.alpha = .5
+			box.alpha = .15
 		else
 			box.collected = false
 		end
@@ -62,7 +62,7 @@ function _M.newTile(type,xPos,yPos,width,height, stageCoinsTable, coinID, tutori
 		box.anchorX, box.anchorY = 0,1
 		box.x, box.y = xPos, yPos
 		physics.addBody(box,"static",{bounce=0,isSensor=true, 
-			shape={-12,-12, 12,-12, 12,17, -12,17}})
+			shape={-9,-5, 9,-5, 9,12, -9,12}})
 		box.objType = "fatal"
 	elseif (type == "PU1") then
 		box = display.newImageRect(movableGroup, "images/powerUp1.png", 35, 35)
@@ -104,7 +104,7 @@ function _M.newTile(type,xPos,yPos,width,height, stageCoinsTable, coinID, tutori
 		box.width = width; box.height = height
 		movableGroup:insert(box)
 		physics.addBody(box, "static", {bounce = 0, isSensor=true,
-			chain={ box.width/-2,box.height*.5, box.width/2,box.height*.5, box.width/2,box.height*-.35, box.width/-2,box.height*-.35},
+			chain={ box.width*-.2,box.height*.4, box.width*.3,box.height*.4, box.width*.25,box.height*-.25, box.width*-.15,box.height*-.25},
         	connectFirstAndLastChainVertex = true})
 		box.objType = "portal1"
 		box:play()
@@ -124,7 +124,7 @@ function _M.newTile(type,xPos,yPos,width,height, stageCoinsTable, coinID, tutori
 		box.width = width; box.height = height
 		movableGroup:insert(box)
 		physics.addBody(box, "static", {bounce = 0, isSensor=true,
-			chain={ box.width/-2,box.height*.5, box.width/2,box.height*.5, box.width/2,box.height*-.35, box.width/-2,box.height*-.35},
+			chain={box.width*-.2,box.height*.4, box.width*.3,box.height*.4, box.width*.25,box.height*-.25, box.width*-.15,box.height*-.25},
         	connectFirstAndLastChainVertex = true})
 		box.objType = "portal2"
 		box:play()
@@ -144,7 +144,7 @@ function _M.newTile(type,xPos,yPos,width,height, stageCoinsTable, coinID, tutori
 		box.width = width; box.height = height
 		movableGroup:insert(box)
 		physics.addBody(box, "static", {bounce = 0, isSensor=true,
-			chain={ box.width/-2,box.height*.43, box.width/2,box.height*.43, box.width/2,box.height*-.42, box.width/-2,box.height*-.42},
+			chain={ box.width*-.27,box.height*.3, box.width*.27,box.height*.3, box.width*.22,box.height*-.42, box.width*-.22,box.height*-.42},
         	connectFirstAndLastChainVertex = true})
 		box.objType = "portal3"
 		box:play()

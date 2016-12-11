@@ -565,13 +565,14 @@ local function playerCollider( self,event )
 			local temp = event.other
 			display.remove(temp)
 			if event.other.collected == false then
+				audio.play(sfxCoin, {channel=4})	
 				stageCoinsTable[event.other.ID]=true
 				coins = coins +1
 				score = score + 250
-				if coinsCounter then coinsCounter.text = coins.." / "..totalCoins .. " " end
-				
+				loadsave.saveTable(stageCoinsTable, "stage"..currentLevel.."Coins.json")
+				if coinsCounter then coinsCounter.text = coins.." / "..totalCoins .. " " end				
 			end
-			audio.play(sfxCoin, {channel=4})			
+					
       	end
       	    -- COLISÃO COM BLOCOS FATAIS
 		if ( event.selfElement == 1 and event.other.objType == "fatal" and canDie==true) then
@@ -1054,6 +1055,13 @@ function updateFrames()
 
 	if not isPaused and isFinishing==true and isGameFinished == false then
 		player.x = player.x + parSpeed*dt
+		local vx, vy = player:getLinearVelocity() 		
+		if vy == 0 then
+			if player.sequence ~= "running" then
+				player:setSequence("running")
+				player:play()
+			end
+		end
 	end
 	
 	if not isPaused and isFinishing==false and isGameFinished == false then

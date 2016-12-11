@@ -129,85 +129,85 @@ return {
       tiles = {
         {
           id = 0,
-          image = "E:/tiles/coinTile.png",
+          image = "G:/Feevale/Mapas projeto/tiles/coinTile.png",
           width = 25,
           height = 25
         },
         {
           id = 1,
-          image = "E:/tiles/darkTile.png",
+          image = "G:/Feevale/Mapas projeto/tiles/darkTile.png",
           width = 25,
           height = 25
         },
         {
           id = 2,
-          image = "E:/tiles/endGameTile.png",
+          image = "G:/Feevale/Mapas projeto/tiles/endGameTile.png",
           width = 25,
           height = 25
         },
         {
           id = 3,
-          image = "E:/tiles/endZeroGravityTile.png",
+          image = "G:/Feevale/Mapas projeto/tiles/endZeroGravityTile.png",
           width = 25,
           height = 25
         },
         {
           id = 4,
-          image = "E:/tiles/fatalTile.png",
+          image = "G:/Feevale/Mapas projeto/tiles/fatalTile.png",
           width = 25,
           height = 25
         },
         {
           id = 5,
-          image = "E:/tiles/groundTile.png",
+          image = "G:/Feevale/Mapas projeto/tiles/groundTile.png",
           width = 25,
           height = 25
         },
         {
           id = 6,
-          image = "E:/tiles/lightTile.png",
+          image = "G:/Feevale/Mapas projeto/tiles/lightTile.png",
           width = 25,
           height = 25
         },
         {
           id = 7,
-          image = "E:/tiles/portal1Tile.png",
+          image = "G:/Feevale/Mapas projeto/tiles/portal1Tile.png",
           width = 25,
           height = 25
         },
         {
           id = 8,
-          image = "E:/tiles/portal2Tile.png",
+          image = "G:/Feevale/Mapas projeto/tiles/portal2Tile.png",
           width = 25,
           height = 25
         },
         {
           id = 9,
-          image = "E:/tiles/portal3Tile.png",
+          image = "G:/Feevale/Mapas projeto/tiles/portal3Tile.png",
           width = 25,
           height = 25
         },
         {
           id = 10,
-          image = "E:/tiles/portal4Tile.png",
+          image = "G:/Feevale/Mapas projeto/tiles/portal4Tile.png",
           width = 25,
           height = 25
         },
         {
           id = 11,
-          image = "E:/tiles/powerUpTile.png",
+          image = "G:/Feevale/Mapas projeto/tiles/powerUpTile.png",
           width = 25,
           height = 25
         },
         {
           id = 12,
-          image = "E:/tiles/spikeTile.png",
+          image = "G:/Feevale/Mapas projeto/tiles/spikeTile.png",
           width = 25,
           height = 25
         },
         {
           id = 13,
-          image = "E:/tiles/startZeroGravityTile.png",
+          image = "G:/Feevale/Mapas projeto/tiles/startZeroGravityTile.png",
           width = 25,
           height = 25
         }
@@ -791,7 +791,7 @@ return {
           type = "PU1",
           shape = "rectangle",
           x = 6433.25,
-          y = 475,
+          y = 490,
           width = 25,
           height = 25,
           rotation = 0,
@@ -973,7 +973,7 @@ return {
           type = "PU2",
           shape = "rectangle",
           x = 7489.5,
-          y = 475,
+          y = 490.75,
           width = 25,
           height = 25,
           rotation = 0,
@@ -1185,7 +1185,7 @@ return {
           type = "C",
           shape = "rectangle",
           x = 8168.75,
-          y = 468.75,
+          y = 493.75,
           width = 25,
           height = 25,
           rotation = 0,
