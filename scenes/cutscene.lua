@@ -28,7 +28,6 @@ local cutscene = {
 		{ image = "images/cutscene/9.jpg", description = "After that he begins the rebellion of the machines!" }
 	}
 }
-local currentImage
 local imageIndex = 1
 local background
 local cutsceneType
@@ -53,7 +52,10 @@ local function onScreenTouch(event)
 		audio.play(sfxButton)
 
 		if imageIndex <= #cutscene[cutsceneType] then
-			currentImage = display.newImage(imageGroup, cutscene[cutsceneType][imageIndex].image)
+			local page = display.newImage(imageGroup, cutscene[cutsceneType][imageIndex].image)
+			page.alpha = 0
+
+			transition.to(page, {alpha = 1, time = 150})
 			description.text = cutscene[cutsceneType][imageIndex].description
 			imageIndex = imageIndex + 1
 		else
@@ -96,7 +98,7 @@ function scene:create(event)
 
 	cutsceneType = event.params.cutsceneType
 
-	currentImage = display.newImage(imageGroup, cutscene[cutsceneType][imageIndex].image)
+	local page = display.newImage(imageGroup, cutscene[cutsceneType][imageIndex].image)
 
 	descriptionOverlay = display.newRoundedRect(descriptionGroup, _W * .5, _H * .8, _W * .65, _H * .16, 5)
 	descriptionOverlay:setFillColor(0, 0, 0, .65)
