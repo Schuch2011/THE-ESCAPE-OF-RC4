@@ -11,7 +11,7 @@ local background = require("classes.background")
 local saveState = require("classes.preference")
 local loadsave = require("classes.loadsave")
 local animation = require("classes.animation")
-local fpsCounter = require("classes.fpsCounter").newFpsCounter()
+--local fpsCounter = require("classes.fpsCounter").newFpsCounter()
 
 local scene = composer.newScene()
 local runtime = 0
@@ -1022,7 +1022,7 @@ function scene:create(event)
 	sceneGroup:insert(lightGroup)
 	sceneGroup:insert(movableGroup)
 	sceneGroup:insert(HUDGroup)
-	sceneGroup:insert(fpsCounter)
+	--sceneGroup:insert(fpsCounter)
 end
 
 function scene:show( event )     
@@ -1067,7 +1067,7 @@ scene:addEventListener("hide",scene)
 
 function updateFrames()
 	local dt = getDeltaTime()
-	fpsCounter:updateCounter(dt)
+	--fpsCounter:updateCounter(dt)
 
 	if not isPaused and isFinishing==true and isGameFinished == false then
 		player.x = player.x + parSpeed*dt
