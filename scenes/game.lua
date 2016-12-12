@@ -823,34 +823,34 @@ function scene:create(event)
 		leftButton.alpha = 0
 		rightButton.alpha = 0
 
-		message1 = display.newText(HUDGroup, "PRESS THE RIGHT SCREEN BUTTON TO JUMP ", W*.5, H*.3, "airstrike.ttf", 18)
+		message1 = display.newText({parent = HUDGroup, text = "PRESS THE RIGHT SCREEN BUTTON TO JUMP ", x = W*.5, y = H*.35, font = "airstrike.ttf", fontSize = 18, width = W * 1, align = "center"})
 		message1.alpha=0
 
-		message2 = display.newText(HUDGroup, "JUMP WHILE IN THE AIR TO MAKE A DOUBLE JUMP ", W*.5, H*.3, "airstrike.ttf", 17)
+		message2 = display.newText({parent = HUDGroup, text = "JUMP WHILE IN THE AIR TO PERFORM A DOUBLE JUMP ", x = W*.5, y = H*.35, font = "airstrike.ttf", fontSize = 18, width = W * 1, align = "center"})
 		message2.alpha=0
 
-		message3 = display.newText(HUDGroup, "PRESS THE LEFT SCREEN BUTTON TO SWITCH BETWEEN PLATFORMS ", W*.5, H*.3, "airstrike.ttf", 15)
+		message3 = display.newText({parent = HUDGroup, text = "PRESS THE LEFT SCREEN BUTTON TO SWITCH BETWEEN PLATFORMS ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
 		message3.alpha=0
 
-		message4 = display.newText(HUDGroup, "POWERUPS GRANTS YOU TEMPORARILY POWERS ", W*.5, H*.3, "airstrike.ttf", 17)
+		message4 = display.newText({parent = HUDGroup, text = "POWERUPS GRANT YOU TEMPORARILY POWERS ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
 		message4.alpha=0
 
-		message5 = display.newText(HUDGroup, "THIS GIVES YOU A TEMPORARY INCREASE IN YOUR SPEED ", W*.5, H*.3, "airstrike.ttf", 16)
+		message5 = display.newText({parent = HUDGroup, text = "THIS GIVES YOU A TEMPORARY INCREASE IN YOUR SPEED ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
 		message5.alpha=0
 
-		message6 = display.newText(HUDGroup, "THIS GIVES YOU A TEMPORARY BOOST IN THE STRENGHTH OF YOUR JUMP ", W*.5, H*.3, "airstrike.ttf", 15)
+		message6 = display.newText({parent = HUDGroup, text = "THIS GIVES YOU A TEMPORARY BOOST IN THE STRENGHTH OF YOUR JUMP ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
 		message6.alpha=0
 
-		message7 = display.newText(HUDGroup, "THIS GIVES YOU A TEMPORARY INCREASE IN SCORE GAIN ", W*.5, H*.3, "airstrike.ttf", 15)
+		message7 = display.newText({parent = HUDGroup, text = "THIS GIVES YOU A TEMPORARY INCREASE IN SCORE GAIN ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
 		message7.alpha=0
 
-		message8 = display.newText(HUDGroup, "THIS TEMPORARILY PREVENTS YOU FROM DYING TO SPIKES ", W*.5, H*.3, "airstrike.ttf", 15)
+		message8 = display.newText({parent = HUDGroup, text = "THIS TEMPORARILY PREVENTS YOU FROM DYING TO SPIKES ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
 		message8.alpha=0
 
-		message9 = display.newText(HUDGroup, "COLLECT COINS TO UNLOCK NEW CHARACTERS ", W*.5, H*.3, "airstrike.ttf", 18)
+		message9 = display.newText({parent = HUDGroup, text = "COLLECT COINS TO UNLOCK NEW CHARACTERS ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
 		message9.alpha=0
 
-		message10 = display.newText(HUDGroup, "ROTATE YOUR PHONE TO NAVIGATE IN ZERO GRAVITY ", W*.5, H*.3, "airstrike.ttf", 17)
+		message10 = display.newText({parent = HUDGroup, text = "TILT YOUR PHONE TO NAVIGATE IN ZERO GRAVITY ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
 		message10.alpha=0
 
 		iconPU1 = display.newImage(HUDGroup, "images/powerUp1.png", W*.5, H*.17)
@@ -879,7 +879,7 @@ function scene:create(event)
 	local accelerometerSheet = graphics.newImageSheet("images/accelerometerInstruction.png", accelerometerSheetOptions)
 	
 	accelerometerInstruction = display.newSprite(HUDGroup, accelerometerSheet, {name="default", start=1, count=2, loopCount=0, time = 1500, loopDirection="forward"})
-	accelerometerInstruction.x= W*.1; accelerometerInstruction.y = H*.45
+	accelerometerInstruction.x= W*.1; accelerometerInstruction.y = H*.5
 	accelerometerInstruction.xScale, accelerometerInstruction.yScale = .4, .4
 	accelerometerInstruction.alpha=0
 
