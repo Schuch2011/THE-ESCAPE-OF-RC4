@@ -832,19 +832,19 @@ function scene:create(event)
 		message3 = display.newText({parent = HUDGroup, text = "PRESS THE LEFT SCREEN BUTTON TO SWITCH BETWEEN PLATFORMS ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
 		message3.alpha=0
 
-		message4 = display.newText({parent = HUDGroup, text = "POWERUPS GRANT YOU TEMPORARILY POWERS ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
+		message4 = display.newText({parent = HUDGroup, text = "POWERUPS GRANT YOU TEMPORARY POWERS ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
 		message4.alpha=0
 
 		message5 = display.newText({parent = HUDGroup, text = "THIS GIVES YOU A TEMPORARY INCREASE IN YOUR SPEED ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
 		message5.alpha=0
 
-		message6 = display.newText({parent = HUDGroup, text = "THIS GIVES YOU A TEMPORARY BOOST IN THE STRENGHTH OF YOUR JUMP ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
+		message6 = display.newText({parent = HUDGroup, text = "THIS GIVES YOU A TEMPORARY BOOST IN THE STRENGTH OF YOUR JUMP ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
 		message6.alpha=0
 
 		message7 = display.newText({parent = HUDGroup, text = "THIS GIVES YOU A TEMPORARY INCREASE IN SCORE GAIN ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
 		message7.alpha=0
 
-		message8 = display.newText({parent = HUDGroup, text = "THIS TEMPORARILY PREVENTS YOU FROM DYING TO SPIKES ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
+		message8 = display.newText({parent = HUDGroup, text = "THIS PREVENTS YOU FROM DYING TO SPIKES TEMPORARILY ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
 		message8.alpha=0
 
 		message9 = display.newText({parent = HUDGroup, text = "COLLECT COINS TO UNLOCK NEW CHARACTERS ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
