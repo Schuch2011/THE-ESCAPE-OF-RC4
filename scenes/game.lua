@@ -178,6 +178,8 @@ local function onJumpButtonTouch( event )
     	isPaused = false
 		player:play()
 		physics.start(true)
+		parSpeed = parDefaultSpeed
+		player.timeScale=1
 		for i=1, movableGroup.numChildren do
 				if movableGroup[i].isBarrier==true then			
 				movableGroup[i]:play()
@@ -198,22 +200,27 @@ local function onJumpButtonTouch( event )
 	end
 	if isInTutorial ~= 0 then
 		if isInTutorial == 3 then
+			jumpButtonArea.isHitTestable=false
+			rightButton.alpha = 0
 			timer.performWithDelay(150, function()
 				isPaused = true
 				physics.pause()
 				player:pause()
+				message2.alpha = 1
 				for i=1, movableGroup.numChildren do
 					if movableGroup[i].isBarrier==true then			
 						movableGroup[i]:pause()
 					end
 				end
-				message2.alpha = 1
-				glow(rightButton)
+				timer.performWithDelay(500, function()
+					jumpButtonArea.isHitTestable=true
+					rightButton.alpha= .12
+					glow(rightButton)
+				end)				
 			end)
 			isInTutorial = 1
 		else
 			isInTutorial = 0
-
 		end
 	end
 end
@@ -237,6 +244,8 @@ local function onSwitchButtonTouch( event )
 		isPaused = false
 		player:play()
 		physics.start(true)
+		parSpeed = parDefaultSpeed
+		player.timeScale=1
 		for i=1, movableGroup.numChildren do
 			if movableGroup[i].isBarrier==true then			
 				movableGroup[i]:play()
@@ -397,7 +406,7 @@ local function playerCollider( self,event )
     	-- DETECTA SE O PERSONAGEM ALCANÇA O FIM DA FASE
 
     	if ( event.selfElement == 1 and event.other.objType == "tutorial") then
-    		if event.other.tutorialStep~=2 then
+    		if event.other.tutorialStep~=2 and event.other.tutorialStep~=0 then
     			isPaused = true
 				player:pause()
 				physics.pause()
@@ -407,13 +416,18 @@ local function playerCollider( self,event )
 					end
 				end
 			end
-
+			if (event.other.tutorialStep==0) then
+				parSpeed = parDefaultSpeed*.75
+				player.timeScale=.75
+			end
     		if (event.other.tutorialStep==1) then
-    			isInTutorial = 1
-    			jumpButtonArea.isHitTestable = true
-    			rightButton.alpha = 0.12
-    			glow(rightButton)
     			message1.alpha=1
+    			isInTutorial = 1
+    			timer.performWithDelay(500, function()
+					jumpButtonArea.isHitTestable = true
+    				rightButton.alpha = 0.12
+    				glow(rightButton)
+    			end)
     		end
     		if (event.other.tutorialStep==2) then
     			jumpButtonArea.isHitTestable = true
@@ -421,10 +435,12 @@ local function playerCollider( self,event )
     		end
     		if (event.other.tutorialStep==3) then
     			isInTutorial = 3
-    			jumpButtonArea.isHitTestable = true
-    			rightButton.alpha = 0.12
-    			glow(rightButton)
     			message1.alpha=1
+    			timer.performWithDelay(500, function()
+    				jumpButtonArea.isHitTestable = true
+    				rightButton.alpha = 0.12
+    				glow(rightButton)
+    			end)    			
     		end
     		if (event.other.tutorialStep==4 or event.other.tutorialStep==5) then
     			isInTutorial = event.other.tutorialStep
@@ -1015,7 +1031,7 @@ function scene:show( event )
     if ( phase == "will" ) then
 		Runtime:addEventListener("enterFrame",updateFrames)
    		Runtime:addEventListener( "accelerometer", onAccelerate)
-
+   		system.activate('multitouch')
     elseif ( phase == "did" ) then
     	local previous = composer.getSceneName("previous")
 		if previous ~= nil then

@@ -8,7 +8,7 @@ return {
   height = 50,
   tilewidth = 25,
   tileheight = 25,
-  nextobjectid = 1107,
+  nextobjectid = 1111,
   properties = {},
   tilesets = {
     {
@@ -1306,6 +1306,54 @@ return {
           gid = 6,
           visible = true,
           properties = {}
+        },
+        {
+          id = 1107,
+          name = "",
+          type = "T",
+          shape = "rectangle",
+          x = 674.25,
+          y = 578.25,
+          width = 9.75,
+          height = 437.5,
+          rotation = 0,
+          gid = 9,
+          visible = true,
+          properties = {
+            ["tutorialStep"] = 0
+          }
+        },
+        {
+          id = 1108,
+          name = "",
+          type = "T",
+          shape = "rectangle",
+          x = 1828.25,
+          y = 578.25,
+          width = 9.75,
+          height = 437.5,
+          rotation = 0,
+          gid = 9,
+          visible = true,
+          properties = {
+            ["tutorialStep"] = 0
+          }
+        },
+        {
+          id = 1109,
+          name = "",
+          type = "T",
+          shape = "rectangle",
+          x = 3256.25,
+          y = 500,
+          width = 9.75,
+          height = 437.5,
+          rotation = 0,
+          gid = 9,
+          visible = true,
+          properties = {
+            ["tutorialStep"] = 0
+          }
         }
       }
     }

@@ -1,5 +1,5 @@
 display.setStatusBar( display.HiddenStatusBar )
-system.activate('multitouch')
+--system.activate('multitouch')
 
 local composer = require("composer")
 

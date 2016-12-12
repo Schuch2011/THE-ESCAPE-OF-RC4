@@ -69,6 +69,7 @@ end
 
 function scene:show(event)
 	if event.phase == "will" then
+		system.deactivate('multitouch')
 		audio.setVolume(0.15,{channel =1})
 	elseif event.phase == "did" then
 		local previous = composer.getSceneName("previous")
