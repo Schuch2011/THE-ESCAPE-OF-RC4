@@ -212,7 +212,7 @@ local function onJumpButtonTouch( event )
 						movableGroup[i]:pause()
 					end
 				end
-				timer.performWithDelay(500, function()
+				timer.performWithDelay(1500, function()
 					jumpButtonArea.isHitTestable=true
 					rightButton.alpha= .12
 					glow(rightButton)
@@ -437,7 +437,7 @@ local function playerCollider( self,event )
     		if (event.other.tutorialStep==1) then
     			message1.alpha=1
     			isInTutorial = 1
-    			timer.performWithDelay(500, function()
+    			timer.performWithDelay(1500, function()
 					jumpButtonArea.isHitTestable = true
     				rightButton.alpha = 0.12
     				glow(rightButton)
@@ -450,7 +450,7 @@ local function playerCollider( self,event )
     		if (event.other.tutorialStep==3) then
     			isInTutorial = 3
     			message1.alpha=1
-    			timer.performWithDelay(500, function()
+    			timer.performWithDelay(1500, function()
     				jumpButtonArea.isHitTestable = true
     				rightButton.alpha = 0.12
     				glow(rightButton)
