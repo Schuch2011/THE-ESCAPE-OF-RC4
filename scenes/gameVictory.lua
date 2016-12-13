@@ -139,7 +139,10 @@ function scene:show(event)
 	end
 	if event.phase=="did" then
 		
-		composer.removeScene("scenes.game")
+		local previous = composer.getSceneName("previous")
+		if previous ~= nil then
+			composer.removeScene(composer.getSceneName("previous"))
+		end
 	--DESBLOQUEAR PERSONAGEM
 		local gameTotalCoins = 0
 		local totalCoinsCollected = 0
