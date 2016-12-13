@@ -8,7 +8,7 @@ return {
   height = 50,
   tilewidth = 25,
   tileheight = 25,
-  nextobjectid = 1218,
+  nextobjectid = 1219,
   properties = {},
   tilesets = {
     {
@@ -413,20 +413,6 @@ return {
           y = 625,
           width = 25,
           height = 25,
-          rotation = 0,
-          gid = 13,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 1123,
-          name = "",
-          type = "S",
-          shape = "rectangle",
-          x = 4046.5,
-          y = 722,
-          width = 818.75,
-          height = 122,
           rotation = 0,
           gid = 13,
           visible = true,
@@ -1269,6 +1255,20 @@ return {
           height = 84.5,
           rotation = 0,
           gid = 6,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 1218,
+          name = "",
+          type = "F",
+          shape = "rectangle",
+          x = 4040.25,
+          y = 822,
+          width = 887.5,
+          height = 207,
+          rotation = 0,
+          gid = 5,
           visible = true,
           properties = {}
         }
