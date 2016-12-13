@@ -36,7 +36,7 @@ local imageGroup = display.newGroup()
 local descriptionGroup = display.newGroup()
 local descriptionOverlay
 
-local sfxButton = audio.loadSound("audios/button.wav")
+local sfxButton
 
 local function finishCutscene(param)
 	if param == "intro" then
@@ -49,7 +49,7 @@ end
 
 local function onScreenTouch(event)
 	if event.phase == "began" then
-		audio.play(sfxButton)
+		audio.play(sfxButton, {channel=6})
 
 		if imageIndex <= #cutscene[cutsceneType] then
 			local page = display.newImage(imageGroup, cutscene[cutsceneType][imageIndex].image)
@@ -72,6 +72,9 @@ end
 
 function scene:create(event)
 	local sceneGroup = self.view
+
+	audio.reserveChannels(6)
+	sfxButton = audio.loadSound("audios/button.wav")
 
 	coins = event.params.coins
 

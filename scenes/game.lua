@@ -75,7 +75,7 @@ local tempPosition
 local xCompensation = W*0.4
 
 local parGravity = 60
-local parAccelerometerSensitivity = 30
+local parAccelerometerSensitivity = 45
 local parIsZeroGravity=false
 
 local playerProgression = {}
@@ -375,6 +375,7 @@ end
 
 function scene:finishGame()
 	isGameFinished = true
+	parIsZeroGravity = false
 end
 
 function scene:resumeGame()
@@ -634,9 +635,10 @@ local function playerCollider( self,event )
 			audio.play(sfxPowerUp)
     	end  
     	if ( event.selfElement == 1 and event.other.objType == "startZeroGravity" ) then
+    		player:setLinearVelocity( 0,0 )
+    		jumpButtonArea.isHitTestable=false
         	parIsZeroGravity=true
-        	physics.setGravity(0,0)
-        	jumpButtonArea.isHitTestable=false
+        	physics.setGravity(0,0)        	
 			player:setSequence("zeroGravity")
 			player:play()
 			accelerometerInstruction.alpha=1
@@ -1043,7 +1045,7 @@ function scene:show( event )
 
     	physics.setGravity(0,parGravity)
 
-    	audio.setVolume(0.1, {channel = 1})
+    	audio.setVolume(0.05, {channel = 1})
     	audio.setVolume(0.3, {channel = 2})
 		audio.setVolume(0.5,{channel = 4})
     end

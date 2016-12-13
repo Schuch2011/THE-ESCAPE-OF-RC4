@@ -29,7 +29,7 @@ local function onLevelButtonTouch(event)
             scrollView:takeFocus( event )
         end
     elseif ( phase == "ended" ) then
-    	audio.play(sfxButton)
+    	audio.play(sfxButton, {channel=6})
 
     	composer.setVariable("selectedStage", event.target.id)
 
@@ -58,7 +58,7 @@ local function scrollListener(event)
 		if (difX > 20) then
 			if (slotSelected<4) then
 				slotSelected = slotSelected +1 
-				audio.play(sfxSwipe)
+				audio.play(sfxSwipe, {channel = 7})
 				scrollView:scrollToPosition			
 				{
    					x = slotSelected*-parDistance,
@@ -74,7 +74,7 @@ local function scrollListener(event)
 		elseif (difX < -20) then
 			if (slotSelected>0) then
 				slotSelected = slotSelected - 1 
-				audio.play(sfxSwipe)
+				audio.play(sfxSwipe, {channel = 7})
 				scrollView:scrollToPosition			
 				{
    					x = slotSelected*-parDistance,
@@ -102,6 +102,8 @@ end
 function scene:create(event)
 	local sceneGroup = self.view
 	local buttonGroup = display.newGroup()
+
+	audio.reserveChannels(7)
 
 	sfxButton = audio.loadSound("audios/button.wav")
 	sfxSwipe = audio.loadSound("audios/swipe.wav")
@@ -138,7 +140,7 @@ function scene:create(event)
 		width = H*.22, height = H*.22,
 		x = W*0.1, y = H*0.85,
 		onRelease = function()
-			audio.play(sfxButton)
+			audio.play(sfxButton, {channel=6})
 			composer.gotoScene("scenes.menuCharacterSelection", {time=500, effect="slideRight"})
 		end
 	})

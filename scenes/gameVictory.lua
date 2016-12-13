@@ -12,14 +12,22 @@ local scene = composer.newScene()
 local currentLevel
 
 local totalCoins
+local coinsTaken
+local coinsTakenText
+local scoreText
+local nextStageButton
 
 local sfxButton
+local victoryText
+local temp
 
 function scene:create(event)
 	local sceneGroup = self.view
 	currentLevel = composer.getVariable("selectedStage") or 1
 	totalCoins = composer.getVariable("stage"..currentLevel.."TotalCoins") or 0
-	local coinsTaken = event.params or 0
+	coinsTaken = event.params or 0
+
+	audio.reserveChannels(6)
 	sfxButton = audio.loadSound("audios/button.wav")
 
 	local background = display.newImageRect(sceneGroup, "images/background-3.jpg", display.actualContentWidth, H)
@@ -35,26 +43,25 @@ function scene:create(event)
 
 	--TEXTO DE VICTORY
 
-	local victoryText = display.newText({
+	victoryText = display.newText({
 		x = W * .52,
 		y = H * .15,
 		width = W * .4,
 		align = "center",
-		text = currentLevel == 0 and "TRAINNING COMPLETE! " or ("STAGE " .. currentLevel .. " COMPLETE! "),
+		text = currentLevel == 0 and "TRAINING COMPLETE! " or ("STAGE " .. currentLevel .. " COMPLETE! "),
 		font = "airstrike.ttf",
 		fontSize = 30,
 	})
 	victoryText:setFillColor(.97, .95, 0)
 
-	if currentLevel ~= 0 then
+
 		local temp = saveState.getValue("stage"..currentLevel.."Score") or 0
 
-		local coinsTakenText = display.newText(sceneGroup,"COINS: "..coinsTaken.." / "..totalCoins .. " ",W/4,H*.34,"airstrikebold.ttf",25)
-		local scoreText = display.newText(sceneGroup,"SCORE: ".. (temp or 0) .. " ",(W/4)*3,H*.34,"airstrikebold.ttf",25)
-	end
+		coinsTakenText = display.newText(sceneGroup,"COINS: "..coinsTaken.." / "..totalCoins .. " ",W/4,H*.34,"airstrikebold.ttf",25)
+		scoreText = display.newText(sceneGroup,"SCORE: ".. (temp or 0) .. " ",(W/4)*3,H*.34,"airstrikebold.ttf",25)
 
-	if currentLevel ~= 4 then
-		local nextStageButton = widget.newButton(
+
+		nextStageButton = widget.newButton(
 			{
 				x = W/2,
 				y = H*.55,
@@ -68,7 +75,7 @@ function scene:create(event)
 				font = "airstrike.ttf",
 				fontSize = 35,
 				onPress = function ()
-					audio.play(sfxButton)
+					audio.play(sfxButton, {channel = 6})
 					composer.setVariable("selectedStage",currentLevel+1)
 					if currentLevel + 1 == 1 then
 						composer.gotoScene("scenes.cutscene", {effect="slideLeft",time = 500, params = {cutsceneType = "intro"}})
@@ -79,7 +86,7 @@ function scene:create(event)
 			}
 		)
 		sceneGroup:insert(nextStageButton)
-	end
+
 
 	-- BOTAO DE VOLTAR AO MENU
 
@@ -97,7 +104,7 @@ function scene:create(event)
 			font = "airstrike.ttf",
 			fontSize = 35,
 			onPress = function ()
-				audio.play(sfxButton)
+				audio.play(sfxButton, {channel = 6})
 				composer.gotoScene("scenes.menu", {time=500, effect="slideRight"})
 			end
 		}
@@ -109,7 +116,29 @@ function scene:create(event)
 end
 
 function scene:show(event)
+	if event.phase=="will" then
+		currentLevel = composer.getVariable("selectedStage") or 1
+		if currentLevel ~= 0 then
+			temp = saveState.getValue("stage"..currentLevel.."Score") or 0
+			totalCoins = composer.getVariable("stage"..currentLevel.."TotalCoins") or 0
+			coinsTaken = event.params or 0
+			victoryText.text = "STAGE " .. currentLevel .. " COMPLETE! "
+			coinsTakenText.text = "COINS: "..coinsTaken.." / "..totalCoins .. " "
+			scoreText.text = "SCORE: ".. (temp or 0) .. " "
+			coinsTakenText.alpha=1
+			scoreText.alpha = 1
+			if currentLevel == 4 then
+				nextStageButton.isHitTestable = false
+				nextStageButton.alpha= 0
+			end
+		else
+			victoryText.text = "TRAINING COMPLETE! "
+			coinsTakenText.alpha=0
+			scoreText.alpha = 0
+		end
+	end
 	if event.phase=="did" then
+		
 		composer.removeScene("scenes.game")
 	--DESBLOQUEAR PERSONAGEM
 		local gameTotalCoins = 0

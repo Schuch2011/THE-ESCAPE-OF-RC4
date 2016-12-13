@@ -14,7 +14,7 @@ local sfxMenuMusic
 function scene:create(event)
 	local sceneGroup = self.view
 
-	audio.reserveChannels(1)
+	audio.reserveChannels(6)
 
 	sfxButton = audio.loadSound("audios/button.wav")
 	sfxMenuMusic = audio.loadStream("audios/musicMenu.wav")
@@ -37,7 +37,7 @@ function scene:create(event)
 			font = "airstrike.ttf",
 			fontSize = 40,
 			onPress = function ()
-				audio.play(sfxButton)
+				audio.play(sfxButton,{channel=6})
 				composer.gotoScene("scenes.menuCharacterSelection", {time=500, effect="slideLeft"})
 			end
 		}
@@ -57,7 +57,7 @@ function scene:create(event)
 			font = "airstrike.ttf",
 			fontSize = 22,
 			onPress = function ()
-				audio.play(sfxButton)
+				audio.play(sfxButton,{channel=6})
 				composer.gotoScene("scenes.credits", {time=500, effect="slideRight"})
 			end
 		}

@@ -15,6 +15,8 @@ local sfxButton
 function scene:create(event)
 	local sceneGroup = self.view
 
+	audio.reserveChannels(7)
+
 	sfxButton = audio.loadSound("audios/button.wav")
 	
 	local background = display.newRect(_W * .5, _H * .5, display.actualContentWidth, display.actualContentHeight)
@@ -33,7 +35,7 @@ function scene:create(event)
 		font = "airstrike.ttf",
 		fontSize = 35,
 		onRelease = function()
-			audio.play(sfxButton)
+			audio.play(sfxButton, {channel=6})
 			composer.hideOverlay("fade", 200)
 		end
 	})
@@ -54,7 +56,7 @@ function scene:create(event)
 		fontSize = 35,
 		onRelease = function()
 			parent:finishGame()
-			audio.play(sfxButton)
+			audio.play(sfxButton, {channel=6})
 			composer.gotoScene("scenes.retry")
 		end
 	})
@@ -73,6 +75,7 @@ function scene:create(event)
 		fontSize = 35,
 		onRelease = function()
 			isClosing = true
+			audio.play(sfxButton, {channel=6})
 			audio.stop(1)
 			composer.gotoScene("scenes.menu","slideRight",500)
 		end

@@ -14,6 +14,8 @@ local sfxButton
 function scene:create(event)
 	local sceneGroup = self.view
 	currentLevel = composer.getVariable("selectedStage")
+
+	audio.reserveChannels(6)
 	sfxButton = audio.loadSound("audios/button.wav")
 
 	--TEXTO DE GAME OVER
@@ -48,7 +50,7 @@ function scene:create(event)
 			font = "airstrike.ttf",
 			fontSize = 35,
 			onPress = function ()
-				audio.play(sfxButton)
+				audio.play(sfxButton, {channel=6})
 				composer.gotoScene("scenes.game", {time=500, effect="slideRight"})
 			end
 		}
@@ -70,7 +72,7 @@ function scene:create(event)
 			font = "airstrike.ttf",
 			fontSize = 35,
 			onPress = function ()
-				audio.play(sfxButton)
+				audio.play(sfxButton, {channel=6})
 				composer.gotoScene("scenes.menu", {time=500, effect="slideRight"})
 			end
 		}

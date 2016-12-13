@@ -57,7 +57,7 @@ local function scrollListener(event) -- CONTROLA O SCROLL DA SELEÇÃO DOS PERSO
 
 		if (difX > 20) then
 			if (slotSelected<4) then
-				audio.play(sfxSwipe)
+				audio.play(sfxSwipe, {channel = 7})
 				slotSelected = slotSelected +1 
 				scrollView:scrollToPosition			
 				{
@@ -74,7 +74,7 @@ local function scrollListener(event) -- CONTROLA O SCROLL DA SELEÇÃO DOS PERSO
 		elseif (difX < -20) then
 			if (slotSelected>1) then
 				slotSelected = slotSelected - 1 
-				audio.play(sfxSwipe)
+				audio.play(sfxSwipe, {channel = 7})
 				scrollView:scrollToPosition			
 				{
    					x = (slotSelected-1)*-parDistance,
@@ -130,6 +130,8 @@ function scene:create(event)
 	local sceneGroup = self.view
 	local buttonGroup = display.newGroup()
 
+	audio.reserveChannels(7)
+
 	sfxButton = audio.loadSound("audios/button.wav")
 	sfxSwipe = audio.loadSound("audios/swipe.wav")
 
@@ -165,7 +167,7 @@ function scene:create(event)
 		width = H*.22, height = H*.22,
 		x = W*0.1, y = H*0.85,
 		onRelease = function() 
-			audio.play(sfxButton)
+			audio.play(sfxButton, {channel = 6})
 			composer.gotoScene("scenes.menu", {time=500, effect="slideRight"})
 		end
 	})
