@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="500" height="50" tilewidth="25" tileheight="25" nextobjectid="1158">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="500" height="50" tilewidth="25" tileheight="25" nextobjectid="1159">
  <tileset firstgid="1" name="tiles" tilewidth="25" tileheight="25" tilecount="14" columns="0">
   <tile id="0">
    <image width="25" height="25" source="tiles/coinTile.png"/>
@@ -53,7 +53,7 @@
   <object id="1065" type="G" gid="6" x="1756.25" y="575" width="200" height="75"/>
   <object id="1066" type="G" gid="6" x="1881.25" y="500" width="75" height="50"/>
   <object id="1067" type="G" gid="6" x="2056.25" y="475" width="471.5" height="446.75"/>
-  <object id="1076" type="C" gid="1" x="1996" y="432.25" width="25" height="25"/>
+  <object id="1076" type="C" gid="1" x="2023" y="444.75" width="25" height="25"/>
   <object id="1083" type="G" gid="6" x="568.75" y="468.75" width="215.25" height="25"/>
   <object id="1084" type="P2" gid="10" x="568.75" y="443.75" width="50" height="75"/>
   <object id="1085" type="C" gid="1" x="693.75" y="438.75" width="25" height="25"/>
@@ -89,7 +89,7 @@
   <object id="1119" type="G" gid="6" x="4825" y="434.5" width="27.75" height="153.25"/>
   <object id="1120" type="G" gid="6" x="5118.75" y="437.5" width="25" height="153.25"/>
   <object id="1122" type="D" gid="12" x="5118.75" y="534.5" width="25" height="100"/>
-  <object id="1123" type="F" gid="5" x="4840.25" y="843.75" width="262.5" height="159.25"/>
+  <object id="1123" type="F" gid="5" x="4896.5" y="843.75" width="162.5" height="159.25"/>
   <object id="1124" type="G" gid="6" x="3437.5" y="-40.5" width="952.75" height="237.5"/>
   <object id="1125" type="C" gid="1" x="3781.25" y="325" width="25" height="25"/>
   <object id="1126" type="G" gid="6" x="3543.75" y="128.25" width="115.25" height="50"/>

@@ -34,13 +34,6 @@ function scene:create(event)
 	background.x = W * .5
 	background.y = H * .5
 
-	--DESBLOQUEAR PRÓXIMA FASE
-
-	if composer.getVariable("isStage"..(currentLevel+1).."Unlocked_") ~= true then
-		composer.setVariable("isStage"..(currentLevel+1).."Unlocked_", true)
-		saveState.save{["isStage"..(currentLevel+1).."Unlocked"] = true}
-	end
-
 	--TEXTO DE VICTORY
 
 	victoryText = display.newText({
@@ -140,6 +133,13 @@ function scene:show(event)
 	if event.phase=="did" then
 		
 		composer.removeScene("scenes.game")
+
+	--DESBLOQUEAR PRÓXIMA FASE
+		if composer.getVariable("isStage"..(currentLevel+1).."Unlocked_") ~= true then
+			composer.setVariable("isStage"..(currentLevel+1).."Unlocked_", true)
+			saveState.save{["isStage"..(currentLevel+1).."Unlocked"] = true}
+		end
+
 	--DESBLOQUEAR PERSONAGEM
 		local gameTotalCoins = 0
 		local totalCoinsCollected = 0

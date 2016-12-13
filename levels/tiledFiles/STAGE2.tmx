@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="500" height="50" tilewidth="25" tileheight="25" nextobjectid="1219">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="500" height="50" tilewidth="25" tileheight="25" nextobjectid="1221">
  <tileset firstgid="1" name="tiles" tilewidth="25" tileheight="25" tilecount="14" columns="0">
   <tile id="0">
    <image width="25" height="25" source="tiles/coinTile.png"/>
@@ -46,7 +46,7 @@
  </tileset>
  <objectgroup name="Object Layer 1" offsetx="166" offsety="128">
   <object id="283" type="G" gid="6" x="-53.5" y="865.75" width="1018.75" height="290.75"/>
-  <object id="994" type="EG" gid="3" x="8331.25" y="381.5" width="25" height="375"/>
+  <object id="994" type="EG" gid="3" x="8331.25" y="406.5" width="25" height="375"/>
   <object id="1082" type="C" gid="1" x="500" y="450.25" width="25" height="25"/>
   <object id="1083" type="G" gid="6" x="850" y="351.25" width="1115.25" height="228"/>
   <object id="1085" type="G" gid="6" x="1327.75" y="865.75" width="947.25" height="290.75"/>
@@ -79,29 +79,28 @@
   <object id="1156" type="L" gid="7" x="1125" y="600" width="50" height="25"/>
   <object id="1157" type="D" gid="12" x="3609.25" y="428.25" width="84" height="153"/>
   <object id="1158" type="D" gid="12" x="4412.5" y="497" width="75" height="25"/>
-  <object id="1159" type="L" gid="7" x="4921.5" y="411.25" width="112.5" height="25"/>
-  <object id="1160" type="D" gid="12" x="5052.75" y="337.5" width="111.5" height="25"/>
-  <object id="1161" type="L" gid="7" x="5200" y="268.75" width="65.25" height="25"/>
-  <object id="1162" type="G" gid="6" x="5165.25" y="418.75" width="487.5" height="178"/>
+  <object id="1159" type="L" gid="7" x="5006.75" y="409.25" width="112.5" height="25"/>
+  <object id="1160" type="D" gid="12" x="5134" y="337.5" width="118.75" height="25"/>
+  <object id="1162" type="G" gid="6" x="5252.75" y="418.75" width="400" height="178"/>
   <object id="1163" type="G" gid="6" x="5131.25" y="50" width="652.75" height="178"/>
-  <object id="1164" type="G" gid="6" x="5425" y="150" width="102.75" height="25"/>
-  <object id="1165" type="P2" gid="10" x="5425" y="125" width="50" height="75"/>
-  <object id="1166" type="C" gid="1" x="5493.75" y="120.75" width="25" height="25"/>
-  <object id="1167" type="PU3" gid="12" x="5606.25" y="234.25" width="25" height="25"/>
+  <object id="1164" type="G" gid="6" x="5415.25" y="168.75" width="131.25" height="25"/>
+  <object id="1165" type="P2" gid="10" x="5443.75" y="143.75" width="50" height="75"/>
+  <object id="1166" type="C" gid="1" x="5512.5" y="139.5" width="25" height="25"/>
+  <object id="1167" type="PU3" gid="12" x="5575" y="231.25" width="25" height="25"/>
   <object id="1168" type="G" gid="6" x="5784" y="415.75" width="497.25" height="543.75"/>
-  <object id="1169" type="G" gid="6" x="5411.5" y="790.75" width="3403.75" height="240.75"/>
-  <object id="1170" type="S" gid="5" x="5412.5" y="550" width="25" height="25"/>
-  <object id="1171" type="S" gid="5" x="5447.5" y="550" width="25" height="25"/>
-  <object id="1173" type="S" gid="5" x="5483" y="550" width="25" height="25"/>
-  <object id="1175" type="S" gid="5" x="5518.25" y="550" width="25" height="25"/>
-  <object id="1177" type="S" gid="5" x="5553.75" y="550" width="25" height="25"/>
-  <object id="1180" type="S" gid="5" x="5589.25" y="550" width="25" height="25"/>
-  <object id="1181" type="S" gid="5" x="5624.75" y="550" width="25" height="25"/>
-  <object id="1183" type="D" gid="7" x="5412.5" y="525" width="240.25" height="28"/>
+  <object id="1169" type="G" gid="6" x="5411.5" y="790.75" width="3403.75" height="215.75"/>
+  <object id="1170" type="S" gid="5" x="5412.5" y="575" width="25" height="25"/>
+  <object id="1171" type="S" gid="5" x="5447.5" y="575" width="25" height="25"/>
+  <object id="1173" type="S" gid="5" x="5483" y="575" width="25" height="25"/>
+  <object id="1175" type="S" gid="5" x="5518.25" y="575" width="25" height="25"/>
+  <object id="1177" type="S" gid="5" x="5553.75" y="575" width="25" height="25"/>
+  <object id="1180" type="S" gid="5" x="5589.25" y="575" width="25" height="25"/>
+  <object id="1181" type="S" gid="5" x="5624.75" y="575" width="25" height="25"/>
+  <object id="1183" type="D" gid="7" x="5412.5" y="550" width="240.25" height="28"/>
   <object id="1184" type="G" gid="6" x="6281.25" y="15.75" width="2527.75" height="143.75"/>
-  <object id="1185" type="SZG" gid="8" x="6375" y="553.25" width="25" height="537.5"/>
-  <object id="1186" type="EZG" gid="4" x="7925" y="631.25" width="25" height="534.25"/>
-  <object id="1187" type="G" gid="6" x="6793.75" y="550" width="125" height="115.5"/>
+  <object id="1185" type="SZG" gid="8" x="6375" y="578.25" width="25" height="562.5"/>
+  <object id="1186" type="EZG" gid="4" x="7925" y="403.25" width="25" height="125"/>
+  <object id="1187" type="G" gid="6" x="6793.75" y="575" width="125" height="134.25"/>
   <object id="1188" type="G" gid="6" x="7112.5" y="431.25" width="125" height="109.25"/>
   <object id="1189" type="G" gid="6" x="7112.5" y="131.25" width="125" height="115.5"/>
   <object id="1190" type="G" gid="6" x="7375" y="593.75" width="125" height="115.5"/>
@@ -109,11 +108,10 @@
   <object id="1192" type="G" gid="6" x="7112.5" y="237.5" width="125" height="25"/>
   <object id="1193" type="P1" gid="10" x="7112.5" y="212.5" width="50" height="84.25"/>
   <object id="1194" type="C" gid="1" x="7187.5" y="187.5" width="25" height="25"/>
-  <object id="1195" type="L" gid="12" x="6143.75" y="556.25" width="25" height="140.75"/>
-  <object id="1197" type="L" gid="7" x="7112.5" y="325" width="25" height="90.5"/>
-  <object id="1198" type="L" gid="7" x="7212.5" y="553.25" width="25" height="125"/>
-  <object id="1199" type="D" gid="12" x="7112.5" y="553.25" width="25" height="125.25"/>
-  <object id="1200" type="D" gid="12" x="7212.5" y="322" width="25" height="84.75"/>
+  <object id="1197" type="L" gid="7" x="7212.5" y="325" width="25" height="90.5"/>
+  <object id="1198" type="L" gid="7" x="7212.5" y="578.25" width="25" height="150"/>
+  <object id="1199" type="D" gid="12" x="7112.5" y="578.25" width="25" height="150.25"/>
+  <object id="1200" type="D" gid="12" x="7112.5" y="322" width="25" height="84.75"/>
   <object id="1205" type="S" gid="5" x="7421.5" y="481.25" width="25" height="25"/>
   <object id="1206" type="S" gid="5" x="7457" y="481.25" width="25" height="25"/>
   <object id="1207" type="S" gid="5" x="7386.5" y="481.25" width="25" height="25"/>
@@ -124,8 +122,10 @@
   <object id="1212" type="G" gid="6" x="7600" y="97" width="125" height="84.5"/>
   <object id="1213" type="G" gid="6" x="7725" y="178.25" width="125" height="169"/>
   <object id="1214" type="G" gid="6" x="7850" y="278.25" width="352.75" height="266"/>
-  <object id="1216" type="G" gid="6" x="7725" y="550" width="1090.25" height="169"/>
-  <object id="1217" type="G" gid="6" x="7600" y="550" width="125" height="84.5"/>
-  <object id="1218" type="F" gid="5" x="4040.25" y="822" width="887.5" height="207"/>
+  <object id="1216" type="G" gid="6" x="7725" y="575" width="1090.25" height="169"/>
+  <object id="1217" type="G" gid="6" x="7600" y="575" width="125" height="84.5"/>
+  <object id="1218" type="F" gid="5" x="4109" y="822" width="725" height="207"/>
+  <object id="1219" type="D" gid="12" x="5627" y="240.75" width="25" height="193.75"/>
+  <object id="1220" type="D" gid="7" x="6143.75" y="575" width="25" height="159.25"/>
  </objectgroup>
 </map>

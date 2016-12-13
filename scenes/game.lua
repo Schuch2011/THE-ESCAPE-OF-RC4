@@ -75,7 +75,7 @@ local tempPosition
 local xCompensation = W*0.4
 
 local parGravity = 60
-local parAccelerometerSensitivity = 45
+local parAccelerometerSensitivity = 60
 local parIsZeroGravity=false
 
 local playerProgression = {}
@@ -270,10 +270,23 @@ local function onSwitchButtonTouch( event )
 	end
 end
 
+local gravityDirection = false
 local function onAccelerate( event )
 	if (parIsZeroGravity==true) then
-    	physics.setGravity(0,event.yInstant*-1*parAccelerometerSensitivity)
+		if event.yInstant > 0 and gravityDirection == false then
+			local temp1, temp2 = player:getLinearVelocity()
+			player:setLinearVelocity( 0,temp2*.5)
+		elseif event.yInstant < 0 and gravityDirection == true then
+			local temp1, temp2 = player:getLinearVelocity()
+			player:setLinearVelocity( 0,temp2*.5)
+		end
+    	physics.setGravity(0,(event.yInstant)*-1*parAccelerometerSensitivity)
     	parSpeed = parZeroChamberSpeed
+    	if event.yInstant > 0 then
+    		gravityDirection = true
+    	else
+    		gravityDirection = false
+    	end
 	end
 end
  
@@ -459,26 +472,26 @@ local function playerCollider( self,event )
     			rightButton.alpha = 0
 
     			transition.to(message4, {time=100, alpha = 1, onComplete= function()
-    				timer.performWithDelay(5000, function()
+    				timer.performWithDelay(4000, function()
     					message4.alpha=0
     					message5.alpha=1
     					iconPU1.alpha=1
-    					timer.performWithDelay(5000, function()
+    					timer.performWithDelay(4000, function()
     						message5.alpha=0
     						message6.alpha=1
     						iconPU1.alpha=0
     						iconPU2.alpha=1
-    					    timer.performWithDelay(5000, function()
+    					    timer.performWithDelay(4000, function()
     							message6.alpha=0
     							message7.alpha=1
     							iconPU2.alpha=0
     							iconPU3.alpha=1
-    							timer.performWithDelay(5000, function()
+    							timer.performWithDelay(4000, function()
     								message7.alpha=0
     								message8.alpha=1
     								iconPU3.alpha=0
     								iconPU4.alpha=1
-    								timer.performWithDelay(5000, function()
+    								timer.performWithDelay(4000, function()
     									message8.alpha=0
     									iconPU4.alpha=0
     									switchButtonArea.isHitTestable = true
@@ -1034,6 +1047,7 @@ function scene:show( event )
    		Runtime:addEventListener( "accelerometer", onAccelerate)
    		system.activate('multitouch')
     elseif ( phase == "did" ) then
+    	composer.removeHidden( true )
     	local previous = composer.getSceneName("previous")
 		if previous ~= nil then
 			composer.removeScene(composer.getSceneName("previous"))
@@ -1045,7 +1059,7 @@ function scene:show( event )
 
     	physics.setGravity(0,parGravity)
 
-    	audio.setVolume(0.05, {channel = 1})
+    	audio.setVolume(0.02, {channel = 1})
     	audio.setVolume(0.3, {channel = 2})
 		audio.setVolume(0.5,{channel = 4})
     end

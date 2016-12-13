@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="500" height="50" tilewidth="25" tileheight="25" nextobjectid="1289">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="500" height="50" tilewidth="25" tileheight="25" nextobjectid="1290">
  <tileset firstgid="1" name="tiles" tilewidth="25" tileheight="25" tilecount="14" columns="0">
   <tile id="0">
    <image width="25" height="25" source="tiles/coinTile.png"/>
@@ -62,7 +62,7 @@
   <object id="1165" type="L" gid="7" x="1150.72" y="654.159" width="77.75" height="25"/>
   <object id="1166" type="L" gid="7" x="1624.72" y="610.159" width="77.75" height="25"/>
   <object id="1167" type="D" gid="12" x="1763.97" y="548.159" width="75" height="25"/>
-  <object id="1168" type="G" gid="6" x="3093.75" y="306.25" width="1682.19" height="173.667"/>
+  <object id="1168" type="G" gid="6" x="3093.75" y="306.25" width="1682.19" height="209.25"/>
   <object id="1169" type="G" gid="6" x="1923.4" y="495.917" width="75" height="25"/>
   <object id="1170" type="G" gid="6" x="2009.23" y="574.917" width="285.819" height="25"/>
   <object id="1171" type="G" gid="6" x="2294.46" y="575.709" width="25" height="105.333"/>
@@ -85,7 +85,7 @@
   <object id="1193" type="G" gid="6" x="3544.07" y="377.462" width="125" height="74.5"/>
   <object id="1194" type="PU1" gid="12" x="3361.25" y="492.5" width="25" height="25"/>
   <object id="1195" type="G" gid="6" x="4344.07" y="502.462" width="129" height="25"/>
-  <object id="1196" type="G" gid="6" x="4344.07" y="341.462" width="127.5" height="38.5"/>
+  <object id="1196" type="G" gid="6" x="4344.07" y="341.462" width="39.93" height="38.5"/>
   <object id="1197" type="PU1" gid="12" x="4094.25" y="492" width="25" height="25"/>
   <object id="1198" type="G" gid="6" x="4768.34" y="151.166" width="2178.16" height="173.667"/>
   <object id="1199" type="G" gid="6" x="5204.9" y="302.129" width="25" height="151.833"/>
@@ -163,5 +163,6 @@
   <object id="1282" type="G" gid="6" x="4986.9" y="237.629" width="25" height="199.833"/>
   <object id="1287" type="C" gid="1" x="475" y="568.5" width="25" height="25"/>
   <object id="1288" type="L" gid="7" x="2593.75" y="537.5" width="77.75" height="25"/>
+  <object id="1289" type="G" gid="6" x="4384" y="323.75" width="87.5" height="38.5"/>
  </objectgroup>
 </map>
