@@ -599,6 +599,7 @@ local function playerCollider( self,event )
 				coins = coins +1
 				score = score + 250
 				loadsave.saveTable(stageCoinsTable, "stage"..currentLevel.."Coins.json")
+				saveState.save{["stage"..currentLevel.."Coins"]=coins}
 				if coinsCounter then coinsCounter.text = coins.." / "..totalCoins .. " " end				
 			end
 					
