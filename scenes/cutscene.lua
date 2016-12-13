@@ -134,6 +134,12 @@ function scene:show(event)
 	if phase == "will" then
 
 	elseif phase == "did" then
+
+		local previous = composer.getSceneName("previous")
+		if previous ~= nil then
+			composer.removeScene(composer.getSceneName("previous"))
+		end
+
 		Runtime:addEventListener("touch", onScreenTouch)
 	end
 end

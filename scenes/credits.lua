@@ -47,7 +47,7 @@ function scene:create(event)
 	display.newText({parent = creditsGroup, text = "Sérgio Alves ", x = W * .75, y = H * .545, font = "airstrike.ttf", fontSize = 16})
 	
 	display.newText({parent = creditsGroup, text = "Coordinator ", x = W * .5, y = H * .7, font = "airstrikebold.ttf", fontSize = 22})
-	display.newText({parent = creditsGroup, text = "Eduardo 'EdH' Muller ", x = W * .5, y = H * .775, font = "airstrike.ttf", fontSize = 16})
+	display.newText({parent = creditsGroup, text = "Eduardo 'EdH' Müller ", x = W * .5, y = H * .775, font = "airstrike.ttf", fontSize = 16})
 	
 	sceneGroup:insert(creditsGroup)
 	sceneGroup:insert(backButton)

@@ -131,8 +131,10 @@ function scene:show(event)
 		end
 	end
 	if event.phase=="did" then
-		
-		composer.removeScene("scenes.game")
+		local previous = composer.getSceneName("previous")
+		if previous ~= nil then
+			composer.removeScene(composer.getSceneName("previous"))
+		end
 
 	--DESBLOQUEAR PRÓXIMA FASE
 		if composer.getVariable("isStage"..(currentLevel+1).."Unlocked_") ~= true then
