@@ -555,7 +555,6 @@ local function playerCollider( self,event )
 			
 			isFinishing = true
 			timer.performWithDelay(2500, function()
-				print("oi")
 				stopGame()
 				audio.play(sfxGameWin)
 				local tempScore = saveState.getValue("stage"..currentLevel.."Score") or 0
