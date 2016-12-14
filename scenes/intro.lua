@@ -4,10 +4,21 @@ local W = display.contentWidth
 local H = display.contentHeight
 
 local composer = require("composer")
+local saveState = require("classes.preference")
 
 local scene = composer.newScene()
 
 local sfxMenuMusic
+
+local function audioHandler(invert)
+	local isOn = saveState.getValue("isAudioOn")
+	if isOn == nil then isOn=true end
+	if invert==true then
+		if isOn==true then	isOn=false	else 	isOn=true 	end
+	end
+	if isOn then audio.setVolume(1) else audio.setVolume(0) end
+	saveState.save{["isAudioOn"]=isOn}
+end
 
 function scene:create(event)
 	local sceneGroup = self.view
@@ -34,7 +45,14 @@ function scene:create(event)
 	end})
 end
 
+function scene:show(event)
+	if event.phase == "will" then
+		audioHandler()
+	end
+end
+
 scene:addEventListener("create",scene)
+scene:addEventListener("show", scene)
 
 return scene
 

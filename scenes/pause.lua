@@ -1,5 +1,6 @@
 local composer = require("composer")
 local widget = require("widget")
+local saveState = require("classes.preference")
 
 local _W = display.contentWidth
 local _H = display.contentHeight
@@ -11,6 +12,26 @@ local isClosing = false
 -- AUDIOS
 
 local sfxButton
+local audioOn
+local audioOff
+
+local function audioHandler(invert)
+	local isOn = saveState.getValue("isAudioOn") 
+	if isOn == nil then isOn=true end
+	if invert==true then
+		if isOn==true then	isOn=false	else 	isOn=true 	end
+	end
+	if isOn then audio.setVolume(1) else audio.setVolume(0) end
+	saveState.save{["isAudioOn"]=isOn}
+end
+
+local function audioButton(self, event)
+	audioOn.isVisible = not audioOn.isVisible
+    audioOff.isVisible = not audioOff.isVisible
+    audioHandler(true)
+    audio.play(sfxButton, {channel=6})
+    return true
+end
 
 function scene:create(event)
 	local sceneGroup = self.view
@@ -23,7 +44,7 @@ function scene:create(event)
 	background:setFillColor(0, 0, 0, .8)
 	
 	local resumeButton = widget.newButton({
-		x = _W * .5,
+		x = _W * .4,
 		y = _H * .22,
 		width = 320,
 		height = 50,
@@ -43,7 +64,7 @@ function scene:create(event)
 	local parent = composer.getScene("scenes.game")
 
 	local restartButton = widget.newButton({
-		x = _W * .5,
+		x = _W * .4,
 		y = _H * .485,
 		width = 320,
 		height = 50,
@@ -62,7 +83,7 @@ function scene:create(event)
 	})
 
 	local backToMenuButton = widget.newButton({
-		x = _W * .5,
+		x = _W * .4,
 		y = _H * .75,
 		width = 320,
 		height = 50,
@@ -80,23 +101,51 @@ function scene:create(event)
 			composer.gotoScene("scenes.menu","slideRight",500)
 		end
 	})
-	
+
 	sceneGroup:insert(background)
+
+	audioOn = display.newImage(sceneGroup, "images/audioOn.png", _W*.93, _H*.20)
+	audioOn.width, audioOn.height = _W*.15, _W*.15
+	
+	audioOff = display.newImage(sceneGroup, "images/audioOff.png", _W*.93, _H*.20)
+	audioOff.width, audioOff.height = _W*.15, _W*.15
+
+	audioOn:addEventListener("tap", audioButton)
+	audioOff:addEventListener("tap", audioButton)	
+
 	sceneGroup:insert(resumeButton)
 	sceneGroup:insert(restartButton)
 	sceneGroup:insert(backToMenuButton)
 end
 
+function scene:show(event)
+	if event.phase == "will" then
+		if saveState.getValue("isAudioOn")==true then
+			audioOn.isVisible = true
+			audioOff.isVisible = false
+		else
+			audioOn.isVisible = false
+			audioOff.isVisible = true
+		end
+	end
+	if event.phase == "did" then
+		if not audio.isChannelActive(1) then
+    		audio.play(sfxMenuMusic, {channel = 1, loops = -1})
+    		audio.setVolume(0.15,{channel =1})
+		end
+	end
+end
+
 function scene:hide(event)
 	local phase = event.phase
 	local parent = event.parent
-
 	if phase == "did" and isClosing == false then
 		parent:resumeGame()
 	end
 end
 
 scene:addEventListener("create", scene)
+scene:addEventListener("show", scene)
 scene:addEventListener("hide", scene)
 
 return scene

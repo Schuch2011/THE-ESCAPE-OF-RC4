@@ -5,11 +5,33 @@ local H = display.contentHeight
 
 local composer = require("composer")
 local widget = require("widget")
+local saveState = require("classes.preference")
 
 local scene = composer.newScene()
 
 local sfxButton
 local sfxMenuMusic
+
+local audioOn
+local audioOff
+
+local function audioHandler(invert)
+	local isOn = saveState.getValue("isAudioOn")
+	if isOn == nil then isOn=true end
+	if invert==true then
+		if isOn==true then	isOn=false	else 	isOn=true 	end
+	end
+	if isOn then audio.setVolume(1) else audio.setVolume(0) end
+	saveState.save{["isAudioOn"]=isOn}
+end
+
+local function audioButton(self, event)
+	audioOn.isVisible = not audioOn.isVisible
+    audioOff.isVisible = not audioOff.isVisible
+    audioHandler(true)
+    audio.play(sfxButton,{channel=6})
+    return true
+end
 
 function scene:create(event)
 	local sceneGroup = self.view
@@ -63,6 +85,15 @@ function scene:create(event)
 		}
 	)
 
+	audioOn = display.newImage(sceneGroup, "images/audioOn.png", W*.95, H*.80)
+	audioOn.width, audioOn.height = W*.15, W*.15
+	
+	audioOff = display.newImage(sceneGroup, "images/audioOff.png", W*.95, H*.80)
+	audioOff.width, audioOff.height = W*.15, W*.15
+
+	audioOn:addEventListener("tap", audioButton)
+	audioOff:addEventListener("tap", audioButton)
+
 	sceneGroup:insert(startButton)
 	sceneGroup:insert(creditsButton)
 end
@@ -71,7 +102,18 @@ function scene:show(event)
 	if event.phase == "will" then
 		system.deactivate('multitouch')
 		audio.setVolume(0.15,{channel =1})
+
+		if saveState.getValue("isAudioOn")==true then
+			audioOn.isVisible = true
+			audioOff.isVisible = false
+		else
+			audioOn.isVisible = false
+			audioOff.isVisible = true
+		end
+
+		audioHandler()		
 	elseif event.phase == "did" then
+		
 		local previous = composer.getSceneName("previous")
 		if previous ~= nil then
 			composer.removeScene(composer.getSceneName("previous"))
