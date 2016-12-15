@@ -25,6 +25,8 @@ local isInTutorial = 0
 local switchTime=false
 local coins = 0
 local totalCoins
+local totalCoinsCollected
+local totalMaxCoins = 10 + 8 + 11 + 6
 local stageCoinsTable = {}
 local score = 0
 
@@ -567,6 +569,10 @@ local function playerCollider( self,event )
 
 		if ( event.selfElement == 1 and event.other.objType == "endStage") then
 			
+			if currentLevel == 4 then
+				_achievement:unlockAndShow(1)
+			end
+
 			isFinishing = true
 			timer.performWithDelay(2500, function()
 				stopGame()
@@ -600,6 +606,20 @@ local function playerCollider( self,event )
 				score = score + 250
 				loadsave.saveTable(stageCoinsTable, "stage"..currentLevel.."Coins.json")
 				saveState.save{["stage"..currentLevel.."Coins"]=coins}
+
+				if currentLevel ~= 0 then
+					totalCoinsCollected = totalCoinsCollected + 1
+					saveState.save{totalCoinsCollected = totalCoinsCollected}
+
+					if totalCoinsCollected == totalMaxCoins then
+						_achievement:unlockAndShow(3)
+					end
+
+					if totalCoinsCollected == 29 then
+						_achievement:unlockAndShow(2)
+					end
+				end
+
 				if coinsCounter then coinsCounter.text = coins.." / "..totalCoins .. " " end				
 			end
 					
@@ -753,6 +773,8 @@ function scene:create(event)
 	playerGroup:insert(player)
 
 	totalCoins = composer.getVariable("stage"..currentLevel.."TotalCoins")
+
+	totalCoinsCollected = saveState.getValue("totalCoinsCollected") or 0
 
 	if not loadsave.loadTable("stage"..currentLevel.."Coins.json") then
 		for i= 1, totalCoins do 

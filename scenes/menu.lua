@@ -48,7 +48,7 @@ function scene:create(event)
 	local startButton = widget.newButton(
 		{
 			x = W/2,
-			y = H*.5,
+			y = H*.45,
 			width = 250,
 			height = 50,
 			shape = "roundedRect",
@@ -65,11 +65,31 @@ function scene:create(event)
 		}
 	)
 	
+	local achievementsButton = widget.newButton(
+		{
+			x = W/2,
+			y = H*.65,
+			width = 215,
+			height = 30,
+			shape = "roundedRect",
+			cornerRadius = 12,
+			fillColor = {default = {.76, .34, .29}, over = {.76, .34, .29}},
+			label = "ACHIEVEMENTS ",
+			labelColor = {default = {1, 1, 1}, over = {1, 1, 1}},
+			font = "airstrike.ttf",
+			fontSize = 22,
+			onPress = function ()
+				audio.play(sfxButton,{channel=6})
+				composer.gotoScene("scenes.achievements", {time=500, effect="slideRight"})
+			end
+		}
+	)
+
 	local creditsButton = widget.newButton(
 		{
 			x = W/2,
-			y = H*.79,
-			width = 160,
+			y = H*.81,
+			width = 215,
 			height = 30,
 			shape = "roundedRect",
 			cornerRadius = 12,
@@ -95,6 +115,7 @@ function scene:create(event)
 	audioOff:addEventListener("tap", audioButton)
 
 	sceneGroup:insert(startButton)
+	sceneGroup:insert(achievementsButton)
 	sceneGroup:insert(creditsButton)
 end
 
