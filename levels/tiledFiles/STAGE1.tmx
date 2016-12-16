@@ -118,7 +118,7 @@
   <object id="1152" type="G" gid="6" x="6956.25" y="459.5" width="121.5" height="56.25"/>
   <object id="1153" type="C" gid="1" x="5718.75" y="418.75" width="25" height="25"/>
   <object id="1154" type="C" gid="1" x="6812.5" y="400" width="25" height="25"/>
-  <object id="1155" type="P2" gid="10" x="6956.25" y="406.25" width="50" height="75"/>
+  <object id="1155" type="P3" gid="10" x="6956.25" y="404.25" width="50" height="82.25"/>
   <object id="1156" type="G" gid="6" x="6956.25" y="331.25" width="121.5" height="47"/>
   <object id="1157" type="C" gid="1" x="7031.25" y="381.25" width="25" height="25"/>
  </objectgroup>

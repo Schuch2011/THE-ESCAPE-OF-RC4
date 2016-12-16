@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="500" height="50" tilewidth="25" tileheight="25" nextobjectid="1111">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="500" height="50" tilewidth="25" tileheight="25" nextobjectid="1114">
  <tileset firstgid="1" name="tiles" tilewidth="25" tileheight="25" tilecount="14" columns="0">
   <tile id="0">
    <image width="25" height="25" source="tiles/coinTile.png"/>
@@ -90,7 +90,7 @@
  </tileset>
  <objectgroup name="Object Layer 1" offsetx="166" offsety="128">
   <object id="283" type="G" gid="6" x="-234.5" y="703.25" width="3212.5" height="128.25"/>
-  <object id="376" type="G" gid="6" x="4483.25" y="728.25" width="6763.25" height="228.25"/>
+  <object id="376" type="G" gid="6" x="4483.25" y="728.25" width="7375.75" height="228.25"/>
   <object id="622" type="F" gid="5" x="3971.5" y="734.5" width="587.5" height="109.5"/>
   <object id="632" type="G" gid="6" x="1977.75" y="575" width="68.75" height="90.5"/>
   <object id="640" type="G" gid="6" x="4733.25" y="500" width="325" height="50"/>
@@ -128,7 +128,7 @@
   <object id="733" type="G" gid="6" x="5158.25" y="400" width="75" height="25"/>
   <object id="759" type="G" gid="6" x="5783.25" y="500" width="150" height="125"/>
   <object id="991" type="G" gid="6" x="5508.25" y="400" width="75" height="25"/>
-  <object id="994" type="EG" gid="3" x="10575" y="500" width="25" height="400"/>
+  <object id="994" type="EG" gid="3" x="11183.3" y="500" width="25" height="400"/>
   <object id="1026" type="PU1" gid="12" x="6433.25" y="490" width="25" height="25"/>
   <object id="1062" type="G" gid="6" x="800" y="575" width="25" height="25"/>
   <object id="1063" type="G" gid="6" x="1168.75" y="575" width="25" height="25"/>
@@ -189,18 +189,18 @@
    </properties>
   </object>
   <object id="1097" type="C" gid="1" x="8168.75" y="493.75" width="25" height="25"/>
-  <object id="1099" type="T" gid="9" x="8681.25" y="500" width="9.75" height="437.5">
+  <object id="1099" type="T" gid="9" x="9289.5" y="500" width="9.75" height="437.5">
    <properties>
     <property name="tutorialStep" type="int" value="8"/>
    </properties>
   </object>
-  <object id="1100" type="G" gid="6" x="8743.75" y="231.25" width="2509" height="200"/>
-  <object id="1101" type="G" gid="6" x="9087.5" y="500" width="115.25" height="50"/>
-  <object id="1102" type="G" gid="6" x="9516.5" y="359.5" width="209" height="128.25"/>
-  <object id="1103" type="G" gid="6" x="9931.25" y="500" width="215.25" height="50"/>
-  <object id="1104" type="EZG" gid="18" x="10006.3" y="481.25" width="25" height="253"/>
-  <object id="1105" type="SZG" gid="22" x="8756.25" y="503.25" width="25" height="275"/>
-  <object id="1106" type="G" gid="6" x="9202.25" y="500" width="138" height="109.25"/>
+  <object id="1100" type="G" gid="6" x="9352" y="231.25" width="2509" height="200"/>
+  <object id="1101" type="G" gid="6" x="9695.75" y="500" width="115.25" height="50"/>
+  <object id="1102" type="G" gid="6" x="10124.8" y="359.5" width="209" height="128.25"/>
+  <object id="1103" type="G" gid="6" x="10539.5" y="500" width="215.25" height="50"/>
+  <object id="1104" type="EZG" gid="18" x="10614.5" y="481.25" width="25" height="253"/>
+  <object id="1105" type="SZG" gid="22" x="9364.5" y="503.25" width="25" height="275"/>
+  <object id="1106" type="G" gid="6" x="9810.5" y="500" width="138" height="109.25"/>
   <object id="1107" type="T" gid="9" x="674.25" y="578.25" width="9.75" height="437.5">
    <properties>
     <property name="tutorialStep" type="int" value="0"/>
@@ -216,5 +216,12 @@
     <property name="tutorialStep" type="int" value="0"/>
    </properties>
   </object>
+  <object id="1111" type="T" gid="9" x="8549" y="500" width="9.75" height="437.5">
+   <properties>
+    <property name="tutorialStep" type="int" value="9"/>
+   </properties>
+  </object>
+  <object id="1112" type="G" gid="6" x="8695.75" y="412.5" width="177.75" height="271.75"/>
+  <object id="1113" type="P2" gid="10" x="8718.75" y="500.25" width="50" height="75"/>
  </objectgroup>
 </map>

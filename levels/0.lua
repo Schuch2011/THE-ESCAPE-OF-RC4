@@ -8,7 +8,7 @@ return {
   height = 50,
   tilewidth = 25,
   tileheight = 25,
-  nextobjectid = 1111,
+  nextobjectid = 1114,
   properties = {},
   tilesets = {
     {
@@ -28,85 +28,85 @@ return {
       tiles = {
         {
           id = 0,
-          image = "G:/Feevale/Mapas projeto/tiles/coinTile.png",
+          image = "tiledFiles/tiles/coinTile.png",
           width = 25,
           height = 25
         },
         {
           id = 1,
-          image = "G:/Feevale/Mapas projeto/tiles/darkTile.png",
+          image = "tiledFiles/tiles/darkTile.png",
           width = 25,
           height = 25
         },
         {
           id = 2,
-          image = "G:/Feevale/Mapas projeto/tiles/endGameTile.png",
+          image = "tiledFiles/tiles/endGameTile.png",
           width = 25,
           height = 25
         },
         {
           id = 3,
-          image = "G:/Feevale/Mapas projeto/tiles/endZeroGravityTile.png",
+          image = "tiledFiles/tiles/endZeroGravityTile.png",
           width = 25,
           height = 25
         },
         {
           id = 4,
-          image = "G:/Feevale/Mapas projeto/tiles/fatalTile.png",
+          image = "tiledFiles/tiles/fatalTile.png",
           width = 25,
           height = 25
         },
         {
           id = 5,
-          image = "G:/Feevale/Mapas projeto/tiles/groundTile.png",
+          image = "tiledFiles/tiles/groundTile.png",
           width = 25,
           height = 25
         },
         {
           id = 6,
-          image = "G:/Feevale/Mapas projeto/tiles/lightTile.png",
+          image = "tiledFiles/tiles/lightTile.png",
           width = 25,
           height = 25
         },
         {
           id = 7,
-          image = "G:/Feevale/Mapas projeto/tiles/portal1Tile.png",
+          image = "tiledFiles/tiles/portal1Tile.png",
           width = 25,
           height = 25
         },
         {
           id = 8,
-          image = "G:/Feevale/Mapas projeto/tiles/portal2Tile.png",
+          image = "tiledFiles/tiles/portal2Tile.png",
           width = 25,
           height = 25
         },
         {
           id = 9,
-          image = "G:/Feevale/Mapas projeto/tiles/portal3Tile.png",
+          image = "tiledFiles/tiles/portal3Tile.png",
           width = 25,
           height = 25
         },
         {
           id = 10,
-          image = "G:/Feevale/Mapas projeto/tiles/portal4Tile.png",
+          image = "tiledFiles/tiles/portal4Tile.png",
           width = 25,
           height = 25
         },
         {
           id = 11,
-          image = "G:/Feevale/Mapas projeto/tiles/powerUpTile.png",
+          image = "tiledFiles/tiles/powerUpTile.png",
           width = 25,
           height = 25
         },
         {
           id = 12,
-          image = "G:/Feevale/Mapas projeto/tiles/spikeTile.png",
+          image = "tiledFiles/tiles/spikeTile.png",
           width = 25,
           height = 25
         },
         {
           id = 13,
-          image = "G:/Feevale/Mapas projeto/tiles/startZeroGravityTile.png",
+          image = "tiledFiles/tiles/startZeroGravityTile.png",
           width = 25,
           height = 25
         }
@@ -129,85 +129,85 @@ return {
       tiles = {
         {
           id = 0,
-          image = "G:/Feevale/Mapas projeto/tiles/coinTile.png",
+          image = "tiledFiles/tiles/coinTile.png",
           width = 25,
           height = 25
         },
         {
           id = 1,
-          image = "G:/Feevale/Mapas projeto/tiles/darkTile.png",
+          image = "tiledFiles/tiles/darkTile.png",
           width = 25,
           height = 25
         },
         {
           id = 2,
-          image = "G:/Feevale/Mapas projeto/tiles/endGameTile.png",
+          image = "tiledFiles/tiles/endGameTile.png",
           width = 25,
           height = 25
         },
         {
           id = 3,
-          image = "G:/Feevale/Mapas projeto/tiles/endZeroGravityTile.png",
+          image = "tiledFiles/tiles/endZeroGravityTile.png",
           width = 25,
           height = 25
         },
         {
           id = 4,
-          image = "G:/Feevale/Mapas projeto/tiles/fatalTile.png",
+          image = "tiledFiles/tiles/fatalTile.png",
           width = 25,
           height = 25
         },
         {
           id = 5,
-          image = "G:/Feevale/Mapas projeto/tiles/groundTile.png",
+          image = "tiledFiles/tiles/groundTile.png",
           width = 25,
           height = 25
         },
         {
           id = 6,
-          image = "G:/Feevale/Mapas projeto/tiles/lightTile.png",
+          image = "tiledFiles/tiles/lightTile.png",
           width = 25,
           height = 25
         },
         {
           id = 7,
-          image = "G:/Feevale/Mapas projeto/tiles/portal1Tile.png",
+          image = "tiledFiles/tiles/portal1Tile.png",
           width = 25,
           height = 25
         },
         {
           id = 8,
-          image = "G:/Feevale/Mapas projeto/tiles/portal2Tile.png",
+          image = "tiledFiles/tiles/portal2Tile.png",
           width = 25,
           height = 25
         },
         {
           id = 9,
-          image = "G:/Feevale/Mapas projeto/tiles/portal3Tile.png",
+          image = "tiledFiles/tiles/portal3Tile.png",
           width = 25,
           height = 25
         },
         {
           id = 10,
-          image = "G:/Feevale/Mapas projeto/tiles/portal4Tile.png",
+          image = "tiledFiles/tiles/portal4Tile.png",
           width = 25,
           height = 25
         },
         {
           id = 11,
-          image = "G:/Feevale/Mapas projeto/tiles/powerUpTile.png",
+          image = "tiledFiles/tiles/powerUpTile.png",
           width = 25,
           height = 25
         },
         {
           id = 12,
-          image = "G:/Feevale/Mapas projeto/tiles/spikeTile.png",
+          image = "tiledFiles/tiles/spikeTile.png",
           width = 25,
           height = 25
         },
         {
           id = 13,
-          image = "G:/Feevale/Mapas projeto/tiles/startZeroGravityTile.png",
+          image = "tiledFiles/tiles/startZeroGravityTile.png",
           width = 25,
           height = 25
         }
@@ -246,7 +246,7 @@ return {
           shape = "rectangle",
           x = 4483.25,
           y = 728.25,
-          width = 6763.25,
+          width = 7375.75,
           height = 228.25,
           rotation = 0,
           gid = 6,
@@ -776,7 +776,7 @@ return {
           name = "",
           type = "EG",
           shape = "rectangle",
-          x = 10575,
+          x = 11183.3,
           y = 500,
           width = 25,
           height = 400,
@@ -1198,7 +1198,7 @@ return {
           name = "",
           type = "T",
           shape = "rectangle",
-          x = 8681.25,
+          x = 9289.5,
           y = 500,
           width = 9.75,
           height = 437.5,
@@ -1214,7 +1214,7 @@ return {
           name = "",
           type = "G",
           shape = "rectangle",
-          x = 8743.75,
+          x = 9352,
           y = 231.25,
           width = 2509,
           height = 200,
@@ -1228,7 +1228,7 @@ return {
           name = "",
           type = "G",
           shape = "rectangle",
-          x = 9087.5,
+          x = 9695.75,
           y = 500,
           width = 115.25,
           height = 50,
@@ -1242,7 +1242,7 @@ return {
           name = "",
           type = "G",
           shape = "rectangle",
-          x = 9516.5,
+          x = 10124.8,
           y = 359.5,
           width = 209,
           height = 128.25,
@@ -1256,7 +1256,7 @@ return {
           name = "",
           type = "G",
           shape = "rectangle",
-          x = 9931.25,
+          x = 10539.5,
           y = 500,
           width = 215.25,
           height = 50,
@@ -1270,7 +1270,7 @@ return {
           name = "",
           type = "EZG",
           shape = "rectangle",
-          x = 10006.3,
+          x = 10614.5,
           y = 481.25,
           width = 25,
           height = 253,
@@ -1284,7 +1284,7 @@ return {
           name = "",
           type = "SZG",
           shape = "rectangle",
-          x = 8756.25,
+          x = 9364.5,
           y = 503.25,
           width = 25,
           height = 275,
@@ -1298,7 +1298,7 @@ return {
           name = "",
           type = "G",
           shape = "rectangle",
-          x = 9202.25,
+          x = 9810.5,
           y = 500,
           width = 138,
           height = 109.25,
@@ -1354,6 +1354,50 @@ return {
           properties = {
             ["tutorialStep"] = 0
           }
+        },
+        {
+          id = 1111,
+          name = "",
+          type = "T",
+          shape = "rectangle",
+          x = 8549,
+          y = 500,
+          width = 9.75,
+          height = 437.5,
+          rotation = 0,
+          gid = 9,
+          visible = true,
+          properties = {
+            ["tutorialStep"] = 9
+          }
+        },
+        {
+          id = 1112,
+          name = "",
+          type = "G",
+          shape = "rectangle",
+          x = 8695.75,
+          y = 412.5,
+          width = 177.75,
+          height = 271.75,
+          rotation = 0,
+          gid = 6,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 1113,
+          name = "",
+          type = "P2",
+          shape = "rectangle",
+          x = 8718.75,
+          y = 500.25,
+          width = 50,
+          height = 75,
+          rotation = 0,
+          gid = 10,
+          visible = true,
+          properties = {}
         }
       }
     }

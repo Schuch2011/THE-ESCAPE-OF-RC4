@@ -16,6 +16,8 @@ local initXPos = 0
 local xView = 0
 local difX = 0
 
+local willUnlock = 0
+
 local isChar1Unlocked
 local isChar2Unlocked
 local isChar3Unlocked
@@ -105,8 +107,15 @@ end
 
 function scene:create(event)
 	-- CONTAR TOTAL DE MOEDAS COLETADAS E A SEREM COLETADAS
+	local sceneGroup = self.view
+	local buttonGroup = display.newGroup()
+
+
 	local maxCoins = 0
 	local coinsTaken = 0
+
+	local isCharUnlocked = {}
+	isCharUnlocked = loadsave.loadTable("isCharUnlocked.json") or {true, false, false, false}
 
 	for i=1, 4 do
 		local level = require("levels."..i)
@@ -127,8 +136,25 @@ function scene:create(event)
 		coinsTaken = coinsTaken + stageCoinsCollected
 	end
 
-	local sceneGroup = self.view
-	local buttonGroup = display.newGroup()
+	for i= 1, 4 do
+		local toCollect = 0
+		local collected = 0
+		for j=i-1, 1, -1 do 
+			toCollect = toCollect + composer.getVariable("stage"..j.."TotalCoins_")			
+		end
+		for j=1, 4 do 
+			collected = collected + (saveState.getValue("stage"..j.."Coins") or 0)
+		end
+		if toCollect - collected <= 0 and composer.getVariable("isChar"..(i).."Unlocked_")~=true then
+				isCharUnlocked[i] = true
+				loadsave.saveTable(isCharUnlocked,"isCharUnlocked.json")
+				composer.setVariable("isChar"..(i).."Unlocked_",true)
+				if i ~= 1 then
+					willUnlock = i
+				end		
+		end
+	end
+
 
 	audio.reserveChannels(7)
 
@@ -173,8 +199,7 @@ function scene:create(event)
 	})
 	buttonGroup:insert(backButton)
 
-	local isCharUnlocked = {}
-	isCharUnlocked = loadsave.loadTable("isCharUnlocked.json") or {true, false, false, false}
+
 
 	for i = 1, 4 do
 		local cWidth = 1
@@ -259,6 +284,9 @@ function scene:show(event)
 		local previous = composer.getSceneName("previous")
 		if previous ~= nil then
 			composer.removeScene(composer.getSceneName("previous"))
+		end
+		if willUnlock ~= 0 then
+			composer.showOverlay("scenes.characterUnlockedMenu", {effect = "fade", time = 200, isModal = true, params = willUnlock})
 		end
 	end
 end

@@ -5,6 +5,26 @@ local physics = require("physics")
 
 local _M = {}
 
+local darkFill = {
+		type = "gradient",
+    	color1 = { 192/255 , 72/255 , 72/255 },
+    	color2 = { 72/255, 0/255 , 72/255},
+    	direction = "left"
+	}
+
+local darkStroke = {0}
+
+local lightFill = {
+		type = "gradient",
+    	color1 = { 95/255 , 44/255 , 130/255 },
+    	color2 = { 73/255, 160/255 , 157/255},
+    	direction = "left"
+	}
+
+local lightStroke = {0}
+
+
+
 local toxicGasSequence = {
 	{
 		name = "default",
@@ -160,11 +180,15 @@ function _M.newTile(type,xPos,yPos,width,height, stageCoinsTable, coinID, tutori
 			movableGroup:insert(box)
 		elseif (type == "L") then
 			box.objType="ground"
-			box:setFillColor(106/255,47/255,238/255)
+			box.fill = lightFill
+			box.stroke = lightStroke
+			box.strokeWidth = 2
 			lightGroup:insert(box)
 		elseif (type == "D") then
 			box.objType="ground"
-			box:setFillColor(0/255,51/255,102/255)
+			box.fill = darkFill
+			box.stroke = darkStroke
+			box.strokeWidth = 2
 			darkGroup:insert(box)
 			box.isBodyActive = false
 			box.alpha = 0.35 

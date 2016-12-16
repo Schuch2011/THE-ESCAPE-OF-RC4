@@ -25,11 +25,13 @@ local function audioHandler(invert)
 	saveState.save{["isAudioOn"]=isOn}
 end
 
-local function audioButton(self, event)
-	audioOn.isVisible = not audioOn.isVisible
-    audioOff.isVisible = not audioOff.isVisible
-    audioHandler(true)
-    audio.play(sfxButton,{channel=6})
+local function audioButton(event)
+	if (event.phase == "began") then
+		audioOn.isVisible = not audioOn.isVisible
+    	audioOff.isVisible = not audioOff.isVisible
+    	audioHandler(true)
+    	audio.play(sfxButton)    	
+    end
     return true
 end
 
@@ -111,8 +113,8 @@ function scene:create(event)
 	audioOff = display.newImage(sceneGroup, "images/audioOff.png", W*.95, H*.80)
 	audioOff.width, audioOff.height = W*.15, W*.15
 
-	audioOn:addEventListener("tap", audioButton)
-	audioOff:addEventListener("tap", audioButton)
+	audioOn:addEventListener("touch", audioButton)
+	audioOff:addEventListener("touch", audioButton)
 
 	sceneGroup:insert(startButton)
 	sceneGroup:insert(achievementsButton)

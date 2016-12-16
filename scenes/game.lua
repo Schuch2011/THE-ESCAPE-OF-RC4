@@ -22,6 +22,7 @@ local isPaused = true
 local isGameFinished = false
 local isFinishing
 local isInTutorial = 0
+local tutorialChange = false
 local switchTime=false
 local coins = 0
 local totalCoins
@@ -105,6 +106,7 @@ local message7
 local message8
 local message9
 local message10
+local message11
 
 local iconPU1
 local iconPU2
@@ -422,7 +424,7 @@ local function playerCollider( self,event )
     	-- DETECTA SE O PERSONAGEM ALCANÇA O FIM DA FASE
 
     	if ( event.selfElement == 1 and event.other.objType == "tutorial") then
-    		if event.other.tutorialStep~=2 and event.other.tutorialStep~=0 then
+    		if event.other.tutorialStep~=2 and event.other.tutorialStep~=0 and (event.other.tutorialStep~=9 or tutorialChange==false) then
     			isPaused = true
 				player:pause()
 				physics.pause()
@@ -446,7 +448,7 @@ local function playerCollider( self,event )
     			end)
     		end
     		if (event.other.tutorialStep==2) then
-    			jumpButtonArea.isHitTestable = true
+    			jumpButtonArea.isHitTestable = false
     			rightButton.alpha = 0
     		end
     		if (event.other.tutorialStep==3) then
@@ -564,6 +566,66 @@ local function playerCollider( self,event )
     			end)
     		end
 
+    		if (event.other.tutorialStep==9 and tutorialChange==false) then
+    			tutorialChange = true
+    			switchButtonArea.isHitTestable = false
+    			leftButton.alpha = 0
+    			jumpButtonArea.isHitTestable = false
+    			rightButton.alpha = 0
+    			message11.alpha=1
+    			timer.performWithDelay(5000, function()    				
+    				switchButtonArea.isHitTestable = true
+    				leftButton.alpha = 0.12
+    				jumpButtonArea.isHitTestable = true
+    				rightButton.alpha = 0.12
+    				message11.alpha=0
+    				isPaused = false
+
+					local tempX = player.x
+					local tempY = player.y
+
+					player:removeSelf()
+
+					player = animation.newAnimation("images/3.png", 140, 125, 21 + 23 + 5 + 21)
+					player.x = tempX
+					player.y = tempY
+					player.width = W * .1
+					player.height = player.width * (125 / 140)
+					player.xScale = player.width / 140
+					player.yScale = player.height / 125
+					
+					physics.addBody(player,"dynamic",
+					{ shape={- player.width * .3 , - player.height * .4,
+							   player.width * .35, - player.height * .4,
+							   player.width * .35,   player.height * .5,
+							 - player.width * .3 ,   player.height * .5}, bounce=0},
+					{ shape={- player.width * .06, player.height * .5,
+							   player.width * .11, player.height * .5,
+							   player.width * .11, player.height * .7,
+							 - player.width * .06, player.height * .7}, isSensor=true}
+					)
+					player.isFixedRotation = true
+					player.canJump = 0
+					player.collision = playerCollider
+					player:addEventListener( "collision", player)
+					player.isSleepingAllowed = false
+					player.isBullet = true
+					player:setSequence("running")
+					player:play()
+
+					playerGroup:insert(player)
+					playerGroup.x = 0
+					playerGroup.x = playerGroup.x - tempX + parPlayerXPosition
+
+					physics.start(true)
+					for i=1, movableGroup.numChildren do
+						if movableGroup[i].isBarrier==true then			
+							movableGroup[i]:play()
+						end
+					end	
+    			end)
+    		end
+
 
     	end
 
@@ -604,7 +666,9 @@ local function playerCollider( self,event )
 				stageCoinsTable[event.other.ID]=true
 				coins = coins +1
 				score = score + 250
-				loadsave.saveTable(stageCoinsTable, "stage"..currentLevel.."Coins.json")
+				if currentLevel ~= 0 then
+					loadsave.saveTable(stageCoinsTable, "stage"..currentLevel.."Coins.json")
+				end
 				saveState.save{["stage"..currentLevel.."Coins"]=coins}
 
 				if currentLevel ~= 0 then
@@ -633,7 +697,7 @@ local function playerCollider( self,event )
     	if ( event.selfElement == 1 and event.other.objType == "portal1" and charId~=2) then
 			gameOver()
     	end
-    	if ( event.selfElement == 1 and event.other.objType == "portal2" and charId~=3) then
+    	if ( event.selfElement == 1 and event.other.objType == "portal2" and charId~=3  and currentLevel~=0) then
 			gameOver()
     	end
     	if ( event.selfElement == 1 and event.other.objType == "portal3" and charId~=4) then
@@ -765,7 +829,6 @@ function scene:create(event)
 	player:addEventListener( "collision", player)
 	player.isSleepingAllowed = false
 	player.isBullet = true
-
 	player:setSequence("running")
 	player:play()
 
@@ -889,6 +952,9 @@ function scene:create(event)
 
 		message10 = display.newText({parent = HUDGroup, text = "TILT YOUR PHONE TO NAVIGATE IN ZERO GRAVITY ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
 		message10.alpha=0
+
+		message11 = display.newText({parent = HUDGroup, text = "SPECIAL BARRIERS CAN ONLY BE CROSSED BY SPECIFIC CHARACTERS ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
+		message11.alpha=0
 
 		iconPU1 = display.newImage(HUDGroup, "images/powerUp1.png", W*.5, H*.17)
 		iconPU1.xScale, iconPU1.yScale = .35, .35
@@ -1078,6 +1144,7 @@ function scene:show( event )
 		isPaused = false
 		isGameFinished = false
 		isFinishing = false
+		tutorialChange = false
     	local dt = getDeltaTime()
 
     	physics.setGravity(0,parGravity)
@@ -1115,6 +1182,30 @@ function updateFrames()
 				player:setSequence("running")
 				player:play()
 			end
+		end
+		playerLocalX, playerLocalY = player:localToContent(0, 0)
+
+		if (playerLocalY > parPlayerYPosition or playerLocalY<parPlayerYPosition) then
+			local difY
+
+			--TESTA SE A DIFERENÇA ENTRE A POSIÇÃO VERTICAL ATUAL E A PADRÃO É POUCA
+			if ((playerLocalY-(playerLocalY-parPlayerYPosition)/parVerticalFollowRate+2)>parPlayerYPosition) and ((playerLocalY-(playerLocalY-parPlayerYPosition)/parVerticalFollowRate-2)<parPlayerYPosition) then
+				difY = playerLocalY-parPlayerYPosition
+				playerGroup.y = playerGroup.y - difY				
+			else
+				difY = (playerLocalY-parPlayerYPosition)/parVerticalFollowRate
+				playerGroup.y = playerGroup.y - difY
+			end
+
+			for i = 1, backgroundGroup.numChildren do
+				if backgroundGroup[i].speed then
+					backgroundGroup[i].y = backgroundGroup[i].y - (difY * backgroundGroup[i].speed.y)
+				end
+ 			end
+
+			movableGroup.y = movableGroup.y - difY
+			lightGroup.y = lightGroup.y - difY
+			darkGroup.y = darkGroup.y - difY
 		end
 	end
 	

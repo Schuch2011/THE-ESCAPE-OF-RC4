@@ -68,7 +68,7 @@
   <object id="1171" type="G" gid="6" x="2294.46" y="575.709" width="25" height="105.333"/>
   <object id="1172" type="G" gid="6" x="1984.46" y="575.375" width="25" height="104.333"/>
   <object id="1173" type="G" gid="6" x="2119.4" y="499.25" width="99.4853" height="25"/>
-  <object id="1174" type="P2" gid="10" x="2119.58" y="474.333" width="50" height="75"/>
+  <object id="1174" type="P3" gid="10" x="2119.58" y="478.333" width="50" height="112.583"/>
   <object id="1175" type="L" gid="7" x="1969.39" y="808.826" width="77.75" height="25"/>
   <object id="1176" type="D" gid="12" x="2131.64" y="788.826" width="75" height="25"/>
   <object id="1177" type="D" gid="12" x="1815.64" y="770.826" width="75" height="25"/>

@@ -673,7 +673,7 @@ return {
         {
           id = 1165,
           name = "",
-          type = "P2",
+          type = "P1",
           shape = "rectangle",
           x = 5443.75,
           y = 143.75,
@@ -841,7 +841,7 @@ return {
         {
           id = 1183,
           name = "",
-          type = "D",
+          type = "L",
           shape = "rectangle",
           x = 5412.5,
           y = 550,
@@ -981,7 +981,7 @@ return {
         {
           id = 1193,
           name = "",
-          type = "P1",
+          type = "P2",
           shape = "rectangle",
           x = 7112.5,
           y = 212.5,
@@ -1261,7 +1261,7 @@ return {
         {
           id = 1220,
           name = "",
-          type = "D",
+          type = "L",
           shape = "rectangle",
           x = 6143.75,
           y = 575,
