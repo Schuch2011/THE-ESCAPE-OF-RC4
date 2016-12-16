@@ -678,10 +678,6 @@ local function playerCollider( self,event )
 					if totalCoinsCollected == totalMaxCoins then
 						_achievement:unlockAndShow(3)
 					end
-
-					if totalCoinsCollected == 29 then
-						_achievement:unlockAndShow(2)
-					end
 				end
 
 				if coinsCounter then coinsCounter.text = coins.." / "..totalCoins .. " " end				

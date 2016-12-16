@@ -58,8 +58,10 @@ function scene:create(event)
 		charName = "RC4-FR53 "
 		charDescription = "Fire Resistance "
 	elseif characterUnlocked == 4 then
-		charName = "RC4-SPY14"
+		charName = "RC4-SPY14 "
 		charDescription = "Laser Resistance "
+
+		_achievement:unlockAndShow(2)
 	end
 
 	local charNameText = display.newText(sceneGroup, charName, W*.75, H*.35, "airstrikebold.ttf", 38)
