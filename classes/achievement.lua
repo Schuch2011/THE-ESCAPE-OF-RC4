@@ -14,7 +14,36 @@ local achievements = {
 function _M.new()
 
 	local achievement = display.newGroup()
-	local background = display.newRoundedRect(achievement, 0, 0, _W * .5, _H * .2, 4)
+	achievement.x = _W * .5
+	achievement.y = 0
+	achievement.anchorY = 1
+	achievement.anchorChildren = true
+
+	local overlayBackground = display.newRoundedRect(achievement, 0, 0, _W * .55, _H * .15, 4)
+	overlayBackground:setFillColor(0, 0, 0, .85)
+
+	local title = display.newText({
+		parent = achievement,
+		x = - overlayBackground.width * .5 + 60,
+		y = - overlayBackground.height * .5 + 10,
+		text = "Achievement Unlocked ",
+		font = "airstrikebold.ttf",
+		fontSize = 15,
+		align = "left"
+	})
+	title.anchorX = 0
+	title.anchorY = 0
+
+	local description = display.newText({
+		parent = achievement,
+		x = - overlayBackground.width * .5 + 60,
+		y = 12,
+		text = "",
+		font = "airstrikebold.ttf",
+		fontSize = 12,
+		align = "left"
+	})
+	description.anchorX = 0
 
 	local values = saveState.getValue( "achievements" )
 
@@ -25,13 +54,6 @@ function _M.new()
 	else
 		saveState.save{ achievements = achievements }
 	end
-
-	background.anchorY = 0
-	background:setFillColor(0, 0, 0, .5)
-
-	achievement.anchorY = 0
-	achievement.x = _W * .5
-	achievement.y = _H
 
 	function achievement:unlock(index)
 		if not achievements[index].isUnlocked then
@@ -45,49 +67,20 @@ function _M.new()
 			achievements[index].isUnlocked = true
 			saveState.save{ achievements = achievements}
 
-			local overlayGroup = display.newGroup()
-			overlayGroup.x = _W * .5
-			overlayGroup.y = 0
-			overlayGroup.anchorY = 1
-			overlayGroup.anchorChildren = true
+			description.text = achievements[index].description
 
-			local overlayBackground = display.newRoundedRect(overlayGroup, 0, 0, _W * .55, _H * .15, 4)
-			overlayBackground:setFillColor(0, 0, 0, .85)
-
-			local overlayTitle = display.newText({
-				parent = overlayGroup,
-				x = - overlayBackground.width * .5 + 60,
-				y = - overlayBackground.height * .5 + 10,
-				text = "Achievement Unlocked ",
-				font = "airstrikebold.ttf",
-				fontSize = 15,
-				align = "left"
-			})
-			overlayTitle.anchorX = 0
-			overlayTitle.anchorY = 0
-
-			local description = display.newText({
-				parent = overlayGroup,
-				x = - overlayBackground.width * .5 + 60,
-				y = 12,
-				text = achievements[index].description,
-				font = "airstrikebold.ttf",
-				fontSize = 12,
-				align = "left"
-			})
-			description.anchorX = 0
-
-			local image = display.newImage(overlayGroup, "images/" .. achievements[index].image)
+			local image = display.newImage(achievement, "images/" .. achievements[index].image)
 			image.xScale = .15
 			image.yScale = .15
 
 			image.x = - overlayBackground.width * .5 + 30
 
-			transition.to(overlayGroup, {y = overlayGroup.height + 30, time = 250})
+			transition.to(achievement, {y = achievement.height + 30, time = 250})
 
 			timer.performWithDelay(3250, function()
-				transition.to(overlayGroup, {y = 0, time = 250, onComplete = function()
-						display.remove(overlayGroup)
+				transition.to(achievement, {y = 0, time = 250, onComplete = function()
+						description.text = ""
+						display.remove(image)
 					end})
 			end, 1)
 		end
