@@ -49,7 +49,7 @@ end
 
 local function onScreenTouch(event)
 	if event.phase == "began" then
-		audio.play(sfxButton, {channel=6})
+		audio.play(sfxButton)
 
 		if imageIndex <= #cutscene[cutsceneType] then
 			local page = display.newImage(imageGroup, cutscene[cutsceneType][imageIndex].image)
