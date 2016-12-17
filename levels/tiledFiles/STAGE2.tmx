@@ -46,7 +46,7 @@
  </tileset>
  <objectgroup name="Object Layer 1" offsetx="166" offsety="128">
   <object id="283" type="G" gid="6" x="-53.5" y="865.75" width="1018.75" height="290.75"/>
-  <object id="994" type="EG" gid="3" x="8331.25" y="406.5" width="25" height="375"/>
+  <object id="994" type="EG" gid="3" x="6450.25" y="575" width="25" height="171.75"/>
   <object id="1082" type="C" gid="1" x="500" y="450.25" width="25" height="25"/>
   <object id="1083" type="G" gid="6" x="850" y="351.25" width="1115.25" height="228"/>
   <object id="1085" type="G" gid="6" x="1327.75" y="865.75" width="947.25" height="290.75"/>
@@ -87,8 +87,8 @@
   <object id="1165" type="P1" gid="10" x="5443.75" y="143.75" width="50" height="75"/>
   <object id="1166" type="C" gid="1" x="5512.5" y="139.5" width="25" height="25"/>
   <object id="1167" type="PU3" gid="12" x="5575" y="231.25" width="25" height="25"/>
-  <object id="1168" type="G" gid="6" x="5784" y="415.75" width="497.25" height="543.75"/>
-  <object id="1169" type="G" gid="6" x="5411.5" y="790.75" width="3403.75" height="215.75"/>
+  <object id="1168" type="G" gid="6" x="5784" y="415.75" width="1225" height="543.75"/>
+  <object id="1169" type="G" gid="6" x="5411.5" y="790.75" width="1597.5" height="215.75"/>
   <object id="1170" type="S" gid="5" x="5412.5" y="575" width="25" height="25"/>
   <object id="1171" type="S" gid="5" x="5447.5" y="575" width="25" height="25"/>
   <object id="1173" type="S" gid="5" x="5483" y="575" width="25" height="25"/>
@@ -97,33 +97,6 @@
   <object id="1180" type="S" gid="5" x="5589.25" y="575" width="25" height="25"/>
   <object id="1181" type="S" gid="5" x="5624.75" y="575" width="25" height="25"/>
   <object id="1183" type="L" gid="7" x="5412.5" y="550" width="240.25" height="28"/>
-  <object id="1184" type="G" gid="6" x="6281.25" y="15.75" width="2527.75" height="143.75"/>
-  <object id="1185" type="SZG" gid="8" x="6375" y="578.25" width="25" height="562.5"/>
-  <object id="1186" type="EZG" gid="4" x="7925" y="403.25" width="25" height="125"/>
-  <object id="1187" type="G" gid="6" x="6793.75" y="575" width="125" height="134.25"/>
-  <object id="1188" type="G" gid="6" x="7112.5" y="431.25" width="125" height="109.25"/>
-  <object id="1189" type="G" gid="6" x="7112.5" y="131.25" width="125" height="115.5"/>
-  <object id="1190" type="G" gid="6" x="7375" y="593.75" width="125" height="115.5"/>
-  <object id="1191" type="G" gid="6" x="7393.75" y="290.75" width="125" height="103.25"/>
-  <object id="1192" type="G" gid="6" x="7112.5" y="237.5" width="125" height="25"/>
-  <object id="1193" type="P2" gid="10" x="7112.5" y="212.5" width="50" height="84.25"/>
-  <object id="1194" type="C" gid="1" x="7187.5" y="187.5" width="25" height="25"/>
-  <object id="1197" type="L" gid="7" x="7212.5" y="325" width="25" height="90.5"/>
-  <object id="1198" type="L" gid="7" x="7212.5" y="578.25" width="25" height="150"/>
-  <object id="1199" type="D" gid="12" x="7112.5" y="578.25" width="25" height="150.25"/>
-  <object id="1200" type="D" gid="12" x="7112.5" y="322" width="25" height="84.75"/>
-  <object id="1205" type="S" gid="5" x="7421.5" y="481.25" width="25" height="25"/>
-  <object id="1206" type="S" gid="5" x="7457" y="481.25" width="25" height="25"/>
-  <object id="1207" type="S" gid="5" x="7386.5" y="481.25" width="25" height="25"/>
-  <object id="1208" type="S" gid="5" x="7405.25" y="190.75" width="25" height="25"/>
-  <object id="1209" type="S" gid="5" x="7475.75" y="190.75" width="25" height="25"/>
-  <object id="1210" type="S" gid="5" x="7440.25" y="190.75" width="25" height="25"/>
-  <object id="1211" type="PU3" gid="12" x="7162.5" y="293.75" width="25" height="25"/>
-  <object id="1212" type="G" gid="6" x="7600" y="97" width="125" height="84.5"/>
-  <object id="1213" type="G" gid="6" x="7725" y="178.25" width="125" height="169"/>
-  <object id="1214" type="G" gid="6" x="7850" y="278.25" width="352.75" height="266"/>
-  <object id="1216" type="G" gid="6" x="7725" y="575" width="1090.25" height="169"/>
-  <object id="1217" type="G" gid="6" x="7600" y="575" width="125" height="84.5"/>
   <object id="1218" type="F" gid="5" x="4109" y="822" width="725" height="207"/>
   <object id="1219" type="D" gid="12" x="5627" y="240.75" width="25" height="193.75"/>
   <object id="1220" type="L" gid="7" x="6143.75" y="575" width="25" height="159.25"/>

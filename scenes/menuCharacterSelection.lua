@@ -145,7 +145,7 @@ function scene:create(event)
 		for j=1, 4 do 
 			collected = collected + (saveState.getValue("stage"..j.."Coins") or 0)
 		end
-		if toCollect - collected <= 0 and composer.getVariable("isChar"..(i).."Unlocked_")~=true then
+		if toCollect - collected <= 0 and isCharUnlocked[i]~=true then
 				isCharUnlocked[i] = true
 				loadsave.saveTable(isCharUnlocked,"isCharUnlocked.json")
 				composer.setVariable("isChar"..(i).."Unlocked_",true)

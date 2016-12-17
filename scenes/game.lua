@@ -56,7 +56,6 @@ local parPowerUp4Duration = 4000
 
 local parDefaultSpeed = 3--10
 local parPowerUpSpeed = 6
-local parZeroChamberSpeed = 2
 local parSpeed = parDefaultSpeed
 
 local parDefaultJumpForce = -15---20
@@ -78,8 +77,6 @@ local tempPosition
 local xCompensation = W*0.4
 
 local parGravity = 60
-local parAccelerometerSensitivity = 60
-local parIsZeroGravity=false
 
 local playerProgression = {}
 local levelEndPosition
@@ -112,8 +109,6 @@ local iconPU1
 local iconPU2
 local iconPU3
 local iconPU4
-
-local accelerometerInstruction
 
 local function setPhysics() -- INICIAR E CONFIGURAR A SIMULAÇÃO DE FÍSICA
 	physics.start(true)
@@ -165,7 +160,6 @@ end
 local function stopGame()
 	isPaused = true
 	audio.stop(1)
-    parIsZeroGravity = false
 end
 
 local function gameOver()
@@ -274,26 +268,6 @@ local function onSwitchButtonTouch( event )
 	end
 end
 
-local gravityDirection = false
-local function onAccelerate( event )
-	if (parIsZeroGravity==true) then
-		if event.yInstant > 0 and gravityDirection == false then
-			local temp1, temp2 = player:getLinearVelocity()
-			player:setLinearVelocity( 0,temp2*.5)
-		elseif event.yInstant < 0 and gravityDirection == true then
-			local temp1, temp2 = player:getLinearVelocity()
-			player:setLinearVelocity( 0,temp2*.5)
-		end
-    	physics.setGravity(0,(event.yInstant)*-1*parAccelerometerSensitivity)
-    	parSpeed = parZeroChamberSpeed
-    	if event.yInstant > 0 then
-    		gravityDirection = true
-    	else
-    		gravityDirection = false
-    	end
-	end
-end
- 
 local function getDeltaTime() -- CALCULAR O TEMPO DESDE O ÚLTIMO FRAME GERADO
     local temp = system.getTimer()
     local dt = (temp-runtime) / (1000/60)
@@ -385,14 +359,12 @@ local function onPaused()
 	pauseButton.isVisible = false
 	
 	player:pause()
-	accelerometerInstruction:pause()
 	
 	composer.showOverlay("scenes.pause", {effect = "fade", time = 200, isModal = true})
 end
 
 function scene:finishGame()
 	isGameFinished = true
-	parIsZeroGravity = false
 end
 
 function scene:resumeGame()
@@ -411,7 +383,6 @@ function scene:resumeGame()
 	end
 	
 	player:play()
-	accelerometerInstruction:play()
 end
 
 local function playerCollider( self,event ) 
@@ -530,31 +501,6 @@ local function playerCollider( self,event )
     				jumpButtonArea.isHitTestable = true
     				rightButton.alpha = 0.12
     				message9.alpha=0
-    				isPaused = false
-					player:play()
-					physics.start(true)
-					for i=1, movableGroup.numChildren do
-						if movableGroup[i].isBarrier==true then			
-							movableGroup[i]:play()
-						end
-					end	
-    			end)
-    		end
-
-    		if (event.other.tutorialStep==8) then
-    			switchButtonArea.isHitTestable = false
-    			leftButton.alpha = 0
-    			jumpButtonArea.isHitTestable = false
-    			rightButton.alpha = 0
-    			message10.alpha=1
-    			accelerometerInstruction.alpha=1
-				accelerometerInstruction:play()
-    			timer.performWithDelay(5000, function()    				
-    				switchButtonArea.isHitTestable = true
-    				leftButton.alpha = 0.12
-    				jumpButtonArea.isHitTestable = true
-    				rightButton.alpha = 0.12
-    				message10.alpha=0
     				isPaused = false
 					player:play()
 					physics.start(true)
@@ -727,28 +673,6 @@ local function playerCollider( self,event )
 			display.remove(temp)
 			activatePowerUp(4)
 			audio.play(sfxPowerUp)
-    	end  
-    	if ( event.selfElement == 1 and event.other.objType == "startZeroGravity" ) then
-    		player:setLinearVelocity( 0,0 )
-    		jumpButtonArea.isHitTestable=false
-        	parIsZeroGravity=true
-        	physics.setGravity(0,0)        	
-			player:setSequence("zeroGravity")
-			player:play()
-			accelerometerInstruction.alpha=1
-			accelerometerInstruction:play()
-			rightButton.alpha = 0
-    	end  
-    	if ( event.selfElement == 1 and event.other.objType == "endZeroGravity" ) then
-    		parSpeed = parDefaultSpeed
-        	parIsZeroGravity=false
-        	physics.setGravity(0,parGravity)
-        	jumpButtonArea.isHitTestable=true
-			player:setSequence("running")
-			player:play()
-			accelerometerInstruction.alpha=0
-			accelerometerInstruction:pause()
-			rightButton.alpha = 0.12
     	end  
     end
 end
@@ -946,9 +870,6 @@ function scene:create(event)
 		message9 = display.newText({parent = HUDGroup, text = "COLLECT COINS TO UNLOCK NEW CHARACTERS ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
 		message9.alpha=0
 
-		message10 = display.newText({parent = HUDGroup, text = "TILT YOUR PHONE TO NAVIGATE IN ZERO GRAVITY ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
-		message10.alpha=0
-
 		message11 = display.newText({parent = HUDGroup, text = "SPECIAL BARRIERS CAN ONLY BE CROSSED BY SPECIFIC CHARACTERS ", x = W*.5, y = H*.35, width = W * 1, font = "airstrike.ttf", fontSize = 18, align = "center"})
 		message11.alpha=0
 
@@ -968,19 +889,6 @@ function scene:create(event)
 		iconPU4.xScale, iconPU4.yScale = .35, .35
 		iconPU4.alpha = 0
 	end
-
-	local accelerometerSheetOptions = {
-		width = 472/2,
-		height = 216,
-		numFrames = 2,
-	}
-	
-	local accelerometerSheet = graphics.newImageSheet("images/accelerometerInstruction.png", accelerometerSheetOptions)
-	
-	accelerometerInstruction = display.newSprite(HUDGroup, accelerometerSheet, {name="default", start=1, count=2, loopCount=0, time = 1500, loopDirection="forward"})
-	accelerometerInstruction.x= W*.1; accelerometerInstruction.y = H*.5
-	accelerometerInstruction.xScale, accelerometerInstruction.yScale = .4, .4
-	accelerometerInstruction.alpha=0
 
 	pauseButton = widget.newButton({
 		x = W * .15,
@@ -1129,7 +1037,6 @@ function scene:show( event )
     local phase = event.phase    
     if ( phase == "will" ) then
 		Runtime:addEventListener("enterFrame",updateFrames)
-   		Runtime:addEventListener( "accelerometer", onAccelerate)
    		system.activate('multitouch')
     elseif ( phase == "did" ) then
     	composer.removeHidden( true )
@@ -1158,7 +1065,6 @@ function scene:hide(event)
 
 	elseif (phase == "did") then
 		Runtime:removeEventListener("enterFrame",updateFrames)
-		Runtime:removeEventListener( "accelerometer", onAccelerate )
 	end
 end
 
@@ -1220,19 +1126,17 @@ function updateFrames()
 	
 		local vx, vy = player:getLinearVelocity() 
 		
-		if not parIsZeroGravity then
-			-- ANIMAÇÃO DO PERSONAGEM CAINDO
-			if vy > 0 then
-				if player.sequence ~= "falling" then
-					--player:setSequence("falling")
-					--player:play()
-				end
-			-- ANIMAÇÃO DO PERSONAGEM CORRENDO
-			elseif vy == 0 then
-				if player.sequence ~= "running" then
-					player:setSequence("running")
-					player:play()
-				end
+		-- ANIMAÇÃO DO PERSONAGEM CAINDO
+		if vy > 0 then
+			if player.sequence ~= "falling" then
+				--player:setSequence("falling")
+				--player:play()
+			end
+		-- ANIMAÇÃO DO PERSONAGEM CORRENDO
+		elseif vy == 0 then
+			if player.sequence ~= "running" then
+				player:setSequence("running")
+				player:play()
 			end
 		end
 		
