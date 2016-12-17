@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="500" height="50" tilewidth="25" tileheight="25" nextobjectid="1114">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="500" height="50" tilewidth="25" tileheight="25" nextobjectid="1119">
  <tileset firstgid="1" name="tiles" tilewidth="25" tileheight="25" tilecount="14" columns="0">
   <tile id="0">
    <image width="25" height="25" source="tiles/coinTile.png"/>
@@ -90,7 +90,7 @@
  </tileset>
  <objectgroup name="Object Layer 1" offsetx="166" offsety="128">
   <object id="283" type="G" gid="6" x="-234.5" y="703.25" width="3212.5" height="128.25"/>
-  <object id="376" type="G" gid="6" x="4483.25" y="728.25" width="5344.5" height="228.25"/>
+  <object id="376" type="G" gid="6" x="4502.75" y="728.25" width="5493.75" height="228.25"/>
   <object id="622" type="F" gid="5" x="3971.5" y="734.5" width="587.5" height="109.5"/>
   <object id="632" type="G" gid="6" x="1977.75" y="575" width="68.75" height="90.5"/>
   <object id="640" type="G" gid="6" x="4733.25" y="500" width="325" height="50"/>

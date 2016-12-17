@@ -36,7 +36,6 @@ local score = 0
 local sfxCoin
 local sfxJump1
 local sfxJump2
-local sfxJumpLanding
 local sfxSwitch
 local sfxPowerUp
 local sfxGameOver
@@ -91,6 +90,7 @@ local jumpButtonArea
 local switchButtonArea
 local leftButton
 local rightButton
+local okButton
 local pauseButton
 
 local message1
@@ -283,6 +283,152 @@ local function loadPowerUpOverlayImage(group, type)
 	powerUp.isVisible = false
 end
 
+local function tutorialStep6(event)
+	if event.phase == "began" then
+		if isInTutorial == 6.0 then
+			message4.alpha=0
+    		message5.alpha=1
+    		iconPU1.alpha=1 	
+    		isInTutorial = 6.1
+    		audio.play(sfxButton)				
+		elseif isInTutorial == 6.1 then
+			message5.alpha=0
+    		message6.alpha=1
+    		iconPU1.alpha=0
+    		iconPU2.alpha=1
+    		isInTutorial = 6.2
+    		audio.play(sfxButton)
+		elseif isInTutorial == 6.2 then
+			message6.alpha=0
+    		message7.alpha=1
+    		iconPU2.alpha=0
+    		iconPU3.alpha=1
+    		isInTutorial = 6.3
+    		audio.play(sfxButton)
+		elseif isInTutorial == 6.3 then
+			message7.alpha=0
+    		message8.alpha=1
+    		iconPU3.alpha=0
+    		iconPU4.alpha=1
+    		isInTutorial = 6.4
+    		audio.play(sfxButton)
+		elseif isInTutorial == 6.4 then
+			isInTutorial = 0
+			message8.alpha=0
+    		iconPU4.alpha=0
+    		switchButtonArea.isHitTestable = true
+    		leftButton.alpha = .12
+    		jumpButtonArea.isHitTestable = true
+    		rightButton.alpha = .12
+    		isPaused = false
+			player:play()
+			physics.start(true)
+			okButton.alpha=0
+			okButton.isHitTestable = false
+			transition.cancel("button")
+			audio.play(sfxButton)
+			for i=1, movableGroup.numChildren do
+					if movableGroup[i].isBarrier==true then			
+					movableGroup[i]:play()
+				end
+			end	
+		elseif isInTutorial == 7 then
+			isInTutorial = 0
+			switchButtonArea.isHitTestable = true
+    		leftButton.alpha = 0.12
+    		jumpButtonArea.isHitTestable = true
+    		rightButton.alpha = 0.12
+    		message9.alpha=0
+    		isPaused = false
+			player:play()
+			physics.start(true)
+			okButton.alpha=0
+			okButton.isHitTestable = false
+			transition.cancel("button")
+			audio.play(sfxButton)
+			for i=1, movableGroup.numChildren do
+				if movableGroup[i].isBarrier==true then			
+					movableGroup[i]:play()
+				end
+			end	
+		elseif isInTutorial == 9 then
+			switchButtonArea.isHitTestable = true
+    		leftButton.alpha = 0.12
+    		jumpButtonArea.isHitTestable = true
+    		rightButton.alpha = 0.12
+    		message11.alpha=0
+    		isPaused = false
+    		audio.play(sfxButton)
+			local tempX = player.x
+			local tempY = player.y
+
+			player:removeSelf()
+
+			player = animation.newAnimation("images/3.png", 140, 125, 21 + 23 + 5 + 21)
+			player.x = tempX
+			player.y = tempY
+			player.width = W * .1
+			player.height = player.width * (125 / 140)
+			player.xScale = player.width / 140
+			player.yScale = player.height / 125
+					
+			physics.addBody(player,"dynamic",
+			{ shape={- player.width * .3 , - player.height * .4,
+					   player.width * .35, - player.height * .4,
+					   player.width * .35,   player.height * .5,
+					 - player.width * .3 ,   player.height * .5}, bounce=0},
+			{ shape={- player.width * .06, player.height * .5,
+					   player.width * .11, player.height * .5,
+					   player.width * .11, player.height * .7,
+					 - player.width * .06, player.height * .7}, isSensor=true}
+			)
+			player.isFixedRotation = true
+			player.canJump = 0
+			player.isSleepingAllowed = false
+			player.isBullet = true
+			player:setSequence("running")
+			player:play()
+
+			playerGroup:insert(player)
+			playerGroup.x = 0
+			playerGroup.x = playerGroup.x - tempX + parPlayerXPosition
+
+			physics.start(true)
+			okButton.isHitTestable = false
+			transition.cancel("button")
+			okButton.alpha=0
+			for i=1, movableGroup.numChildren do
+				if movableGroup[i].isBarrier==true then			
+					movableGroup[i]:play()
+				end
+			end	
+			timer.performWithDelay(4000, function()
+				isFinishing = true
+				timer.performWithDelay(2500, function()
+					stopGame()
+					audio.play(sfxGameWin)
+					local tempScore = saveState.getValue("stage"..currentLevel.."Score") or 0
+					score = (math.floor(score/10))*10
+	
+					if (score>tempScore) then
+						saveState.save{["stage"..currentLevel.."Score"]=score}
+					end
+	
+					saveState.save{["stage"..currentLevel.."Coins"]=coins}					
+	
+					loadsave.saveTable(stageCoinsTable, "stage"..currentLevel.."Coins.json")
+	
+					if currentLevel == 4 then
+						composer.gotoScene("scenes.cutscene", {effect="slideLeft",time = 500, params = {coins = coins, cutsceneType = "final"}})
+					else
+						composer.gotoScene("scenes.gameVictory",{params=coins, effect="slideLeft",time = 500})
+					end
+				end)
+			end)
+		end
+	end
+end
+
 local function activatePowerUp(type)
 	activePowerUpOverlayGroup.isVisible = true
 	
@@ -389,7 +535,6 @@ local function playerCollider( self,event )
     if (event.phase == "began") then
 		-- RECOMEÇA A CONTAGEM DE PULOS QUANDO O PERSONAGEM ESTÁ COM OS PÉS NO CHÃO		
     	if ( event.selfElement == 2 and event.other.objType == "ground") then
-        	audio.play(sfxJumpLanding, {channel = 2})
         	self.canJump = 2
     	end
     	-- DETECTA SE O PERSONAGEM ALCANÇA O FIM DA FASE
@@ -441,146 +586,47 @@ local function playerCollider( self,event )
     			message3.alpha=1
     		end
     		if (event.other.tutorialStep==6) then
+    			isInTutorial = 6.0
     			switchButtonArea.isHitTestable = false
     			leftButton.alpha = 0
     			jumpButtonArea.isHitTestable = false
     			rightButton.alpha = 0
-
-    			transition.to(message4, {time=100, alpha = 1, onComplete= function()
-    				timer.performWithDelay(4000, function()
-    					message4.alpha=0
-    					message5.alpha=1
-    					iconPU1.alpha=1
-    					timer.performWithDelay(4000, function()
-    						message5.alpha=0
-    						message6.alpha=1
-    						iconPU1.alpha=0
-    						iconPU2.alpha=1
-    					    timer.performWithDelay(4000, function()
-    							message6.alpha=0
-    							message7.alpha=1
-    							iconPU2.alpha=0
-    							iconPU3.alpha=1
-    							timer.performWithDelay(4000, function()
-    								message7.alpha=0
-    								message8.alpha=1
-    								iconPU3.alpha=0
-    								iconPU4.alpha=1
-    								timer.performWithDelay(4000, function()
-    									message8.alpha=0
-    									iconPU4.alpha=0
-    									switchButtonArea.isHitTestable = true
-    									leftButton.alpha = .12
-    									jumpButtonArea.isHitTestable = true
-    									rightButton.alpha = .12
-    									isPaused = false
-										player:play()
-										physics.start(true)
-										for i=1, movableGroup.numChildren do
-												if movableGroup[i].isBarrier==true then			
-												movableGroup[i]:play()
-											end
-										end							
-    								end)
-    							end)
-    						end)
-    					end)
-    				end)
-    			end})
+    			message4.alpha=1
+    			okButton.alpha=0.12
+    			okButton.isHitTestable = true
+    			glow(okButton)
     		end
 
     		if (event.other.tutorialStep==7) then
+    			isInTutorial = 7
     			switchButtonArea.isHitTestable = false
     			leftButton.alpha = 0
     			jumpButtonArea.isHitTestable = false
     			rightButton.alpha = 0
     			message9.alpha=1
-    			timer.performWithDelay(5000, function()    				
-    				switchButtonArea.isHitTestable = true
-    				leftButton.alpha = 0.12
-    				jumpButtonArea.isHitTestable = true
-    				rightButton.alpha = 0.12
-    				message9.alpha=0
-    				isPaused = false
-					player:play()
-					physics.start(true)
-					for i=1, movableGroup.numChildren do
-						if movableGroup[i].isBarrier==true then			
-							movableGroup[i]:play()
-						end
-					end	
-    			end)
+    			okButton.alpha = 0.12
+    			okButton.isHitTestable = true
+    			glow(okButton)
     		end
 
     		if (event.other.tutorialStep==9 and tutorialChange==false) then
+    			isInTutorial = 9
     			tutorialChange = true
     			switchButtonArea.isHitTestable = false
     			leftButton.alpha = 0
     			jumpButtonArea.isHitTestable = false
     			rightButton.alpha = 0
     			message11.alpha=1
-    			timer.performWithDelay(5000, function()    				
-    				switchButtonArea.isHitTestable = true
-    				leftButton.alpha = 0.12
-    				jumpButtonArea.isHitTestable = true
-    				rightButton.alpha = 0.12
-    				message11.alpha=0
-    				isPaused = false
-
-					local tempX = player.x
-					local tempY = player.y
-
-					player:removeSelf()
-
-					player = animation.newAnimation("images/3.png", 140, 125, 21 + 23 + 5 + 21)
-					player.x = tempX
-					player.y = tempY
-					player.width = W * .1
-					player.height = player.width * (125 / 140)
-					player.xScale = player.width / 140
-					player.yScale = player.height / 125
-					
-					physics.addBody(player,"dynamic",
-					{ shape={- player.width * .3 , - player.height * .4,
-							   player.width * .35, - player.height * .4,
-							   player.width * .35,   player.height * .5,
-							 - player.width * .3 ,   player.height * .5}, bounce=0},
-					{ shape={- player.width * .06, player.height * .5,
-							   player.width * .11, player.height * .5,
-							   player.width * .11, player.height * .7,
-							 - player.width * .06, player.height * .7}, isSensor=true}
-					)
-					player.isFixedRotation = true
-					player.canJump = 0
-					player.collision = playerCollider
-					player:addEventListener( "collision", player)
-					player.isSleepingAllowed = false
-					player.isBullet = true
-					player:setSequence("running")
-					player:play()
-
-					playerGroup:insert(player)
-					playerGroup.x = 0
-					playerGroup.x = playerGroup.x - tempX + parPlayerXPosition
-
-					physics.start(true)
-					for i=1, movableGroup.numChildren do
-						if movableGroup[i].isBarrier==true then			
-							movableGroup[i]:play()
-						end
-					end	
-    			end)
+    			okButton.alpha = 0.12
+    			okButton.isHitTestable = true
+    			glow(okButton)
     		end
-
-
     	end
 
-		if ( event.selfElement == 1 and event.other.objType == "endStage") then
-			
+		if ( event.selfElement == 1 and event.other.objType == "endStage") then	
 			if currentLevel == 4 then
 				_achievement:unlockAndShow(1)
 			end
-
 			isFinishing = true
 			timer.performWithDelay(2500, function()
 				stopGame()
@@ -607,17 +653,14 @@ local function playerCollider( self,event )
     	if ( event.selfElement == 1 and event.other.objType == "coin") then
 			local temp = event.other
 			display.remove(temp)
-			if event.other.collected == false then
+			if event.other.collected == false or currentLevel == 0 then
 				audio.play(sfxCoin, {channel=4})	
-				stageCoinsTable[event.other.ID]=true
-				coins = coins +1
-				score = score + 250
 				if currentLevel ~= 0 then
+					stageCoinsTable[event.other.ID]=true
+					coins = coins +1
+					score = score + 250
 					loadsave.saveTable(stageCoinsTable, "stage"..currentLevel.."Coins.json")
-				end
-				saveState.save{["stage"..currentLevel.."Coins"]=coins}
-
-				if currentLevel ~= 0 then
+					saveState.save{["stage"..currentLevel.."Coins"]=coins}
 					totalCoinsCollected = totalCoinsCollected + 1
 					saveState.save{totalCoinsCollected = totalCoinsCollected}
 
@@ -690,7 +733,6 @@ function scene:create(event)
 	sfxCoin = audio.loadSound("audios/coin.wav")
 	sfxJump1 = audio.loadSound("audios/jump1.wav")
 	sfxJump2 = audio.loadSound("audios/jump2.wav")
-	sfxJumpLanding = audio.loadSound("audios/jumpLanding.wav")
 	sfxSwitch = audio.loadSound("audios/switch.wav")
 	sfxPowerUp = audio.loadSound("audios/powerUp.wav")
 	sfxGameOver = audio.loadSound("audios/gameOver.wav")
@@ -824,6 +866,24 @@ function scene:create(event)
 	rightButton.alpha = 0.12
 	rightButton.isHitTestable = false
 	HUDGroup:insert(rightButton)
+
+	okButton = widget.newButton({
+		label = "OK ",
+		labelColor = {default={1}},
+		labelXOffset = W*-.13,
+		labelYOffset = W*-.15,
+		fontSize = 30,
+		font = "airstrike.ttf",
+		shape = "circle",
+		radius=W*.4,
+		x=W*1.05,
+		y=H*1,
+		fillColor = {default={0.8}, over={0.6}},
+		onEvent = tutorialStep6
+	})
+	okButton.alpha = 0
+	okButton.isHitTestable = false
+	HUDGroup:insert(okButton)
 
 	jumpButtonArea = display.newRect(HUDGroup, W * .5 , H * .5 , display.actualContentWidth * .5, display.actualContentHeight)
 	jumpButtonArea.anchorX = 0
@@ -1037,6 +1097,7 @@ function scene:show( event )
     local phase = event.phase    
     if ( phase == "will" ) then
 		Runtime:addEventListener("enterFrame",updateFrames)
+		Runtime:addEventListener("touch",tutorialStep6)
    		system.activate('multitouch')
     elseif ( phase == "did" ) then
     	composer.removeHidden( true )
@@ -1065,6 +1126,7 @@ function scene:hide(event)
 
 	elseif (phase == "did") then
 		Runtime:removeEventListener("enterFrame",updateFrames)
+		Runtime:removeEventListener("touch",tutorialStep6)
 	end
 end
 
@@ -1077,6 +1139,7 @@ function updateFrames()
 	--fpsCounter:updateCounter(dt)
 
 	if not isPaused and isFinishing==true and isGameFinished == false then
+				print("ola")
 		player.x = player.x + parSpeed*dt
 		local vx, vy = player:getLinearVelocity() 		
 		if vy == 0 then
