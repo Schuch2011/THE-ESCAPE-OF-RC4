@@ -32,7 +32,7 @@ function scene:create(event)
 	local bg = display.newRect(sceneGroup, W/2, H/2, W*1.2, H)
 	bg:setFillColor(1)
 
-	local logo= display.newImage(sceneGroup, "images/intro.png",W/2, H/2)
+	local logo= display.newImage(sceneGroup, "images/intro.png",W*.49, H/2)
 	logo.xScale = .17
 	logo.yScale = logo.xScale
 	logo.alpha = 0
